@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { FootprintsIcon, TimerIcon, FlameIcon, Dumbbell, HeartIcon, BedIcon } from 'lucide-react';
+import { FootprintsIcon, TimerIcon, FlameIcon, Dumbbell, HeartIcon, BedIcon, MapPinIcon } from 'lucide-react';
 interface HealthDashboardProps {
   onSwipe: () => void;
 }
@@ -12,6 +12,10 @@ export const HealthDashboard: React.FC<HealthDashboardProps> = ({
       current: 7543,
       goal: 10000
     },
+    distance: {
+      current: 5.2,
+      goal: 8.0
+    },
     activeMinutes: {
       current: 35,
       goal: 60
@@ -23,7 +27,8 @@ export const HealthDashboard: React.FC<HealthDashboardProps> = ({
     workouts: [{
       type: 'Running',
       duration: '30 min',
-      time: 'Today, 7:30 AM'
+      time: 'Today, 7:30 AM',
+      distance: '3.2 km'
     }, {
       type: 'Strength',
       duration: '45 min',
@@ -32,6 +37,11 @@ export const HealthDashboard: React.FC<HealthDashboardProps> = ({
       type: 'Yoga',
       duration: '20 min',
       time: 'Yesterday, 7:00 AM'
+    }, {
+      type: 'Walking',
+      duration: '50 min',
+      time: 'Yesterday, 12:30 PM',
+      distance: '4.1 km'
     }],
     activityRings: {
       move: 75,
@@ -62,6 +72,9 @@ export const HealthDashboard: React.FC<HealthDashboardProps> = ({
     setTouchStart(0);
     setTouchEnd(0);
   };
+  // Calculate the circumference for a circle with radius 45
+  const circleRadius = 45;
+  const circumference = 2 * Math.PI * circleRadius;
   return <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-5 animate-fade-in overflow-y-auto" style={{
     maxHeight: 'calc(100vh - 240px)'
   }} // Increased height
@@ -77,24 +90,18 @@ export const HealthDashboard: React.FC<HealthDashboardProps> = ({
         <div className="relative w-24 h-24">
           {/* Stand Ring (outer) */}
           <svg className="absolute inset-0 w-full h-full -rotate-90" viewBox="0 0 100 100">
-            <circle cx="50" cy="50" r="45" fill="none" stroke="#E0E0E0" strokeWidth="8" />
-            <circle cx="50" cy="50" r="45" fill="none" stroke="#3498db" strokeWidth="8" strokeDasharray={`${healthData.activityRings.stand} 100`} strokeLinecap="round" className="ring-animation" style={{
-            '--progress': healthData.activityRings.stand
-          } as React.CSSProperties} />
+            <circle cx="50" cy="50" r={circleRadius} fill="none" stroke="#E0E0E0" strokeWidth="8" />
+            <circle cx="50" cy="50" r={circleRadius} fill="none" stroke="#3498db" strokeWidth="8" strokeDasharray={circumference} strokeDashoffset={circumference * (1 - healthData.activityRings.stand / 100)} strokeLinecap="round" className="activity-ring blue-ring" />
           </svg>
           {/* Exercise Ring (middle) */}
           <svg className="absolute inset-0 w-full h-full -rotate-90 scale-[0.75]" viewBox="0 0 100 100">
-            <circle cx="50" cy="50" r="45" fill="none" stroke="#E0E0E0" strokeWidth="8" />
-            <circle cx="50" cy="50" r="45" fill="none" stroke="#2ecc71" strokeWidth="8" strokeDasharray={`${healthData.activityRings.exercise} 100`} strokeLinecap="round" className="ring-animation" style={{
-            '--progress': healthData.activityRings.exercise
-          } as React.CSSProperties} />
+            <circle cx="50" cy="50" r={circleRadius} fill="none" stroke="#E0E0E0" strokeWidth="8" />
+            <circle cx="50" cy="50" r={circleRadius} fill="none" stroke="#2ecc71" strokeWidth="8" strokeDasharray={circumference} strokeDashoffset={circumference * (1 - healthData.activityRings.exercise / 100)} strokeLinecap="round" className="activity-ring green-ring" />
           </svg>
           {/* Move Ring (inner) */}
           <svg className="absolute inset-0 w-full h-full -rotate-90 scale-[0.5]" viewBox="0 0 100 100">
-            <circle cx="50" cy="50" r="45" fill="none" stroke="#E0E0E0" strokeWidth="8" />
-            <circle cx="50" cy="50" r="45" fill="none" stroke="#e74c3c" strokeWidth="8" strokeDasharray={`${healthData.activityRings.move} 100`} strokeLinecap="round" className="ring-animation" style={{
-            '--progress': healthData.activityRings.move
-          } as React.CSSProperties} />
+            <circle cx="50" cy="50" r={circleRadius} fill="none" stroke="#E0E0E0" strokeWidth="8" />
+            <circle cx="50" cy="50" r={circleRadius} fill="none" stroke="#e74c3c" strokeWidth="8" strokeDasharray={circumference} strokeDashoffset={circumference * (1 - healthData.activityRings.move / 100)} strokeLinecap="round" className="activity-ring red-ring" />
           </svg>
           {/* Improved text positioning with background for better readability */}
           <div className="absolute inset-0 flex flex-col items-center justify-center text-center">
@@ -165,6 +172,34 @@ export const HealthDashboard: React.FC<HealthDashboardProps> = ({
           </span>
         </div>
       </div>
+      {/* Distance Progress - New section */}
+      <div className="mb-4">
+        <div className="flex justify-between items-center mb-2">
+          <div className="flex items-center">
+            <div className="w-5 h-5 rounded-full bg-purple-100 flex items-center justify-center mr-2">
+              <MapPinIcon size={12} className="text-purple-500" />
+            </div>
+            <span className="text-sm text-[#757575]">
+              Distance (Walking + Running)
+            </span>
+          </div>
+          <span className="text-sm font-medium">
+            {Math.round(healthData.distance.current / healthData.distance.goal * 100)}
+            %
+          </span>
+        </div>
+        <div className="w-full h-2 bg-gray-100 rounded-full overflow-hidden">
+          <div className="h-full bg-purple-500 transition-all duration-1000" style={{
+          width: `${healthData.distance.current / healthData.distance.goal * 100}%`
+        }}></div>
+        </div>
+        <div className="flex justify-between mt-1">
+          <span className="text-xs text-[#757575]">0 km</span>
+          <span className="text-xs text-[#757575]">
+            {healthData.distance.current} / {healthData.distance.goal} km
+          </span>
+        </div>
+      </div>
       {/* Recent Activity - Now with proper spacing */}
       <div className="space-y-3 mt-6">
         <h3 className="text-sm font-medium text-[#1A1A1A] mb-3">
@@ -179,9 +214,15 @@ export const HealthDashboard: React.FC<HealthDashboardProps> = ({
                 <h4 className="text-sm font-medium text-[#1A1A1A] truncate">
                   {workout.type}
                 </h4>
-                <p className="text-xs text-[#757575] truncate">
-                  {workout.time}
-                </p>
+                <div className="flex items-center text-xs text-[#757575]">
+                  <span className="truncate">{workout.time}</span>
+                  {workout.distance && <>
+                      <span className="mx-1">•</span>
+                      <span className="text-purple-500 font-medium">
+                        {workout.distance}
+                      </span>
+                    </>}
+                </div>
               </div>
               <span className="text-xs font-medium text-[#757575] ml-2 whitespace-nowrap">
                 {workout.duration}

@@ -31,10 +31,6 @@
   from { transform: translateX(0); }
   to { transform: translateX(-100%); }
 }
-@keyframes ring-progress {
-  0% { stroke-dasharray: 0 100; }
-  100% { stroke-dasharray: var(--progress) 100; }
-}
 @keyframes spin-once {
   from { transform: rotate(0deg); }
   to { transform: rotate(360deg); }
@@ -42,6 +38,31 @@
 @keyframes slide-up {
   from { transform: translateY(100%); }
   to { transform: translateY(0); }
+}
+/* Activity ring animations */
+@keyframes fill-blue-ring {
+  from { stroke-dashoffset: 282.74; }
+  to { stroke-dashoffset: 28.274; }
+}
+@keyframes fill-green-ring {
+  from { stroke-dashoffset: 282.74; }
+  to { stroke-dashoffset: 113.096; }
+}
+@keyframes fill-red-ring {
+  from { stroke-dashoffset: 282.74; }
+  to { stroke-dashoffset: 70.685; }
+}
+.activity-ring {
+  transition: stroke-dashoffset 1.5s ease-out;
+}
+.red-ring {
+  animation: fill-red-ring 1.5s ease-out forwards;
+}
+.green-ring {
+  animation: fill-green-ring 1.5s ease-out forwards;
+}
+.blue-ring {
+  animation: fill-blue-ring 1.5s ease-out forwards;
 }
 /* Custom Classes */
 .animate-bounce-in {
@@ -61,9 +82,6 @@
 }
 .animate-slide-out-left {
   animation: slide-out-left 0.3s ease-out forwards;
-}
-.ring-animation {
-  animation: ring-progress 1.5s ease-out forwards;
 }
 .animate-scale-up {
   animation: scale-up 0.2s ease-out forwards;

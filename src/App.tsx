@@ -1,17 +1,17 @@
 import React, { useState } from 'react';
-import { HomeScreen } from './screens/HomeScreen';
-import { IngredientCaptureScreen } from './screens/IngredientCaptureScreen';
-import { RecipeDetailScreen } from './screens/RecipeDetailScreen';
-import { MealCompletionScreen } from './screens/MealCompletionScreen';
-import { MealPrepScreen } from './screens/MealPrepScreen';
-import { ProgressScreen } from './screens/ProgressScreen';
-import { SettingsScreen } from './screens/SettingsScreen';
-import { WeeklyPlanScreen } from './screens/WeeklyPlanScreen';
+import { HomeScreen } from './components/HomeScreen';
+import { IngredientCaptureScreen } from './components/IngredientCaptureScreen';
+import { RecipeDetailScreen } from './components/RecipeDetailScreen';
+import { MealCompletionScreen } from './components/MealCompletionScreen';
+import { MealPrepScreen } from './components/MealPrepScreen';
+import { ProgressScreen } from './components/ProgressScreen';
+import { SettingsScreen } from './components/SettingsScreen';
+import { WeeklyPlanScreen } from './components/WeeklyPlanScreen';
 import { NavigationBar } from './components/NavigationBar';
 import { RecipeImportGuide } from './components/RecipeImportGuide';
-import { IngredientConfirmationScreen } from './screens/IngredientConfirmationScreen';
-import { RecipeSuggestionScreen } from './screens/RecipeSuggestionScreen';
-import { RecipeDiscoveryScreen } from './screens/RecipeDiscoveryScreen';
+import { IngredientConfirmationScreen } from './components/IngredientConfirmationScreen';
+import { RecipeSuggestionScreen } from './components/RecipeSuggestionScreen';
+import { RecipeDiscoveryScreen } from './components/RecipeDiscoveryScreen';
 export function App() {
   const [currentScreen, setCurrentScreen] = useState('recipe-discovery'); // Changed from 'home' to 'recipe-discovery'
   const [showMealCompletion, setShowMealCompletion] = useState(false);
