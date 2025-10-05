@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { BellIcon, HomeIcon, CalendarIcon, SettingsIcon, PlusIcon, CameraIcon, ImportIcon, XIcon, BarChartIcon } from 'lucide-react';
 import { CalendarStrip } from './CalendarStrip';
 import { MealRow } from './MealRow';
@@ -6,6 +6,7 @@ import { ToastNotification } from './ToastNotification';
 import { HealthDashboard } from './HealthDashboard';
 import { MealPrepSetup } from './MealPrepSetup';
 import { RecipeImportGuide } from './RecipeImportGuide';
+import { RecentUploadCard } from './RecentUploadCard';
 interface HomeScreenProps {
   navigateTo: (screen: string) => void;
 }
@@ -86,6 +87,31 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
   const [showPlusOptions, setShowPlusOptions] = useState(false);
   const [touchStart, setTouchStart] = useState(0);
   const [touchEnd, setTouchEnd] = useState(0);
+  const [recentUploads, setRecentUploads] = useState([{
+    id: 1,
+    progress: 100,
+    isComplete: true,
+    timestamp: 'Today, 9:41 AM',
+    ingredients: [{
+      id: 1,
+      name: 'Tomatoes',
+      quantity: '3 medium'
+    }, {
+      id: 2,
+      name: 'Onions',
+      quantity: '2 medium'
+    }, {
+      id: 3,
+      name: 'Bell Peppers',
+      quantity: '1 large'
+    }]
+  }, {
+    id: 2,
+    progress: 68,
+    isComplete: false,
+    timestamp: 'Just now',
+    ingredients: []
+  }]);
   const handleTouchStart = (e: React.TouchEvent) => {
     setTouchStart(e.targetTouches[0].clientX);
   };
@@ -136,6 +162,22 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
       goal: 60
     }
   };
+  const handleViewResults = (uploadId: number) => {
+    navigateTo('ingredient-confirmation');
+  };
+  // Simulate progress update for the incomplete upload
+  useEffect(() => {
+    if (recentUploads.some(upload => !upload.isComplete)) {
+      const interval = setInterval(() => {
+        setRecentUploads(prev => prev.map(upload => !upload.isComplete && upload.progress < 100 ? {
+          ...upload,
+          progress: Math.min(upload.progress + 2, 100),
+          isComplete: upload.progress + 2 >= 100
+        } : upload));
+      }, 300);
+      return () => clearInterval(interval);
+    }
+  }, [recentUploads]);
   return <div className="flex flex-col min-h-screen bg-[#F8F9FA] max-w-[430px] mx-auto">
       {/* Toast Notification */}
       {toast.visible && <ToastNotification message={toast.message} />}
@@ -260,6 +302,15 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
                 </div>
               </div>
             </div>
+            {/* Recent Uploads Section - NEW SECTION */}
+            {recentUploads.length > 0 && <div className="px-6 pt-3 pb-1">
+                <h2 className="text-lg font-bold text-[#1A1A1A] mb-3">
+                  Recent Uploads
+                </h2>
+                <div className="space-y-3 mb-4">
+                  {recentUploads.map(upload => <RecentUploadCard key={upload.id} progress={upload.progress} isComplete={upload.isComplete} timestamp={upload.timestamp} onClick={() => handleViewResults(upload.id)} />)}
+                </div>
+              </div>}
             {/* Meals Section Header - Optimized spacing */}
             <div className="px-6 pt-3 pb-1">
               <h2 className="text-xl font-bold text-[#1A1A1A]">

@@ -52,6 +52,10 @@
   from { stroke-dashoffset: 282.74; }
   to { stroke-dashoffset: 70.685; }
 }
+@keyframes fill-orange-ring {
+  from { stroke-dashoffset: 282.74; }
+  to { stroke-dashoffset: 28.274; }
+}
 .activity-ring {
   transition: stroke-dashoffset 1.5s ease-out;
 }
@@ -63,6 +67,9 @@
 }
 .blue-ring {
   animation: fill-blue-ring 1.5s ease-out forwards;
+}
+.orange-ring {
+  animation: fill-orange-ring 1.5s ease-out forwards;
 }
 /* Custom Classes */
 .animate-bounce-in {
@@ -88,6 +95,14 @@
 }
 .animate-slide-up {
   animation: slide-up 0.3s ease-out forwards;
+}
+/* New Animation for Scale In */
+@keyframes scale-in {
+  0% { transform: scale(0); opacity: 0; }
+  100% { transform: scale(1); opacity: 1; }
+}
+.animate-scale-in {
+  animation: scale-in 0.25s ease-out forwards;
 }
 /* Safe Area Support */
 .safe-area-bottom {

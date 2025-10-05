@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { XIcon, CameraIcon, ImageIcon, SunIcon, LayersIcon, HandIcon } from 'lucide-react';
+import { XIcon, CameraIcon, ImageIcon, SunIcon, LayersIcon, HandIcon, SettingsIcon } from 'lucide-react';
+import { IngredientAnalysisModal } from './IngredientAnalysisModal';
 interface IngredientCaptureScreenProps {
   navigateTo: (screen: string) => void;
 }
@@ -7,6 +8,18 @@ export const IngredientCaptureScreen: React.FC<IngredientCaptureScreenProps> = (
   navigateTo
 }) => {
   const [activeTab, setActiveTab] = useState('fridge');
+  const [showAnalysisModal, setShowAnalysisModal] = useState(false);
+  const [testMode, setTestMode] = useState(false);
+  const handleCapture = () => {
+    // Simulate taking a photo
+    setShowAnalysisModal(true);
+  };
+  const handleAnalysisComplete = (ingredients: any[]) => {
+    console.log('Analysis complete with ingredients:', ingredients);
+    setShowAnalysisModal(false);
+    // Navigate to the confirmation screen with the detected ingredients
+    navigateTo('ingredient-confirmation');
+  };
   return <div className="flex flex-col min-h-screen bg-[#F4F1DE]">
       {/* Status Bar */}
       <div className="flex justify-between items-center px-4 py-2 bg-[#F4F1DE] text-[#1A3A3A]">
@@ -22,9 +35,14 @@ export const IngredientCaptureScreen: React.FC<IngredientCaptureScreenProps> = (
         <h1 className="text-xl font-bold text-[#1A3A3A]">
           Capture Ingredients
         </h1>
-        <button className="p-2 text-[#1A3A3A]" onClick={() => navigateTo('home')}>
-          <XIcon size={24} />
-        </button>
+        <div className="flex items-center">
+          <button className={`mr-2 px-3 py-1 rounded-full text-xs ${testMode ? 'bg-[#FF6B6B] text-white' : 'bg-gray-200 text-[#1A3A3A]'}`} onClick={() => setTestMode(!testMode)}>
+            {testMode ? 'Test Mode ON' : 'Test Mode'}
+          </button>
+          <button className="p-2 text-[#1A3A3A]" onClick={() => navigateTo('home')}>
+            <XIcon size={24} />
+          </button>
+        </div>
       </header>
       {/* Tab Navigation */}
       <div className="px-6 mb-4">
@@ -100,9 +118,27 @@ export const IngredientCaptureScreen: React.FC<IngredientCaptureScreenProps> = (
           </div>
         </div>
       </div>
+      {/* Test Mode Controls - Only visible in test mode */}
+      {testMode && <div className="px-6 mb-6 p-4 bg-red-50 rounded-xl border border-red-200">
+          <h3 className="font-medium text-red-800 mb-2">Test Mode Controls</h3>
+          <p className="text-sm text-red-700 mb-3">
+            Use these buttons to test the app flow manually:
+          </p>
+          <div className="flex flex-wrap gap-2">
+            <button onClick={handleCapture} className="px-3 py-2 bg-red-600 text-white rounded-lg text-sm">
+              1. Open Analysis Modal
+            </button>
+            <button onClick={() => navigateTo('ingredient-confirmation')} className="px-3 py-2 bg-red-600 text-white rounded-lg text-sm">
+              2. Skip to Confirmation
+            </button>
+            <button onClick={() => navigateTo('recipe-suggestions')} className="px-3 py-2 bg-red-600 text-white rounded-lg text-sm">
+              3. Skip to Recipes
+            </button>
+          </div>
+        </div>}
       {/* Capture Button */}
       <div className="flex flex-col items-center px-6 mt-auto mb-6">
-        <button onClick={() => navigateTo('ingredient-confirmation')} className="w-20 h-20 bg-[#FF6B6B] rounded-full flex items-center justify-center mb-4 shadow-lg hover:bg-opacity-90 transition-transform active:scale-95">
+        <button onClick={handleCapture} className="w-20 h-20 bg-[#FF6B6B] rounded-full flex items-center justify-center mb-4 shadow-lg hover:bg-opacity-90 transition-transform active:scale-95">
           <div className="w-16 h-16 border-4 border-white rounded-full"></div>
         </button>
         <button className="flex items-center text-[#1A3A3A] font-medium hover:opacity-80 transition-opacity">
@@ -110,6 +146,8 @@ export const IngredientCaptureScreen: React.FC<IngredientCaptureScreenProps> = (
           Upload from Gallery
         </button>
       </div>
+      {/* Analysis Modal */}
+      <IngredientAnalysisModal isOpen={showAnalysisModal} onClose={() => setShowAnalysisModal(false)} onComplete={handleAnalysisComplete} testMode={testMode} />
       {/* Add the animations to the global styles */}
       <style jsx global>{`
         @keyframes scan {

@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { FootprintsIcon, TimerIcon, FlameIcon, Dumbbell, HeartIcon, BedIcon, MapPinIcon } from 'lucide-react';
+import { ActivityRings } from './ActivityRings';
 interface HealthDashboardProps {
   onSwipe: () => void;
 }
@@ -53,6 +54,10 @@ export const HealthDashboard: React.FC<HealthDashboardProps> = ({
       quality: 'Good',
       bedtime: '11:30 PM',
       wakeup: '7:00 AM'
+    },
+    stand: {
+      current: 9,
+      goal: 12
     }
   };
   // Handle touch events for swipe
@@ -72,9 +77,6 @@ export const HealthDashboard: React.FC<HealthDashboardProps> = ({
     setTouchStart(0);
     setTouchEnd(0);
   };
-  // Calculate the circumference for a circle with radius 45
-  const circleRadius = 45;
-  const circumference = 2 * Math.PI * circleRadius;
   return <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-5 animate-fade-in overflow-y-auto" style={{
     maxHeight: 'calc(100vh - 240px)'
   }} // Increased height
@@ -84,93 +86,14 @@ export const HealthDashboard: React.FC<HealthDashboardProps> = ({
           Activity Summary
         </h2>
       </div>
-      {/* Activity Rings - Optimized spacing */}
-      <div className="flex items-center space-x-5 mb-4">
-        {/* Activity Rings - Enhanced version with better text positioning */}
-        <div className="relative w-24 h-24">
-          {/* Stand Ring (outer) */}
-          <svg className="absolute inset-0 w-full h-full -rotate-90" viewBox="0 0 100 100">
-            <circle cx="50" cy="50" r={circleRadius} fill="none" stroke="#E0E0E0" strokeWidth="8" />
-            <circle cx="50" cy="50" r={circleRadius} fill="none" stroke="#3498db" strokeWidth="8" strokeDasharray={circumference} strokeDashoffset={circumference * (1 - healthData.activityRings.stand / 100)} strokeLinecap="round" className="activity-ring blue-ring" />
-          </svg>
-          {/* Exercise Ring (middle) */}
-          <svg className="absolute inset-0 w-full h-full -rotate-90 scale-[0.75]" viewBox="0 0 100 100">
-            <circle cx="50" cy="50" r={circleRadius} fill="none" stroke="#E0E0E0" strokeWidth="8" />
-            <circle cx="50" cy="50" r={circleRadius} fill="none" stroke="#2ecc71" strokeWidth="8" strokeDasharray={circumference} strokeDashoffset={circumference * (1 - healthData.activityRings.exercise / 100)} strokeLinecap="round" className="activity-ring green-ring" />
-          </svg>
-          {/* Move Ring (inner) */}
-          <svg className="absolute inset-0 w-full h-full -rotate-90 scale-[0.5]" viewBox="0 0 100 100">
-            <circle cx="50" cy="50" r={circleRadius} fill="none" stroke="#E0E0E0" strokeWidth="8" />
-            <circle cx="50" cy="50" r={circleRadius} fill="none" stroke="#e74c3c" strokeWidth="8" strokeDasharray={circumference} strokeDashoffset={circumference * (1 - healthData.activityRings.move / 100)} strokeLinecap="round" className="activity-ring red-ring" />
-          </svg>
-          {/* Improved text positioning with background for better readability */}
-          <div className="absolute inset-0 flex flex-col items-center justify-center text-center">
-            <div className="bg-white bg-opacity-80 rounded-full w-16 h-16 flex flex-col items-center justify-center">
-              <p className="text-xl font-bold text-[#1A1A1A] leading-none">
-                75%
-              </p>
-              <p className="text-[10px] text-[#757575] leading-tight">
-                daily goals
-              </p>
-            </div>
-          </div>
-        </div>
-        <div className="flex-1 space-y-3">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center">
-              <div className="w-6 h-6 rounded-full bg-red-100 flex items-center justify-center mr-2">
-                <FlameIcon size={14} className="text-red-500" />
-              </div>
-              <span className="text-sm text-[#757575]">Move</span>
-            </div>
-            <span className="text-sm font-medium">
-              {healthData.caloriesBurned.current} cal
-            </span>
-          </div>
-          <div className="flex items-center justify-between">
-            <div className="flex items-center">
-              <div className="w-6 h-6 rounded-full bg-green-100 flex items-center justify-center mr-2">
-                <Dumbbell size={14} className="text-green-500" />
-              </div>
-              <span className="text-sm text-[#757575]">Exercise</span>
-            </div>
-            <span className="text-sm font-medium">
-              {healthData.activeMinutes.current} min
-            </span>
-          </div>
-          <div className="flex items-center justify-between">
-            <div className="flex items-center">
-              <div className="w-6 h-6 rounded-full bg-blue-100 flex items-center justify-center mr-2">
-                <FootprintsIcon size={14} className="text-blue-500" />
-              </div>
-              <span className="text-sm text-[#757575]">Steps</span>
-            </div>
-            <span className="text-sm font-medium">
-              {healthData.steps.current.toLocaleString()}
-            </span>
-          </div>
-        </div>
-      </div>
-      {/* Step Progress - Optimized spacing */}
-      <div className="mb-4">
-        <div className="flex justify-between items-center mb-2">
-          <span className="text-sm text-[#757575]">Daily Steps</span>
-          <span className="text-sm font-medium">
-            {Math.round(healthData.steps.current / healthData.steps.goal * 100)}
-            %
-          </span>
-        </div>
-        <div className="w-full h-2 bg-gray-100 rounded-full overflow-hidden">
-          <div className="h-full bg-blue-500 transition-all duration-1000" style={{
-          width: `${healthData.steps.current / healthData.steps.goal * 100}%`
-        }}></div>
-        </div>
-        <div className="flex justify-between mt-1">
-          <span className="text-xs text-[#757575]">0</span>
-          <span className="text-xs text-[#757575]">
-            {healthData.steps.goal.toLocaleString()}
-          </span>
-        </div>
+      {/* Enhanced Activity Rings */}
+      <div className="flex justify-center mb-6">
+        <ActivityRings data={{
+        steps: healthData.steps,
+        activity: healthData.activeMinutes,
+        stand: healthData.stand,
+        calories: healthData.caloriesBurned
+      }} />
       </div>
       {/* Distance Progress - New section */}
       <div className="mb-4">
