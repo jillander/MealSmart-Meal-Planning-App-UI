@@ -782,7 +782,6 @@ export const IngredientConfirmationScreen: React.FC<IngredientConfirmationScreen
           </button>
           <button onClick={() => {
           onConfirm(ingredients);
-          navigateTo('recipe-suggestions');
         }} className="py-4 bg-emerald-500 text-white rounded-xl font-medium hover:bg-emerald-600 flex items-center justify-center shadow-md transition-all w-[60%] text-lg">
             <CheckIcon size={20} className="mr-2" />
             Find Recipes

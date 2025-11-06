@@ -1,87 +1,43 @@
 import React, { useState } from 'react';
-import { ArrowLeftIcon, BookmarkIcon, ClockIcon, FlameIcon, ChefHatIcon, ShareIcon, CheckCircleIcon, CircleIcon, PlayCircleIcon, UsersIcon, CheckIcon, ChevronDownIcon } from 'lucide-react';
-interface RecipeDetailScreenProps {
+import { ArrowLeftIcon, BookmarkIcon, ClockIcon, FlameIcon, ChefHatIcon, ShareIcon, CheckCircleIcon, CircleIcon, PlayCircleIcon, UsersIcon } from 'lucide-react';
+interface RecipeDetailScreenV1Props {
   navigateTo: (screen: string) => void;
   onMarkAsPrepared: () => void;
 }
-export const RecipeDetailScreen: React.FC<RecipeDetailScreenProps> = ({
+export const RecipeDetailScreenV1: React.FC<RecipeDetailScreenV1Props> = ({
   navigateTo,
   onMarkAsPrepared
 }) => {
   const [checkedIngredients, setCheckedIngredients] = useState<number[]>([]);
   const [activeTab, setActiveTab] = useState<'ingredients' | 'instructions'>('ingredients');
-  const [servings, setServings] = useState(2);
-  const [showMealTypeModal, setShowMealTypeModal] = useState(false);
   const ingredients = [{
     id: 1,
-    name: 'chicken breasts',
-    amount: 2,
-    unit: 'pieces',
+    name: '2 chicken breasts',
     available: true
   }, {
     id: 2,
-    name: 'brown rice',
-    amount: 1,
-    unit: 'cup',
+    name: '1 cup brown rice',
     available: true
   }, {
     id: 3,
-    name: 'bell peppers',
-    amount: 2,
-    unit: 'pieces',
+    name: '2 bell peppers',
     available: true
   }, {
     id: 4,
-    name: 'olive oil',
-    amount: 1,
-    unit: 'tbsp',
+    name: '1 tbsp olive oil',
     available: false
   }, {
     id: 5,
-    name: 'garlic cloves',
-    amount: 2,
-    unit: 'pieces',
+    name: '2 cloves garlic',
     available: true
   }, {
     id: 6,
-    name: 'salt and pepper',
-    amount: 1,
-    unit: 'to taste',
+    name: 'Salt and pepper to taste',
     available: true
   }];
   const instructions = ['Preheat oven to 375°F (190°C)', 'Season chicken breasts with salt and pepper', 'Combine rice and 2 cups water in a large oven-safe pan', 'Dice bell peppers and mince garlic', 'Add vegetables and chicken to the pan', 'Drizzle with olive oil and bake for 25-30 minutes', 'Let rest for 5 minutes before serving'];
-  const mealTypes = [{
-    id: 'breakfast',
-    label: 'Breakfast',
-    emoji: '🌅',
-    time: '8:00 AM'
-  }, {
-    id: 'lunch',
-    label: 'Lunch',
-    emoji: '🌞',
-    time: '12:30 PM'
-  }, {
-    id: 'snack',
-    label: 'Snack',
-    emoji: '🍎',
-    time: '3:30 PM'
-  }, {
-    id: 'dinner',
-    label: 'Dinner',
-    emoji: '🌙',
-    time: '7:00 PM'
-  }];
   const toggleIngredient = (id: number) => {
     setCheckedIngredients(prev => prev.includes(id) ? prev.filter(i => i !== id) : [...prev, id]);
-  };
-  const adjustServings = (delta: number) => {
-    const newServings = Math.max(1, Math.min(12, servings + delta));
-    setServings(newServings);
-  };
-  const handleLogMeal = (mealType: string) => {
-    setShowMealTypeModal(false);
-    onMarkAsPrepared();
-    // Additional logic to log the meal type can be added here
   };
   return <div className="flex flex-col min-h-screen bg-white">
       {/* Hero Image Section */}
@@ -116,7 +72,6 @@ export const RecipeDetailScreen: React.FC<RecipeDetailScreenProps> = ({
           </div>
         </div>
       </div>
-
       {/* Quick Stats */}
       <div className="grid grid-cols-4 gap-4 px-6 py-6 border-b border-gray-100">
         <div className="text-center">
@@ -144,11 +99,10 @@ export const RecipeDetailScreen: React.FC<RecipeDetailScreenProps> = ({
           <div className="w-12 h-12 mx-auto mb-2 bg-purple-50 rounded-full flex items-center justify-center">
             <UsersIcon size={20} className="text-purple-600" />
           </div>
-          <p className="text-lg font-bold text-gray-900">{servings}</p>
+          <p className="text-lg font-bold text-gray-900">2</p>
           <p className="text-xs text-gray-500">servings</p>
         </div>
       </div>
-
       {/* Video Section */}
       <div className="px-6 py-6 border-b border-gray-100">
         <button className="w-full bg-gradient-to-r from-emerald-500 to-teal-500 rounded-2xl p-6 flex items-center justify-between text-white shadow-lg hover:shadow-xl transition-shadow">
@@ -161,7 +115,6 @@ export const RecipeDetailScreen: React.FC<RecipeDetailScreenProps> = ({
           </div>
         </button>
       </div>
-
       {/* Tab Navigation */}
       <div className="px-6 py-4 border-b border-gray-100 sticky top-0 bg-white z-10">
         <div className="flex space-x-2 bg-gray-100 rounded-full p-1">
@@ -173,49 +126,20 @@ export const RecipeDetailScreen: React.FC<RecipeDetailScreenProps> = ({
           </button>
         </div>
       </div>
-
       {/* Content Area */}
       <div className="flex-1 overflow-y-auto px-6 py-6 pb-32">
-        {activeTab === 'ingredients' ? <div>
-            {/* Servings Adjuster */}
-            <div className="flex items-center justify-between mb-6 p-4 bg-gray-50 rounded-xl">
-              <span className="text-sm font-medium text-gray-700">
-                Adjust servings:
-              </span>
-              <div className="flex items-center space-x-3">
-                <button onClick={() => adjustServings(-1)} disabled={servings <= 1} className="w-10 h-10 bg-white rounded-full flex items-center justify-center hover:bg-gray-100 transition-colors disabled:opacity-50 disabled:cursor-not-allowed shadow-sm">
-                  <span className="text-lg font-bold text-gray-700">−</span>
-                </button>
-                <span className="text-lg font-bold text-gray-900 w-12 text-center">
-                  {servings}
+        {activeTab === 'ingredients' ? <div className="space-y-3">
+            {ingredients.map(ingredient => <button key={ingredient.id} onClick={() => toggleIngredient(ingredient.id)} className="w-full flex items-center p-4 bg-gray-50 rounded-xl hover:bg-gray-100 transition-colors">
+                <div className="w-6 h-6 mr-4 flex-shrink-0">
+                  {checkedIngredients.includes(ingredient.id) ? <CheckCircleIcon size={24} className="text-emerald-500 animate-scale-in" /> : <CircleIcon size={24} className="text-gray-300" />}
+                </div>
+                <span className={`flex-1 text-left ${checkedIngredients.includes(ingredient.id) ? 'line-through text-gray-400' : 'text-gray-900'}`}>
+                  {ingredient.name}
                 </span>
-                <button onClick={() => adjustServings(1)} disabled={servings >= 12} className="w-10 h-10 bg-white rounded-full flex items-center justify-center hover:bg-gray-100 transition-colors disabled:opacity-50 disabled:cursor-not-allowed shadow-sm">
-                  <span className="text-lg font-bold text-gray-700">+</span>
-                </button>
-              </div>
-            </div>
-
-            {/* Ingredients List */}
-            <div className="space-y-3">
-              {ingredients.map(ingredient => {
-            const multiplier = servings / 2;
-            const adjustedAmount = ingredient.unit !== 'to taste' ? Math.round(ingredient.amount * multiplier * 10) / 10 : ingredient.amount;
-            return <button key={ingredient.id} onClick={() => toggleIngredient(ingredient.id)} className="w-full flex items-center p-4 bg-gray-50 rounded-xl hover:bg-gray-100 transition-colors">
-                    <div className="w-6 h-6 mr-4 flex-shrink-0">
-                      {checkedIngredients.includes(ingredient.id) ? <CheckCircleIcon size={24} className="text-emerald-500 animate-scale-in" /> : <CircleIcon size={24} className="text-gray-300" />}
-                    </div>
-                    <span className={`flex-1 text-left ${checkedIngredients.includes(ingredient.id) ? 'line-through text-gray-400' : 'text-gray-900'}`}>
-                      <span className="font-semibold">
-                        {adjustedAmount} {ingredient.unit}
-                      </span>{' '}
-                      {ingredient.name}
-                    </span>
-                    {!ingredient.available && <span className="px-3 py-1 bg-amber-100 text-amber-700 text-xs font-medium rounded-full">
-                        Missing
-                      </span>}
-                  </button>;
-          })}
-            </div>
+                {!ingredient.available && <span className="px-3 py-1 bg-amber-100 text-amber-700 text-xs font-medium rounded-full">
+                    Missing
+                  </span>}
+              </button>)}
           </div> : <div className="space-y-6">
             {instructions.map((instruction, index) => <div key={index} className="flex">
                 <div className="w-10 h-10 flex-shrink-0 bg-gradient-to-br from-emerald-500 to-teal-500 rounded-full flex items-center justify-center text-white font-bold mr-4 shadow-md">
@@ -227,39 +151,11 @@ export const RecipeDetailScreen: React.FC<RecipeDetailScreenProps> = ({
               </div>)}
           </div>}
       </div>
-
-      {/* Fixed Bottom Buttons */}
-      <div className="fixed bottom-0 left-0 right-0 max-w-[430px] mx-auto p-6 bg-gradient-to-t from-white via-white to-transparent space-y-3">
-        <button onClick={onMarkAsPrepared} className="w-full bg-gradient-to-r from-emerald-500 to-teal-500 text-white py-4 rounded-2xl font-semibold text-lg shadow-lg hover:shadow-xl transition-all active:scale-95 flex items-center justify-center">
-          <CheckIcon size={20} className="mr-2" />
+      {/* Fixed Bottom Button */}
+      <div className="fixed bottom-0 left-0 right-0 max-w-[430px] mx-auto p-6 bg-gradient-to-t from-white via-white to-transparent">
+        <button onClick={onMarkAsPrepared} className="w-full bg-gradient-to-r from-emerald-500 to-teal-500 text-white py-4 rounded-2xl font-semibold text-lg shadow-lg hover:shadow-xl transition-all active:scale-95">
           Mark as Prepared
         </button>
-        <button onClick={() => setShowMealTypeModal(true)} className="w-full bg-white border-2 border-emerald-500 text-emerald-600 py-4 rounded-2xl font-semibold text-lg shadow-sm hover:shadow-md transition-all active:scale-95">
-          Log as Meal
-        </button>
       </div>
-
-      {/* Meal Type Selection Modal */}
-      {showMealTypeModal && <div className="fixed inset-0 bg-black/50 flex items-end z-50 animate-fade-in">
-          <div className="bg-white w-full rounded-t-3xl p-6 animate-slide-up max-w-[430px] mx-auto">
-            <div className="flex justify-between items-center mb-6">
-              <h2 className="text-xl font-bold text-gray-900">
-                Log as which meal?
-              </h2>
-              <button onClick={() => setShowMealTypeModal(false)} className="w-8 h-8 flex items-center justify-center rounded-full hover:bg-gray-100 transition-colors">
-                <ChevronDownIcon size={20} className="text-gray-500" />
-              </button>
-            </div>
-            <div className="grid grid-cols-2 gap-3">
-              {mealTypes.map(meal => <button key={meal.id} onClick={() => handleLogMeal(meal.id)} className="p-4 bg-gray-50 rounded-2xl hover:bg-emerald-50 hover:border-emerald-200 border-2 border-transparent transition-all active:scale-95">
-                  <div className="text-4xl mb-2">{meal.emoji}</div>
-                  <p className="font-semibold text-gray-900 mb-1">
-                    {meal.label}
-                  </p>
-                  <p className="text-xs text-gray-500">{meal.time}</p>
-                </button>)}
-            </div>
-          </div>
-        </div>}
     </div>;
 };

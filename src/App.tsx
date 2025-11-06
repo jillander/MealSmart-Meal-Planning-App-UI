@@ -12,10 +12,12 @@ import { RecipeImportGuide } from './components/RecipeImportGuide';
 import { IngredientConfirmationScreen } from './components/IngredientConfirmationScreen';
 import { RecipeSuggestionScreen } from './components/RecipeSuggestionScreen';
 import { RecipeDiscoveryScreen } from './components/RecipeDiscoveryScreen';
+import { RecipeGenerationLoadingScreen } from './components/RecipeGenerationLoadingScreen';
 export function App() {
-  const [currentScreen, setCurrentScreen] = useState('recipe-discovery'); // Changed from 'home' to 'recipe-discovery'
+  const [currentScreen, setCurrentScreen] = useState('home');
   const [showMealCompletion, setShowMealCompletion] = useState(false);
   const [showImportGuide, setShowImportGuide] = useState(false);
+  const [confirmedIngredients, setConfirmedIngredients] = useState<any[]>([]);
   const navigateTo = (screen: string) => {
     setCurrentScreen(screen);
   };
@@ -24,6 +26,7 @@ export function App() {
       <style jsx global>{`
         @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&family=Open+Sans:wght@400;600&display=swap');
       `}</style>
+
       <div className="max-w-[430px] mx-auto relative min-h-screen pb-[72px]">
         {currentScreen === 'home' && <HomeScreen navigateTo={navigateTo} />}
         {currentScreen === 'ingredient-capture' && <IngredientCaptureScreen navigateTo={navigateTo} />}
@@ -41,11 +44,13 @@ export function App() {
         // Additional import logic here if needed
       }} />}
         {currentScreen === 'ingredient-confirmation' && <IngredientConfirmationScreen navigateTo={navigateTo} onConfirm={ingredients => {
-        console.log('Confirmed ingredients:', ingredients);
-        // Add any additional logic here
+        setConfirmedIngredients(ingredients);
+        navigateTo('recipe-generation-loading');
       }} />}
+        {currentScreen === 'recipe-generation-loading' && <RecipeGenerationLoadingScreen onComplete={() => navigateTo('recipe-discovery')} ingredients={confirmedIngredients.map(ing => ing.name)} />}
         {currentScreen === 'recipe-suggestions' && <RecipeSuggestionScreen navigateTo={navigateTo} />}
         {currentScreen === 'recipe-discovery' && <RecipeDiscoveryScreen navigateTo={navigateTo} />}
+
         <NavigationBar currentScreen={currentScreen} navigateTo={navigateTo} onShowImportGuide={() => setShowImportGuide(true)} />
       </div>
     </div>;
