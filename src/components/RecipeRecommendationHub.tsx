@@ -323,9 +323,13 @@ export const RecipeRecommendationHub: React.FC<
     );
   };
   const handleCollectionClick = (collectionId: string) => {
-    setSelectedCollection(
-      selectedCollection === collectionId ? null : collectionId
-    );
+    // Navigate to category browse screen with collection data
+    const collection = collections.find((c) => c.id === collectionId);
+    if (collection) {
+      // Store the selected category in a way that can be passed to CategoryBrowseScreen
+      // For now, we'll use the navigateTo function with a special format
+      navigateTo(`category-browse:${collectionId}:${collection.label}`);
+    }
   };
   return (
     <div className="flex flex-col min-h-screen bg-[#F8F9FA]">

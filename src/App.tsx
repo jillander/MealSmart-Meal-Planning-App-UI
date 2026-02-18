@@ -12,12 +12,29 @@ import { RecipeImportGuide } from './components/RecipeImportGuide';
 import { IngredientConfirmationScreen } from './components/IngredientConfirmationScreen';
 import { RecipeSuggestionScreen } from './components/RecipeSuggestionScreen';
 import { RecipeRecommendationHub } from './components/RecipeRecommendationHub';
+import { CategoryBrowseScreen } from './components/CategoryBrowseScreen';
 export function App() {
-  const [currentScreen, setCurrentScreen] = useState('recipe-discovery'); // Changed from 'home' to 'recipe-discovery'
+  const [currentScreen, setCurrentScreen] = useState('recipe-discovery');
   const [showMealCompletion, setShowMealCompletion] = useState(false);
   const [showImportGuide, setShowImportGuide] = useState(false);
+  const [categoryData, setCategoryData] = useState<{
+    id: string;
+    label: string;
+  } | null>(null);
   const navigateTo = (screen: string) => {
-    setCurrentScreen(screen);
+    // Handle category browse navigation with data
+    if (screen.startsWith('category-browse:')) {
+      const parts = screen.split(':');
+      const categoryId = parts[1];
+      const categoryLabel = parts[2];
+      setCategoryData({
+        id: categoryId,
+        label: categoryLabel
+      });
+      setCurrentScreen('category-browse');
+    } else {
+      setCurrentScreen(screen);
+    }
   };
   return (
     <div className="w-full min-h-screen bg-[#F8F9FA] font-['Roboto']">
@@ -79,6 +96,13 @@ export function App() {
         }
         {currentScreen === 'recipe-discovery' &&
         <RecipeRecommendationHub navigateTo={navigateTo} />
+        }
+        {currentScreen === 'category-browse' && categoryData &&
+        <CategoryBrowseScreen
+          navigateTo={navigateTo}
+          categoryId={categoryData.id}
+          categoryLabel={categoryData.label} />
+
         }
         <NavigationBar
           currentScreen={currentScreen}
