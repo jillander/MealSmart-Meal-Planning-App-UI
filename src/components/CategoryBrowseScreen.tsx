@@ -6,8 +6,12 @@ import {
   HeartIcon,
   BookmarkIcon,
   ChevronDownIcon,
-  XIcon } from
+  XIcon,
+  PlusIcon } from
 'lucide-react';
+import { AddToMealPlanModal } from './AddToMealPlanModal';
+import { ToastNotification } from './ToastNotification';
+import { useMealPlan } from '../contexts/MealPlanContext';
 interface CategoryBrowseScreenProps {
   navigateTo: (screen: string) => void;
   categoryId: string;
@@ -37,6 +41,18 @@ export const CategoryBrowseScreen: React.FC<CategoryBrowseScreenProps> = ({
     'match');
   const [savedRecipes, setSavedRecipes] = useState<string[]>([]);
   const [likedRecipes, setLikedRecipes] = useState<string[]>([]);
+  const [showAddToMealPlan, setShowAddToMealPlan] = useState(false);
+  const [selectedRecipeForPlan, setSelectedRecipeForPlan] =
+  useState<Recipe | null>(null);
+  const [toast, setToast] = useState<{
+    message: string;
+    visible: boolean;
+  }>({
+    message: '',
+    visible: false
+  });
+  // Use the meal plan context
+  const { addMeal } = useMealPlan();
   // Mock recipe data based on category
   const getRecipesByCategory = (categoryId: string): Recipe[] => {
     const recipeDatabase: Record<string, Recipe[]> = {
@@ -571,6 +587,46 @@ export const CategoryBrowseScreen: React.FC<CategoryBrowseScreenProps> = ({
     [...current, recipeId]
     );
   };
+  const showToast = (message: string) => {
+    setToast({
+      message,
+      visible: true
+    });
+    setTimeout(
+      () =>
+      setToast({
+        message: '',
+        visible: false
+      }),
+      3000
+    );
+  };
+  const handleAddToMealPlan = (recipe: Recipe) => {
+    setSelectedRecipeForPlan(recipe);
+    setShowAddToMealPlan(true);
+  };
+  const handleConfirmAddToMealPlan = (
+  date: Date,
+  mealType: 'breakfast' | 'lunch' | 'dinner') =>
+  {
+    if (selectedRecipeForPlan) {
+      // Add the meal to the context
+      addMeal(
+        {
+          id: selectedRecipeForPlan.id,
+          title: selectedRecipeForPlan.title,
+          image: selectedRecipeForPlan.image,
+          cookingTime: selectedRecipeForPlan.cookingTime,
+          calories: selectedRecipeForPlan.calories
+        },
+        date,
+        mealType
+      );
+      showToast(
+        `${selectedRecipeForPlan.title} added to ${mealType} on ${date.toLocaleDateString()}`
+      );
+    }
+  };
   // Filter and sort recipes
   const getFilteredAndSortedRecipes = () => {
     let filtered = recipes;
@@ -601,6 +657,9 @@ export const CategoryBrowseScreen: React.FC<CategoryBrowseScreenProps> = ({
   const filteredRecipes = getFilteredAndSortedRecipes();
   return (
     <div className="flex flex-col min-h-screen bg-[#F8F9FA]">
+      {/* Toast Notification */}
+      {toast.visible && <ToastNotification message={toast.message} />}
+
       {/* Status Bar */}
       <div className="flex justify-between items-center px-4 py-3 bg-white text-[#1A1A1A]">
         <span className="text-sm font-medium">9:41 AM</span>
@@ -690,71 +749,39 @@ export const CategoryBrowseScreen: React.FC<CategoryBrowseScreenProps> = ({
             {filteredRecipes.map((recipe) =>
           <div
             key={recipe.id}
-            className="bg-white rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-all duration-200 cursor-pointer"
-            onClick={() => navigateTo('recipe-detail')}>
+            className="bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition-all duration-200">
 
                 {/* Recipe Image */}
-                <div className="relative">
+                <div
+              className="relative cursor-pointer"
+              onClick={() => navigateTo('recipe-detail')}>
+
                   <img
                 src={recipe.image}
                 alt={recipe.title}
-                className="w-full h-36 object-cover" />
+                className="w-full h-40 object-cover" />
 
-                  <div className="absolute top-2 left-2 bg-white rounded-full px-2 py-1 flex items-center shadow-md">
-                    <span className="text-[#4CAF50] font-semibold text-xs">
-                      {recipe.matchPercentage}%
-                    </span>
-                  </div>
+                  {/* Subtle + button in top right */}
                   <button
                 onClick={(e) => {
                   e.stopPropagation();
-                  toggleLike(recipe.id);
+                  handleAddToMealPlan(recipe);
                 }}
-                className="absolute top-2 right-2 w-8 h-8 bg-white rounded-full flex items-center justify-center shadow-md hover:scale-110 transition-transform"
-                aria-label="Like recipe">
+                className="absolute top-3 right-3 w-8 h-8 bg-white/90 backdrop-blur-sm rounded-full flex items-center justify-center shadow-md hover:bg-white hover:scale-110 transition-all duration-200"
+                aria-label="Add to meal plan">
 
-                    <HeartIcon
-                  size={16}
-                  className={`${likedRecipes.includes(recipe.id) ? 'text-red-500 fill-red-500' : 'text-gray-400'} transition-colors`} />
-
+                    <PlusIcon size={18} className="text-[#1A1A1A]" />
                   </button>
                 </div>
 
                 {/* Recipe Info */}
                 <div className="p-3">
-                  <h3 className="font-medium text-sm text-[#1A1A1A] mb-2 line-clamp-2">
+                  <h3 className="font-semibold text-sm text-[#1A1A1A] mb-2 line-clamp-2">
                     {recipe.title}
                   </h3>
-                  <div className="flex items-center text-xs text-[#757575] mb-2">
+                  <div className="flex items-center text-xs text-[#64748B]">
                     <ClockIcon size={12} className="mr-1" />
                     <span>{recipe.cookingTime}</span>
-                    <span className="mx-1.5">•</span>
-                    <span>{recipe.calories} cal</span>
-                  </div>
-                  <div className="flex items-center justify-between">
-                    <div className="flex flex-wrap gap-1">
-                      {recipe.tags.slice(0, 1).map((tag) =>
-                  <span
-                    key={tag}
-                    className="px-2 py-0.5 bg-gray-100 rounded-full text-xs text-[#64748B]">
-
-                          {tag}
-                        </span>
-                  )}
-                    </div>
-                    <button
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    toggleSave(recipe.id);
-                  }}
-                  className="hover:scale-110 transition-transform"
-                  aria-label="Save recipe">
-
-                      <BookmarkIcon
-                    size={16}
-                    className={`${savedRecipes.includes(recipe.id) ? 'text-[#4CAF50] fill-[#4CAF50]' : 'text-gray-400'} transition-colors`} />
-
-                    </button>
                   </div>
                 </div>
               </div>
@@ -834,6 +861,24 @@ export const CategoryBrowseScreen: React.FC<CategoryBrowseScreenProps> = ({
             </div>
           </div>
         </div>
+      }
+
+      {/* Add to Meal Plan Modal */}
+      {showAddToMealPlan && selectedRecipeForPlan &&
+      <AddToMealPlanModal
+        recipe={{
+          id: selectedRecipeForPlan.id,
+          title: selectedRecipeForPlan.title,
+          image: selectedRecipeForPlan.image,
+          cookingTime: selectedRecipeForPlan.cookingTime,
+          calories: selectedRecipeForPlan.calories
+        }}
+        onClose={() => {
+          setShowAddToMealPlan(false);
+          setSelectedRecipeForPlan(null);
+        }}
+        onAdd={handleConfirmAddToMealPlan} />
+
       }
     </div>);
 

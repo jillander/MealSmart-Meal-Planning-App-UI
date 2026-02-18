@@ -15,8 +15,12 @@ import {
   PackageIcon,
   DumbbellIcon,
   UtensilsIcon,
-  SnowflakeIcon } from
+  SnowflakeIcon,
+  PlusIcon } from
 'lucide-react';
+import { AddToMealPlanModal } from './AddToMealPlanModal';
+import { ToastNotification } from './ToastNotification';
+import { useMealPlan } from '../contexts/MealPlanContext';
 interface RecipeRecommendationHubProps {
   navigateTo: (screen: string) => void;
 }
@@ -45,6 +49,20 @@ export const RecipeRecommendationHub: React.FC<
   const [selectedCollection, setSelectedCollection] = useState<string | null>(
     null
   );
+  const [savedRecipes, setSavedRecipes] = useState<string[]>([]);
+  const [likedRecipes, setLikedRecipes] = useState<string[]>([]);
+  const [showAddToMealPlan, setShowAddToMealPlan] = useState(false);
+  const [selectedRecipeForPlan, setSelectedRecipeForPlan] =
+  useState<Recipe | null>(null);
+  const [toast, setToast] = useState<{
+    message: string;
+    visible: boolean;
+  }>({
+    message: '',
+    visible: false
+  });
+  // Use the meal plan context
+  const { addMeal } = useMealPlan();
   const collections: CollectionShortcut[] = [
   {
     id: 'high-protein',
@@ -306,8 +324,6 @@ export const RecipeRecommendationHub: React.FC<
     [...current, filter]
     );
   };
-  const [savedRecipes, setSavedRecipes] = useState<string[]>([]);
-  const [likedRecipes, setLikedRecipes] = useState<string[]>([]);
   const toggleSave = (recipeId: string) => {
     setSavedRecipes((current) =>
     current.includes(recipeId) ?
@@ -331,8 +347,51 @@ export const RecipeRecommendationHub: React.FC<
       navigateTo(`category-browse:${collectionId}:${collection.label}`);
     }
   };
+  const showToast = (message: string) => {
+    setToast({
+      message,
+      visible: true
+    });
+    setTimeout(
+      () =>
+      setToast({
+        message: '',
+        visible: false
+      }),
+      3000
+    );
+  };
+  const handleAddToMealPlan = (recipe: Recipe) => {
+    setSelectedRecipeForPlan(recipe);
+    setShowAddToMealPlan(true);
+  };
+  const handleConfirmAddToMealPlan = (
+  date: Date,
+  mealType: 'breakfast' | 'lunch' | 'dinner') =>
+  {
+    if (selectedRecipeForPlan) {
+      // Add the meal to the context
+      addMeal(
+        {
+          id: selectedRecipeForPlan.id,
+          title: selectedRecipeForPlan.title,
+          image: selectedRecipeForPlan.image,
+          cookingTime: selectedRecipeForPlan.cookingTime,
+          calories: selectedRecipeForPlan.calories
+        },
+        date,
+        mealType
+      );
+      showToast(
+        `${selectedRecipeForPlan.title} added to ${mealType} on ${date.toLocaleDateString()}`
+      );
+    }
+  };
   return (
     <div className="flex flex-col min-h-screen bg-[#F8F9FA]">
+      {/* Toast Notification */}
+      {toast.visible && <ToastNotification message={toast.message} />}
+
       {/* Status Bar */}
       <div className="flex justify-between items-center px-4 py-3 bg-white text-[#1A1A1A]">
         <span className="text-sm font-medium">9:41 AM</span>
@@ -424,55 +483,36 @@ export const RecipeRecommendationHub: React.FC<
               {forYouRecipes.map((recipe) =>
               <div
                 key={recipe.id}
-                className="flex-shrink-0 w-[260px] bg-white rounded-xl shadow-sm overflow-hidden hover:shadow-md transition-shadow duration-200 cursor-pointer"
-                onClick={() => navigateTo('recipe-detail')}>
+                className="flex-shrink-0 w-[180px] bg-white rounded-2xl shadow-sm overflow-hidden hover:shadow-md transition-shadow duration-200">
 
-                  <div className="relative">
+                  <div
+                  className="relative cursor-pointer"
+                  onClick={() => navigateTo('recipe-detail')}>
+
                     <img
                     src={recipe.image}
                     alt={recipe.title}
-                    className="w-full h-36 object-cover" />
+                    className="w-full h-[180px] object-cover" />
 
-                    <div className="absolute top-3 left-3 bg-white rounded-full px-2 py-1 flex items-center shadow-md">
-                      <span className="text-[#4CAF50] font-semibold text-sm">
-                        {recipe.matchPercentage}%
-                      </span>
-                      <span className="text-xs ml-1 text-gray-500">match</span>
-                    </div>
+                    {/* Subtle + button in top right */}
+                    <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleAddToMealPlan(recipe);
+                    }}
+                    className="absolute top-3 right-3 w-8 h-8 bg-white/90 backdrop-blur-sm rounded-full flex items-center justify-center shadow-md hover:bg-white hover:scale-110 transition-all duration-200"
+                    aria-label="Add to meal plan">
+
+                      <PlusIcon size={18} className="text-[#1A1A1A]" />
+                    </button>
                   </div>
                   <div className="p-3">
-                    <h3 className="font-medium text-[#1A1A1A] mb-1 truncate">
+                    <h3 className="font-semibold text-[#1A1A1A] text-sm mb-1 line-clamp-2">
                       {recipe.title}
                     </h3>
-                    <div className="flex items-center text-sm text-[#757575] mb-2">
-                      <ClockIcon size={14} className="mr-1" />
+                    <div className="flex items-center text-xs text-[#64748B]">
+                      <ClockIcon size={12} className="mr-1" />
                       <span>{recipe.cookingTime}</span>
-                      <span className="mx-2">•</span>
-                      <span>{recipe.calories} cal</span>
-                    </div>
-                    <div className="flex items-center justify-between">
-                      <div className="flex space-x-1">
-                        {recipe.tags.slice(0, 2).map((tag) =>
-                      <span
-                        key={tag}
-                        className="px-2 py-0.5 bg-gray-100 rounded-full text-xs text-[#64748B]">
-
-                            {tag}
-                          </span>
-                      )}
-                      </div>
-                      <button
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        toggleLike(recipe.id);
-                      }}
-                      className="text-[#1A1A1A] hover:scale-110 transition-transform">
-
-                        <HeartIcon
-                        size={18}
-                        className={`${likedRecipes.includes(recipe.id) ? 'text-red-500 fill-red-500' : ''}`} />
-
-                      </button>
                     </div>
                   </div>
                 </div>
@@ -502,51 +542,35 @@ export const RecipeRecommendationHub: React.FC<
               {perfectMatchRecipes.map((recipe) =>
               <div
                 key={recipe.id}
-                onClick={() => navigateTo('recipe-detail')}
-                className="flex-shrink-0 w-[280px] bg-white rounded-xl overflow-hidden shadow-sm border-2 border-[#4CAF50] hover:shadow-md transition-all duration-200 cursor-pointer">
+                className="flex-shrink-0 w-[180px] bg-white rounded-2xl overflow-hidden shadow-sm border border-[#4CAF50]/20 hover:shadow-md transition-all duration-200">
 
-                  <img
-                  src={recipe.image}
-                  alt={recipe.title}
-                  className="w-full h-40 object-cover" />
+                  <div
+                  className="relative cursor-pointer"
+                  onClick={() => navigateTo('recipe-detail')}>
 
+                    <img
+                    src={recipe.image}
+                    alt={recipe.title}
+                    className="w-full h-[180px] object-cover" />
+
+                    <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleAddToMealPlan(recipe);
+                    }}
+                    className="absolute top-3 right-3 w-8 h-8 bg-white/90 backdrop-blur-sm rounded-full flex items-center justify-center shadow-md hover:bg-white hover:scale-110 transition-all duration-200"
+                    aria-label="Add to meal plan">
+
+                      <PlusIcon size={18} className="text-[#1A1A1A]" />
+                    </button>
+                  </div>
                   <div className="p-3">
-                    <div className="flex justify-between items-start mb-2">
-                      <div className="flex-1">
-                        <h3 className="font-medium text-[#1A1A1A] mb-1">
-                          {recipe.title}
-                        </h3>
-                        <div className="flex items-center text-sm text-[#757575]">
-                          <span className="text-[#4CAF50] font-bold">
-                            {recipe.matchPercentage}%
-                          </span>
-                          <span className="mx-2">•</span>
-                          <ClockIcon size={14} className="mr-1" />
-                          <span>{recipe.cookingTime}</span>
-                        </div>
-                      </div>
-                      <button
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        toggleSave(recipe.id);
-                      }}
-                      className="text-[#1A1A1A] hover:scale-110 transition-transform">
-
-                        <BookmarkIcon
-                        size={18}
-                        className={`${savedRecipes.includes(recipe.id) ? 'text-[#4CAF50] fill-[#4CAF50]' : ''}`} />
-
-                      </button>
-                    </div>
-                    <div className="flex space-x-1 flex-wrap gap-y-1">
-                      {recipe.tags.map((tag) =>
-                    <span
-                      key={tag}
-                      className="px-2 py-0.5 bg-gray-100 rounded-full text-xs text-[#64748B]">
-
-                          {tag}
-                        </span>
-                    )}
+                    <h3 className="font-semibold text-[#1A1A1A] text-sm mb-1 line-clamp-2">
+                      {recipe.title}
+                    </h3>
+                    <div className="flex items-center text-xs text-[#64748B]">
+                      <ClockIcon size={12} className="mr-1" />
+                      <span>{recipe.cookingTime}</span>
                     </div>
                   </div>
                 </div>
@@ -576,45 +600,35 @@ export const RecipeRecommendationHub: React.FC<
               {quickAndEasyRecipes.map((recipe) =>
               <div
                 key={recipe.id}
-                onClick={() => navigateTo('recipe-detail')}
-                className="flex-shrink-0 w-[280px] bg-white rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-all duration-200 cursor-pointer">
+                className="flex-shrink-0 w-[180px] bg-white rounded-2xl shadow-sm overflow-hidden hover:shadow-md transition-shadow duration-200">
 
-                  <img
-                  src={recipe.image}
-                  alt={recipe.title}
-                  className="w-full h-40 object-cover" />
+                  <div
+                  className="relative cursor-pointer"
+                  onClick={() => navigateTo('recipe-detail')}>
 
+                    <img
+                    src={recipe.image}
+                    alt={recipe.title}
+                    className="w-full h-[180px] object-cover" />
+
+                    <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleAddToMealPlan(recipe);
+                    }}
+                    className="absolute top-3 right-3 w-8 h-8 bg-white/90 backdrop-blur-sm rounded-full flex items-center justify-center shadow-md hover:bg-white hover:scale-110 transition-all duration-200"
+                    aria-label="Add to meal plan">
+
+                      <PlusIcon size={18} className="text-[#1A1A1A]" />
+                    </button>
+                  </div>
                   <div className="p-3">
-                    <div className="flex justify-between items-start mb-2">
-                      <div className="flex-1">
-                        <h3 className="font-medium text-[#1A1A1A] mb-1">
-                          {recipe.title}
-                        </h3>
-                        <div className="flex items-center text-sm text-[#757575]">
-                          <ClockIcon
-                          size={14}
-                          className="mr-1 text-[#2196F3]" />
-
-                          <span className="text-[#2196F3] font-bold">
-                            {recipe.cookingTime}
-                          </span>
-                          <span className="mx-2">•</span>
-                          <span>{recipe.calories} cal</span>
-                        </div>
-                      </div>
-                      <div className="bg-[#2196F3] bg-opacity-10 rounded-full px-2 py-0.5 text-xs text-[#2196F3] font-medium whitespace-nowrap">
-                        Time Saver
-                      </div>
-                    </div>
-                    <div className="flex space-x-1 flex-wrap gap-y-1">
-                      {recipe.tags.map((tag) =>
-                    <span
-                      key={tag}
-                      className="px-2 py-0.5 bg-gray-100 rounded-full text-xs text-[#64748B]">
-
-                          {tag}
-                        </span>
-                    )}
+                    <h3 className="font-semibold text-[#1A1A1A] text-sm mb-1 line-clamp-2">
+                      {recipe.title}
+                    </h3>
+                    <div className="flex items-center text-xs text-[#64748B]">
+                      <ClockIcon size={12} className="mr-1" />
+                      <span>{recipe.cookingTime}</span>
                     </div>
                   </div>
                 </div>
@@ -642,29 +656,35 @@ export const RecipeRecommendationHub: React.FC<
               {trendingRecipes.map((recipe) =>
               <div
                 key={recipe.id}
-                onClick={() => navigateTo('recipe-detail')}
-                className="flex-shrink-0 w-[200px] bg-white rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-all duration-200 cursor-pointer">
+                className="flex-shrink-0 w-[180px] bg-white rounded-2xl shadow-sm overflow-hidden hover:shadow-md transition-shadow duration-200">
 
-                  <div className="relative">
+                  <div
+                  className="relative cursor-pointer"
+                  onClick={() => navigateTo('recipe-detail')}>
+
                     <img
                     src={recipe.image}
                     alt={recipe.title}
-                    className="w-full h-28 object-cover" />
+                    className="w-full h-[180px] object-cover" />
 
-                    <div className="absolute top-2 right-2 bg-white rounded-full w-6 h-6 flex items-center justify-center shadow-md">
-                      <FlameIcon size={14} className="text-[#F44336]" />
-                    </div>
+                    <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleAddToMealPlan(recipe);
+                    }}
+                    className="absolute top-3 right-3 w-8 h-8 bg-white/90 backdrop-blur-sm rounded-full flex items-center justify-center shadow-md hover:bg-white hover:scale-110 transition-all duration-200"
+                    aria-label="Add to meal plan">
+
+                      <PlusIcon size={18} className="text-[#1A1A1A]" />
+                    </button>
                   </div>
                   <div className="p-3">
-                    <h3 className="font-medium text-[#1A1A1A] text-sm mb-1 truncate">
+                    <h3 className="font-semibold text-[#1A1A1A] text-sm mb-1 line-clamp-2">
                       {recipe.title}
                     </h3>
-                    <div className="flex items-center text-xs text-[#757575]">
+                    <div className="flex items-center text-xs text-[#64748B]">
                       <ClockIcon size={12} className="mr-1" />
                       <span>{recipe.cookingTime}</span>
-                      <span className="mx-1">•</span>
-                      <ChefHatIcon size={12} className="mr-1" />
-                      <span>{recipe.difficulty}</span>
                     </div>
                   </div>
                 </div>
@@ -695,29 +715,35 @@ export const RecipeRecommendationHub: React.FC<
               {pantryRecipes.map((recipe) =>
               <div
                 key={recipe.id}
-                onClick={() => navigateTo('recipe-detail')}
-                className="flex-shrink-0 w-[280px] bg-white rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-all duration-200 cursor-pointer">
+                className="flex-shrink-0 w-[180px] bg-white rounded-2xl shadow-sm overflow-hidden hover:shadow-md transition-shadow duration-200">
 
-                  <img
-                  src={recipe.image}
-                  alt={recipe.title}
-                  className="w-full h-40 object-cover" />
+                  <div
+                  className="relative cursor-pointer"
+                  onClick={() => navigateTo('recipe-detail')}>
 
+                    <img
+                    src={recipe.image}
+                    alt={recipe.title}
+                    className="w-full h-[180px] object-cover" />
+
+                    <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleAddToMealPlan(recipe);
+                    }}
+                    className="absolute top-3 right-3 w-8 h-8 bg-white/90 backdrop-blur-sm rounded-full flex items-center justify-center shadow-md hover:bg-white hover:scale-110 transition-all duration-200"
+                    aria-label="Add to meal plan">
+
+                      <PlusIcon size={18} className="text-[#1A1A1A]" />
+                    </button>
+                  </div>
                   <div className="p-3">
-                    <div className="flex justify-between items-start mb-2">
-                      <h3 className="font-medium text-[#1A1A1A] flex-1">
-                        {recipe.title}
-                      </h3>
-                      <div className="bg-[#4CAF50] bg-opacity-10 rounded-full px-2 py-0.5 text-xs text-[#4CAF50] font-medium flex items-center ml-2 whitespace-nowrap">
-                        <ShoppingBagIcon size={12} className="mr-1" />
-                        100%
-                      </div>
-                    </div>
-                    <div className="flex items-center text-sm text-[#757575]">
-                      <ClockIcon size={14} className="mr-1" />
+                    <h3 className="font-semibold text-[#1A1A1A] text-sm mb-1 line-clamp-2">
+                      {recipe.title}
+                    </h3>
+                    <div className="flex items-center text-xs text-[#64748B]">
+                      <ClockIcon size={12} className="mr-1" />
                       <span>{recipe.cookingTime}</span>
-                      <span className="mx-2">•</span>
-                      <span>{recipe.difficulty}</span>
                     </div>
                   </div>
                 </div>
@@ -726,6 +752,24 @@ export const RecipeRecommendationHub: React.FC<
           </div>
         </section>
       </div>
+
+      {/* Add to Meal Plan Modal */}
+      {showAddToMealPlan && selectedRecipeForPlan &&
+      <AddToMealPlanModal
+        recipe={{
+          id: selectedRecipeForPlan.id,
+          title: selectedRecipeForPlan.title,
+          image: selectedRecipeForPlan.image,
+          cookingTime: selectedRecipeForPlan.cookingTime,
+          calories: selectedRecipeForPlan.calories
+        }}
+        onClose={() => {
+          setShowAddToMealPlan(false);
+          setSelectedRecipeForPlan(null);
+        }}
+        onAdd={handleConfirmAddToMealPlan} />
+
+      }
     </div>);
 
 };
