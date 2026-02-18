@@ -1,5 +1,11 @@
 import React from 'react';
-import { XIcon, LinkIcon, CameraIcon, ArrowRightIcon, ClipboardIcon } from 'lucide-react';
+import {
+  XIcon,
+  LinkIcon,
+  CameraIcon,
+  ArrowRightIcon,
+  ClipboardIcon } from
+'lucide-react';
 interface RecipeImportGuideProps {
   onClose: () => void;
   onImport: () => void;
@@ -8,11 +14,15 @@ export const RecipeImportGuide: React.FC<RecipeImportGuideProps> = ({
   onClose,
   onImport
 }) => {
-  return <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-6 z-50">
+  return (
+    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-6 z-50">
       <div className="bg-white rounded-2xl w-full max-w-md p-6">
         <div className="flex justify-between items-center mb-4">
           <h2 className="text-xl font-bold text-[#1A1A1A]">Import a Recipe</h2>
-          <button onClick={onClose} className="w-8 h-8 flex items-center justify-center rounded-full hover:bg-gray-100">
+          <button
+            onClick={onClose}
+            className="w-8 h-8 flex items-center justify-center rounded-full hover:bg-gray-100">
+
             <XIcon size={20} />
           </button>
         </div>
@@ -67,9 +77,13 @@ export const RecipeImportGuide: React.FC<RecipeImportGuideProps> = ({
             more!
           </p>
         </div>
-        <button onClick={onImport} className="w-full py-3 bg-[#4CAF50] text-white rounded-full font-medium">
+        <button
+          onClick={onImport}
+          className="w-full py-3 bg-[#4CAF50] text-white rounded-full font-medium">
+
           Continue
         </button>
       </div>
-    </div>;
+    </div>);
+
 };

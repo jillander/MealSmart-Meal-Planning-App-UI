@@ -15,7 +15,8 @@ export const IngredientProgress: React.FC<IngredientProgressProps> = ({
   ingredients
 }) => {
   const percentage = used / total * 100;
-  return <div className="bg-white rounded-xl p-6 shadow-sm">
+  return (
+    <div className="bg-white rounded-xl p-6 shadow-sm">
       <h2 className="text-lg font-medium text-gray-900 mb-4">
         Ingredient Status
       </h2>
@@ -28,9 +29,12 @@ export const IngredientProgress: React.FC<IngredientProgressProps> = ({
           <span>{Math.round(percentage)}%</span>
         </div>
         <div className="w-full h-2 bg-gray-100 rounded-full overflow-hidden">
-          <div className="h-full bg-[#4CAF50] transition-all duration-500" style={{
-          width: `${percentage}%`
-        }}></div>
+          <div
+            className="h-full bg-[#4CAF50] transition-all duration-500"
+            style={{
+              width: `${percentage}%`
+            }}>
+          </div>
         </div>
         <p className="text-sm text-gray-500 mt-2">
           {total - used} ingredients remaining
@@ -38,13 +42,25 @@ export const IngredientProgress: React.FC<IngredientProgressProps> = ({
       </div>
       {/* Ingredient Thumbnails */}
       <div className="flex space-x-2 mb-3">
-        {ingredients.slice(0, 4).map((ingredient, index) => <div key={index} className="w-10 h-10 rounded-full overflow-hidden shadow-sm">
-            <img src={ingredient.image} alt={ingredient.name} className="w-full h-full object-cover" />
-          </div>)}
+        {ingredients.slice(0, 4).map((ingredient, index) =>
+        <div
+          key={index}
+          className="w-10 h-10 rounded-full overflow-hidden shadow-sm">
+
+            <img
+            src={ingredient.image}
+            alt={ingredient.name}
+            className="w-full h-full object-cover" />
+
+          </div>
+        )}
       </div>
       {/* Expiring Alert */}
-      {expiringCount > 0 && <p className="text-sm text-[#F44336] font-medium">
+      {expiringCount > 0 &&
+      <p className="text-sm text-[#F44336] font-medium">
           {expiringCount} items expiring tomorrow
-        </p>}
-    </div>;
+        </p>
+      }
+    </div>);
+
 };

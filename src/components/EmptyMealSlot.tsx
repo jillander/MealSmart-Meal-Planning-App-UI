@@ -36,7 +36,8 @@ export const EmptyMealSlot: React.FC<EmptyMealSlotProps> = ({
         return '';
     }
   };
-  return <div className="bg-white rounded-2xl p-6 border-2 border-dashed border-[#E0E0E0] hover:border-[#4CAF50] transition-all duration-300 animate-breathe">
+  return (
+    <div className="bg-white rounded-2xl p-6 border-2 border-dashed border-[#E0E0E0] hover:border-[#4CAF50] transition-all duration-300 animate-breathe">
       <div className="flex items-center justify-between">
         <div className="flex items-center space-x-4">
           <div className="w-12 h-12 rounded-full bg-[#F8F9FA] flex items-center justify-center">
@@ -52,9 +53,13 @@ export const EmptyMealSlot: React.FC<EmptyMealSlotProps> = ({
             </p>
           </div>
         </div>
-        <button onClick={onCapture} className="w-10 h-10 rounded-full bg-[#4CAF50] text-white flex items-center justify-center hover:bg-[#45a049] transition-all duration-200 transform hover:scale-110">
+        <button
+          onClick={onCapture}
+          className="w-10 h-10 rounded-full bg-[#4CAF50] text-white flex items-center justify-center hover:bg-[#45a049] transition-all duration-200 transform hover:scale-110">
+
           <PlusIcon size={20} />
         </button>
       </div>
-    </div>;
+    </div>);
+
 };

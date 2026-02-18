@@ -1,5 +1,13 @@
 import React, { useState } from 'react';
-import { ArrowLeftIcon, UserIcon, CreditCardIcon, BellIcon, HelpCircleIcon, LogOutIcon, ChevronRightIcon } from 'lucide-react';
+import {
+  ArrowLeftIcon,
+  UserIcon,
+  CreditCardIcon,
+  BellIcon,
+  HelpCircleIcon,
+  LogOutIcon,
+  ChevronRightIcon } from
+'lucide-react';
 interface SettingsScreenProps {
   navigateTo: (screen: string) => void;
 }
@@ -10,9 +18,11 @@ export const SettingsScreen: React.FC<SettingsScreenProps> = ({
     name: 'John Doe',
     email: 'john@example.com',
     plan: 'Premium',
-    avatar: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80'
+    avatar:
+    'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80'
   });
-  return <div className="flex flex-col min-h-screen bg-[#F8F9FA] max-w-[430px] mx-auto">
+  return (
+    <div className="flex flex-col min-h-screen bg-[#F8F9FA] max-w-[430px] mx-auto">
       {/* Status Bar */}
       <div className="flex justify-between items-center px-4 py-3 bg-white text-[#1A1A1A] border-b border-gray-100">
         <span className="text-sm font-medium">9:41 AM</span>
@@ -28,7 +38,11 @@ export const SettingsScreen: React.FC<SettingsScreenProps> = ({
       {/* Profile Section */}
       <div className="px-6 py-4">
         <div className="bg-white rounded-xl p-4 flex items-center mb-6">
-          <img src={user.avatar} alt={user.name} className="w-16 h-16 rounded-full object-cover" />
+          <img
+            src={user.avatar}
+            alt={user.name}
+            className="w-16 h-16 rounded-full object-cover" />
+
           <div className="ml-4">
             <h2 className="font-medium text-[#1A1A1A]">{user.name}</h2>
             <p className="text-sm text-[#757575]">{user.email}</p>
@@ -92,5 +106,6 @@ export const SettingsScreen: React.FC<SettingsScreenProps> = ({
           <span className="font-medium">Log Out</span>
         </button>
       </div>
-    </div>;
+    </div>);
+
 };

@@ -15,7 +15,8 @@
     "lucide-react": "^0.441.0",
     "react-beautiful-dnd": "^13.1.1",
     "react-intersection-observer": "^9.13.1",
-    "react-responsive-masonry": "^2.3.0"
+    "react-responsive-masonry": "^2.3.0",
+    "@emotion/react": "^11.13.3"
   },
   "devDependencies": {
     "@types/node": "^20.11.18",

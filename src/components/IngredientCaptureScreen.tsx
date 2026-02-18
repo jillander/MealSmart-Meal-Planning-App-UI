@@ -1,12 +1,20 @@
 import React, { useState } from 'react';
-import { XIcon, CameraIcon, ImageIcon, SunIcon, LayersIcon, HandIcon, SettingsIcon } from 'lucide-react';
+import {
+  XIcon,
+  CameraIcon,
+  ImageIcon,
+  SunIcon,
+  LayersIcon,
+  HandIcon,
+  SettingsIcon } from
+'lucide-react';
 import { IngredientAnalysisModal } from './IngredientAnalysisModal';
 interface IngredientCaptureScreenProps {
   navigateTo: (screen: string) => void;
 }
-export const IngredientCaptureScreen: React.FC<IngredientCaptureScreenProps> = ({
-  navigateTo
-}) => {
+export const IngredientCaptureScreen: React.FC<
+  IngredientCaptureScreenProps> =
+({ navigateTo }) => {
   const [activeTab, setActiveTab] = useState('fridge');
   const [showAnalysisModal, setShowAnalysisModal] = useState(false);
   const [testMode, setTestMode] = useState(false);
@@ -20,7 +28,8 @@ export const IngredientCaptureScreen: React.FC<IngredientCaptureScreenProps> = (
     // Navigate to the confirmation screen with the detected ingredients
     navigateTo('ingredient-confirmation');
   };
-  return <div className="flex flex-col min-h-screen bg-[#F4F1DE]">
+  return (
+    <div className="flex flex-col min-h-screen bg-[#F4F1DE]">
       {/* Status Bar */}
       <div className="flex justify-between items-center px-4 py-2 bg-[#F4F1DE] text-[#1A3A3A]">
         <span className="text-sm">9:41 AM</span>
@@ -36,10 +45,16 @@ export const IngredientCaptureScreen: React.FC<IngredientCaptureScreenProps> = (
           Capture Ingredients
         </h1>
         <div className="flex items-center">
-          <button className={`mr-2 px-3 py-1 rounded-full text-xs ${testMode ? 'bg-[#FF6B6B] text-white' : 'bg-gray-200 text-[#1A3A3A]'}`} onClick={() => setTestMode(!testMode)}>
+          <button
+            className={`mr-2 px-3 py-1 rounded-full text-xs ${testMode ? 'bg-[#FF6B6B] text-white' : 'bg-gray-200 text-[#1A3A3A]'}`}
+            onClick={() => setTestMode(!testMode)}>
+
             {testMode ? 'Test Mode ON' : 'Test Mode'}
           </button>
-          <button className="p-2 text-[#1A3A3A]" onClick={() => navigateTo('home')}>
+          <button
+            className="p-2 text-[#1A3A3A]"
+            onClick={() => navigateTo('home')}>
+
             <XIcon size={24} />
           </button>
         </div>
@@ -47,10 +62,16 @@ export const IngredientCaptureScreen: React.FC<IngredientCaptureScreenProps> = (
       {/* Tab Navigation */}
       <div className="px-6 mb-4">
         <div className="flex bg-[#FFF9F2] p-1 rounded-full">
-          <button className={`flex-1 py-2 px-4 rounded-full text-center transition-all duration-200 ${activeTab === 'fridge' ? 'bg-[#FF6B6B] text-white' : 'text-[#1A3A3A]'}`} onClick={() => setActiveTab('fridge')}>
+          <button
+            className={`flex-1 py-2 px-4 rounded-full text-center transition-all duration-200 ${activeTab === 'fridge' ? 'bg-[#FF6B6B] text-white' : 'text-[#1A3A3A]'}`}
+            onClick={() => setActiveTab('fridge')}>
+
             Fridge Photo
           </button>
-          <button className={`flex-1 py-2 px-4 rounded-full text-center transition-all duration-200 ${activeTab === 'receipt' ? 'bg-[#FF6B6B] text-white' : 'text-[#1A3A3A]'}`} onClick={() => setActiveTab('receipt')}>
+          <button
+            className={`flex-1 py-2 px-4 rounded-full text-center transition-all duration-200 ${activeTab === 'receipt' ? 'bg-[#FF6B6B] text-white' : 'text-[#1A3A3A]'}`}
+            onClick={() => setActiveTab('receipt')}>
+
             Receipt Scan
           </button>
         </div>
@@ -58,7 +79,8 @@ export const IngredientCaptureScreen: React.FC<IngredientCaptureScreenProps> = (
       {/* Camera Viewfinder */}
       <div className="px-6 mb-6">
         <div className="relative aspect-[3/4] bg-black rounded-xl overflow-hidden flex items-center justify-center">
-          {activeTab === 'fridge' ? <>
+          {activeTab === 'fridge' ?
+          <>
               {/* Animated border for fridge photo */}
               <div className="absolute inset-8">
                 <div className="absolute inset-0 border-2 border-white opacity-70 rounded-lg"></div>
@@ -76,7 +98,9 @@ export const IngredientCaptureScreen: React.FC<IngredientCaptureScreenProps> = (
                   Position your ingredients in frame
                 </p>
               </div>
-            </> : <>
+            </> :
+
+          <>
               {/* Scanning animation for receipt */}
               <div className="absolute inset-0 border-2 border-dashed border-white opacity-70 m-8 rounded-lg"></div>
               <div className="absolute inset-8 overflow-hidden rounded-lg">
@@ -91,7 +115,8 @@ export const IngredientCaptureScreen: React.FC<IngredientCaptureScreenProps> = (
                   Hold it steady and centered
                 </p>
               </div>
-            </>}
+            </>
+          }
         </div>
       </div>
       {/* Tips Section */}
@@ -119,26 +144,40 @@ export const IngredientCaptureScreen: React.FC<IngredientCaptureScreenProps> = (
         </div>
       </div>
       {/* Test Mode Controls - Only visible in test mode */}
-      {testMode && <div className="px-6 mb-6 p-4 bg-red-50 rounded-xl border border-red-200">
+      {testMode &&
+      <div className="px-6 mb-6 p-4 bg-red-50 rounded-xl border border-red-200">
           <h3 className="font-medium text-red-800 mb-2">Test Mode Controls</h3>
           <p className="text-sm text-red-700 mb-3">
             Use these buttons to test the app flow manually:
           </p>
           <div className="flex flex-wrap gap-2">
-            <button onClick={handleCapture} className="px-3 py-2 bg-red-600 text-white rounded-lg text-sm">
+            <button
+            onClick={handleCapture}
+            className="px-3 py-2 bg-red-600 text-white rounded-lg text-sm">
+
               1. Open Analysis Modal
             </button>
-            <button onClick={() => navigateTo('ingredient-confirmation')} className="px-3 py-2 bg-red-600 text-white rounded-lg text-sm">
+            <button
+            onClick={() => navigateTo('ingredient-confirmation')}
+            className="px-3 py-2 bg-red-600 text-white rounded-lg text-sm">
+
               2. Skip to Confirmation
             </button>
-            <button onClick={() => navigateTo('recipe-suggestions')} className="px-3 py-2 bg-red-600 text-white rounded-lg text-sm">
+            <button
+            onClick={() => navigateTo('recipe-suggestions')}
+            className="px-3 py-2 bg-red-600 text-white rounded-lg text-sm">
+
               3. Skip to Recipes
             </button>
           </div>
-        </div>}
+        </div>
+      }
       {/* Capture Button */}
       <div className="flex flex-col items-center px-6 mt-auto mb-6">
-        <button onClick={handleCapture} className="w-20 h-20 bg-[#FF6B6B] rounded-full flex items-center justify-center mb-4 shadow-lg hover:bg-opacity-90 transition-transform active:scale-95">
+        <button
+          onClick={handleCapture}
+          className="w-20 h-20 bg-[#FF6B6B] rounded-full flex items-center justify-center mb-4 shadow-lg hover:bg-opacity-90 transition-transform active:scale-95">
+
           <div className="w-16 h-16 border-4 border-white rounded-full"></div>
         </button>
         <button className="flex items-center text-[#1A3A3A] font-medium hover:opacity-80 transition-opacity">
@@ -147,7 +186,12 @@ export const IngredientCaptureScreen: React.FC<IngredientCaptureScreenProps> = (
         </button>
       </div>
       {/* Analysis Modal */}
-      <IngredientAnalysisModal isOpen={showAnalysisModal} onClose={() => setShowAnalysisModal(false)} onComplete={handleAnalysisComplete} testMode={testMode} />
+      <IngredientAnalysisModal
+        isOpen={showAnalysisModal}
+        onClose={() => setShowAnalysisModal(false)}
+        onComplete={handleAnalysisComplete}
+        testMode={testMode} />
+
       {/* Add the animations to the global styles */}
       <style jsx global>{`
         @keyframes scan {
@@ -215,5 +259,6 @@ export const IngredientCaptureScreen: React.FC<IngredientCaptureScreenProps> = (
           animation: border-bl 4s ease-in-out infinite;
         }
       `}</style>
-    </div>;
+    </div>);
+
 };

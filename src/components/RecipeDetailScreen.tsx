@@ -1,5 +1,14 @@
-import React, { useState } from 'react';
-import { ArrowLeftIcon, BookmarkIcon, ClockIcon, FlameIcon, ChefHatIcon, ShareIcon, CheckCircleIcon, CircleIcon, PlayCircleIcon, UsersIcon, CheckIcon, ChevronDownIcon } from 'lucide-react';
+import React from 'react';
+import {
+  ArrowLeftIcon,
+  BookmarkIcon,
+  ClockIcon,
+  BarChartIcon,
+  DumbbellIcon,
+  PlayIcon,
+  CheckIcon,
+  XIcon } from
+'lucide-react';
 interface RecipeDetailScreenProps {
   navigateTo: (screen: string) => void;
   onMarkAsPrepared: () => void;
@@ -8,258 +17,168 @@ export const RecipeDetailScreen: React.FC<RecipeDetailScreenProps> = ({
   navigateTo,
   onMarkAsPrepared
 }) => {
-  const [checkedIngredients, setCheckedIngredients] = useState<number[]>([]);
-  const [activeTab, setActiveTab] = useState<'ingredients' | 'instructions'>('ingredients');
-  const [servings, setServings] = useState(2);
-  const [showMealTypeModal, setShowMealTypeModal] = useState(false);
-  const ingredients = [{
-    id: 1,
-    name: 'chicken breasts',
-    amount: 2,
-    unit: 'pieces',
-    available: true
-  }, {
-    id: 2,
-    name: 'brown rice',
-    amount: 1,
-    unit: 'cup',
-    available: true
-  }, {
-    id: 3,
-    name: 'bell peppers',
-    amount: 2,
-    unit: 'pieces',
-    available: true
-  }, {
-    id: 4,
-    name: 'olive oil',
-    amount: 1,
-    unit: 'tbsp',
-    available: false
-  }, {
-    id: 5,
-    name: 'garlic cloves',
-    amount: 2,
-    unit: 'pieces',
-    available: true
-  }, {
-    id: 6,
-    name: 'salt and pepper',
-    amount: 1,
-    unit: 'to taste',
-    available: true
-  }];
-  const instructions = ['Preheat oven to 375°F (190°C)', 'Season chicken breasts with salt and pepper', 'Combine rice and 2 cups water in a large oven-safe pan', 'Dice bell peppers and mince garlic', 'Add vegetables and chicken to the pan', 'Drizzle with olive oil and bake for 25-30 minutes', 'Let rest for 5 minutes before serving'];
-  const mealTypes = [{
-    id: 'breakfast',
-    label: 'Breakfast',
-    emoji: '🌅',
-    time: '8:00 AM'
-  }, {
-    id: 'lunch',
-    label: 'Lunch',
-    emoji: '🌞',
-    time: '12:30 PM'
-  }, {
-    id: 'snack',
-    label: 'Snack',
-    emoji: '🍎',
-    time: '3:30 PM'
-  }, {
-    id: 'dinner',
-    label: 'Dinner',
-    emoji: '🌙',
-    time: '7:00 PM'
-  }];
-  const toggleIngredient = (id: number) => {
-    setCheckedIngredients(prev => prev.includes(id) ? prev.filter(i => i !== id) : [...prev, id]);
-  };
-  const adjustServings = (delta: number) => {
-    const newServings = Math.max(1, Math.min(12, servings + delta));
-    setServings(newServings);
-  };
-  const handleLogMeal = (mealType: string) => {
-    setShowMealTypeModal(false);
-    onMarkAsPrepared();
-    // Additional logic to log the meal type can be added here
-  };
-  return <div className="flex flex-col min-h-screen bg-white">
-      {/* Hero Image Section */}
-      <div className="relative h-[50vh] bg-gradient-to-b from-gray-900 to-gray-800">
-        <img src="https://images.unsplash.com/photo-1565299585323-38d6b0865b47?ixlib=rb-4.0.3&auto=format&fit=crop&w=2000&q=80" alt="One-Pan Chicken Dinner" className="w-full h-full object-cover opacity-90" />
-        {/* Floating Header */}
-        <div className="absolute top-0 left-0 right-0 p-6 flex justify-between items-center bg-gradient-to-b from-black/50 to-transparent">
-          <button onClick={() => navigateTo('home')} className="w-12 h-12 bg-white/90 backdrop-blur-sm rounded-full flex items-center justify-center shadow-lg hover:bg-white transition-colors">
-            <ArrowLeftIcon size={20} className="text-gray-900" />
+  return (
+    <div className="flex flex-col min-h-screen bg-[#FFE8D6]">
+      {/* Status Bar */}
+      <div className="flex justify-between items-center px-4 py-2 bg-[#FFE8D6] text-[#1A3A3A]">
+        <span className="text-sm">9:41 AM</span>
+        <div className="flex items-center space-x-2">
+          <span className="text-sm">Signal</span>
+          <span className="text-sm">WiFi</span>
+          <span className="text-sm">Battery</span>
+        </div>
+      </div>
+      {/* Recipe Image */}
+      <div className="relative w-full h-64">
+        <img
+          src="https://images.unsplash.com/photo-1565299585323-38d6b0865b47?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2000&q=80"
+          alt="One-Pan Chicken Dinner"
+          className="w-full h-full object-cover" />
+
+        <div className="absolute top-0 left-0 right-0 p-4 flex justify-between">
+          <button
+            className="w-10 h-10 bg-white rounded-full flex items-center justify-center shadow-md"
+            onClick={() => navigateTo('home')}>
+
+            <ArrowLeftIcon size={20} className="text-[#1A3A3A]" />
           </button>
-          <div className="flex space-x-3">
-            <button className="w-12 h-12 bg-white/90 backdrop-blur-sm rounded-full flex items-center justify-center shadow-lg hover:bg-white transition-colors">
-              <ShareIcon size={20} className="text-gray-900" />
-            </button>
-            <button className="w-12 h-12 bg-white/90 backdrop-blur-sm rounded-full flex items-center justify-center shadow-lg hover:bg-white transition-colors">
-              <BookmarkIcon size={20} className="text-gray-900" />
-            </button>
-          </div>
+          <button className="w-10 h-10 bg-white rounded-full flex items-center justify-center shadow-md">
+            <BookmarkIcon size={20} className="text-[#1A3A3A]" />
+          </button>
         </div>
-        {/* Recipe Title Overlay */}
-        <div className="absolute bottom-0 left-0 right-0 p-6 bg-gradient-to-t from-black/80 via-black/50 to-transparent">
-          <h1 className="text-3xl font-bold text-white mb-2">
-            One-Pan Chicken Dinner
-          </h1>
-          <div className="flex items-center space-x-4 text-white/90 text-sm">
-            <div className="flex items-center">
-              <UsersIcon size={16} className="mr-1" />
-              <span>by Chef Maria</span>
+      </div>
+      {/* Recipe Content */}
+      <div className="flex-1 bg-[#FFF9F2] rounded-t-3xl -mt-6 px-6 py-6 overflow-y-auto">
+        <h1 className="text-2xl font-bold text-[#1A3A3A] mb-1">
+          One-Pan Chicken Dinner
+        </h1>
+        <div className="flex items-center mb-4">
+          <div className="w-6 h-6 rounded-full bg-gray-300 mr-2"></div>
+          <span className="text-sm text-[#2B394A]">by @ChefMaria</span>
+        </div>
+        {/* Stats Row */}
+        <div className="flex justify-between mb-6">
+          <div className="flex flex-col items-center">
+            <BarChartIcon size={20} className="text-[#FF6B6B] mb-1" />
+            <span className="text-sm font-medium text-[#1A3A3A]">520</span>
+            <span className="text-xs text-[#2B394A]">calories</span>
+          </div>
+          <div className="flex flex-col items-center">
+            <DumbbellIcon size={20} className="text-[#FF6B6B] mb-1" />
+            <span className="text-sm font-medium text-[#1A3A3A]">35g</span>
+            <span className="text-xs text-[#2B394A]">protein</span>
+          </div>
+          <div className="flex flex-col items-center">
+            <div className="w-5 h-5 mb-1 flex items-center justify-center">
+              <span className="text-[#FF6B6B] font-bold">F</span>
             </div>
-            <span>•</span>
-            <span>4.8 ⭐ (124 reviews)</span>
+            <span className="text-sm font-medium text-[#1A3A3A]">15g</span>
+            <span className="text-xs text-[#2B394A]">fat</span>
+          </div>
+          <div className="flex flex-col items-center">
+            <ClockIcon size={20} className="text-[#FF6B6B] mb-1" />
+            <span className="text-sm font-medium text-[#1A3A3A]">35</span>
+            <span className="text-xs text-[#2B394A]">minutes</span>
+          </div>
+          <div className="flex flex-col items-center">
+            <div className="w-5 h-5 mb-1 flex items-center justify-center">
+              <span className="text-[#FF6B6B] font-bold">M</span>
+            </div>
+            <span className="text-xs text-[#2B394A]">Medium</span>
+            <span className="text-xs text-[#2B394A]">difficulty</span>
           </div>
         </div>
-      </div>
-
-      {/* Quick Stats */}
-      <div className="grid grid-cols-4 gap-4 px-6 py-6 border-b border-gray-100">
-        <div className="text-center">
-          <div className="w-12 h-12 mx-auto mb-2 bg-emerald-50 rounded-full flex items-center justify-center">
-            <ClockIcon size={20} className="text-emerald-600" />
+        {/* Video Button */}
+        <button className="w-full bg-[#A0CED9] bg-opacity-20 rounded-xl p-4 flex items-center justify-center mb-6">
+          <div className="w-10 h-10 bg-[#A0CED9] rounded-full flex items-center justify-center mr-3">
+            <PlayIcon size={20} className="text-[#1A3A3A]" />
           </div>
-          <p className="text-lg font-bold text-gray-900">35</p>
-          <p className="text-xs text-gray-500">minutes</p>
-        </div>
-        <div className="text-center">
-          <div className="w-12 h-12 mx-auto mb-2 bg-amber-50 rounded-full flex items-center justify-center">
-            <FlameIcon size={20} className="text-amber-600" />
-          </div>
-          <p className="text-lg font-bold text-gray-900">520</p>
-          <p className="text-xs text-gray-500">calories</p>
-        </div>
-        <div className="text-center">
-          <div className="w-12 h-12 mx-auto mb-2 bg-blue-50 rounded-full flex items-center justify-center">
-            <ChefHatIcon size={20} className="text-blue-600" />
-          </div>
-          <p className="text-lg font-bold text-gray-900">Medium</p>
-          <p className="text-xs text-gray-500">difficulty</p>
-        </div>
-        <div className="text-center">
-          <div className="w-12 h-12 mx-auto mb-2 bg-purple-50 rounded-full flex items-center justify-center">
-            <UsersIcon size={20} className="text-purple-600" />
-          </div>
-          <p className="text-lg font-bold text-gray-900">{servings}</p>
-          <p className="text-xs text-gray-500">servings</p>
-        </div>
-      </div>
-
-      {/* Video Section */}
-      <div className="px-6 py-6 border-b border-gray-100">
-        <button className="w-full bg-gradient-to-r from-emerald-500 to-teal-500 rounded-2xl p-6 flex items-center justify-between text-white shadow-lg hover:shadow-xl transition-shadow">
-          <div className="text-left">
-            <p className="text-sm font-medium opacity-90">Watch Tutorial</p>
-            <p className="text-lg font-bold">Step-by-step video guide</p>
-          </div>
-          <div className="w-14 h-14 bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center">
-            <PlayCircleIcon size={32} className="text-white" />
-          </div>
+          <span className="font-medium text-[#1A3A3A]">Watch Video</span>
         </button>
-      </div>
-
-      {/* Tab Navigation */}
-      <div className="px-6 py-4 border-b border-gray-100 sticky top-0 bg-white z-10">
-        <div className="flex space-x-2 bg-gray-100 rounded-full p-1">
-          <button onClick={() => setActiveTab('ingredients')} className={`flex-1 py-3 rounded-full text-sm font-medium transition-all ${activeTab === 'ingredients' ? 'bg-white text-gray-900 shadow-sm' : 'text-gray-600 hover:text-gray-900'}`}>
-            Ingredients ({ingredients.length})
-          </button>
-          <button onClick={() => setActiveTab('instructions')} className={`flex-1 py-3 rounded-full text-sm font-medium transition-all ${activeTab === 'instructions' ? 'bg-white text-gray-900 shadow-sm' : 'text-gray-600 hover:text-gray-900'}`}>
-            Instructions ({instructions.length})
-          </button>
-        </div>
-      </div>
-
-      {/* Content Area */}
-      <div className="flex-1 overflow-y-auto px-6 py-6 pb-32">
-        {activeTab === 'ingredients' ? <div>
-            {/* Servings Adjuster */}
-            <div className="flex items-center justify-between mb-6 p-4 bg-gray-50 rounded-xl">
-              <span className="text-sm font-medium text-gray-700">
-                Adjust servings:
-              </span>
-              <div className="flex items-center space-x-3">
-                <button onClick={() => adjustServings(-1)} disabled={servings <= 1} className="w-10 h-10 bg-white rounded-full flex items-center justify-center hover:bg-gray-100 transition-colors disabled:opacity-50 disabled:cursor-not-allowed shadow-sm">
-                  <span className="text-lg font-bold text-gray-700">−</span>
-                </button>
-                <span className="text-lg font-bold text-gray-900 w-12 text-center">
-                  {servings}
-                </span>
-                <button onClick={() => adjustServings(1)} disabled={servings >= 12} className="w-10 h-10 bg-white rounded-full flex items-center justify-center hover:bg-gray-100 transition-colors disabled:opacity-50 disabled:cursor-not-allowed shadow-sm">
-                  <span className="text-lg font-bold text-gray-700">+</span>
-                </button>
+        {/* Ingredients Section */}
+        <div className="mb-6">
+          <h2 className="text-lg font-medium text-[#1A3A3A] mb-3">
+            Ingredients (Serves 2)
+          </h2>
+          <ul className="space-y-3">
+            <li className="flex items-center">
+              <div className="w-6 h-6 bg-[#ADF7B6] rounded-full flex items-center justify-center mr-3">
+                <CheckIcon size={16} className="text-[#1A3A3A]" />
               </div>
-            </div>
+              <span className="text-[#1A3A3A]">2 chicken breasts</span>
+            </li>
+            <li className="flex items-center">
+              <div className="w-6 h-6 bg-[#ADF7B6] rounded-full flex items-center justify-center mr-3">
+                <CheckIcon size={16} className="text-[#1A3A3A]" />
+              </div>
+              <span className="text-[#1A3A3A]">1 cup brown rice</span>
+            </li>
+            <li className="flex items-center">
+              <div className="w-6 h-6 bg-[#ADF7B6] rounded-full flex items-center justify-center mr-3">
+                <CheckIcon size={16} className="text-[#1A3A3A]" />
+              </div>
+              <span className="text-[#1A3A3A]">2 bell peppers</span>
+            </li>
+            <li className="flex items-center">
+              <div className="w-6 h-6 bg-[#FF6B6B] bg-opacity-20 rounded-full flex items-center justify-center mr-3">
+                <XIcon size={16} className="text-[#FF6B6B]" />
+              </div>
+              <span className="text-[#1A3A3A]">1 tbsp olive oil (missing)</span>
+            </li>
+            <li className="flex items-center">
+              <div className="w-6 h-6 bg-[#ADF7B6] rounded-full flex items-center justify-center mr-3">
+                <CheckIcon size={16} className="text-[#1A3A3A]" />
+              </div>
+              <span className="text-[#1A3A3A]">2 cloves garlic</span>
+            </li>
+          </ul>
+        </div>
+        {/* Instructions Section */}
+        <div className="mb-8">
+          <h2 className="text-lg font-medium text-[#1A3A3A] mb-3">
+            Instructions
+          </h2>
+          <ol className="space-y-4">
+            <li className="flex">
+              <span className="w-6 h-6 bg-[#A0CED9] rounded-full flex items-center justify-center mr-3 shrink-0 text-[#1A3A3A] font-medium">
+                1
+              </span>
+              <span className="text-[#1A3A3A]">Preheat oven to 375°F</span>
+            </li>
+            <li className="flex">
+              <span className="w-6 h-6 bg-[#A0CED9] rounded-full flex items-center justify-center mr-3 shrink-0 text-[#1A3A3A] font-medium">
+                2
+              </span>
+              <span className="text-[#1A3A3A]">
+                Season chicken with salt and pepper
+              </span>
+            </li>
+            <li className="flex">
+              <span className="w-6 h-6 bg-[#A0CED9] rounded-full flex items-center justify-center mr-3 shrink-0 text-[#1A3A3A] font-medium">
+                3
+              </span>
+              <span className="text-[#1A3A3A]">
+                Combine rice and 2 cups water in pan
+              </span>
+            </li>
+            <li className="flex">
+              <span className="w-6 h-6 bg-[#A0CED9] rounded-full flex items-center justify-center mr-3 shrink-0 text-[#1A3A3A] font-medium">
+                4
+              </span>
+              <span className="text-[#1A3A3A]">
+                Add remaining ingredients and bake for 25 minutes
+              </span>
+            </li>
+          </ol>
+        </div>
+        {/* Mark as Prepared Button */}
+        <button
+          className="w-full bg-[#FF6B6B] text-white py-4 px-6 rounded-full font-medium text-lg shadow-sm hover:bg-opacity-90 transition-colors"
+          onClick={onMarkAsPrepared}>
 
-            {/* Ingredients List */}
-            <div className="space-y-3">
-              {ingredients.map(ingredient => {
-            const multiplier = servings / 2;
-            const adjustedAmount = ingredient.unit !== 'to taste' ? Math.round(ingredient.amount * multiplier * 10) / 10 : ingredient.amount;
-            return <button key={ingredient.id} onClick={() => toggleIngredient(ingredient.id)} className="w-full flex items-center p-4 bg-gray-50 rounded-xl hover:bg-gray-100 transition-colors">
-                    <div className="w-6 h-6 mr-4 flex-shrink-0">
-                      {checkedIngredients.includes(ingredient.id) ? <CheckCircleIcon size={24} className="text-emerald-500 animate-scale-in" /> : <CircleIcon size={24} className="text-gray-300" />}
-                    </div>
-                    <span className={`flex-1 text-left ${checkedIngredients.includes(ingredient.id) ? 'line-through text-gray-400' : 'text-gray-900'}`}>
-                      <span className="font-semibold">
-                        {adjustedAmount} {ingredient.unit}
-                      </span>{' '}
-                      {ingredient.name}
-                    </span>
-                    {!ingredient.available && <span className="px-3 py-1 bg-amber-100 text-amber-700 text-xs font-medium rounded-full">
-                        Missing
-                      </span>}
-                  </button>;
-          })}
-            </div>
-          </div> : <div className="space-y-6">
-            {instructions.map((instruction, index) => <div key={index} className="flex">
-                <div className="w-10 h-10 flex-shrink-0 bg-gradient-to-br from-emerald-500 to-teal-500 rounded-full flex items-center justify-center text-white font-bold mr-4 shadow-md">
-                  {index + 1}
-                </div>
-                <p className="flex-1 text-gray-700 leading-relaxed pt-2">
-                  {instruction}
-                </p>
-              </div>)}
-          </div>}
-      </div>
-
-      {/* Fixed Bottom Buttons */}
-      <div className="fixed bottom-0 left-0 right-0 max-w-[430px] mx-auto p-6 bg-gradient-to-t from-white via-white to-transparent space-y-3">
-        <button onClick={onMarkAsPrepared} className="w-full bg-gradient-to-r from-emerald-500 to-teal-500 text-white py-4 rounded-2xl font-semibold text-lg shadow-lg hover:shadow-xl transition-all active:scale-95 flex items-center justify-center">
-          <CheckIcon size={20} className="mr-2" />
           Mark as Prepared
         </button>
-        <button onClick={() => setShowMealTypeModal(true)} className="w-full bg-white border-2 border-emerald-500 text-emerald-600 py-4 rounded-2xl font-semibold text-lg shadow-sm hover:shadow-md transition-all active:scale-95">
-          Log as Meal
-        </button>
       </div>
+    </div>);
 
-      {/* Meal Type Selection Modal */}
-      {showMealTypeModal && <div className="fixed inset-0 bg-black/50 flex items-end z-50 animate-fade-in">
-          <div className="bg-white w-full rounded-t-3xl p-6 animate-slide-up max-w-[430px] mx-auto">
-            <div className="flex justify-between items-center mb-6">
-              <h2 className="text-xl font-bold text-gray-900">
-                Log as which meal?
-              </h2>
-              <button onClick={() => setShowMealTypeModal(false)} className="w-8 h-8 flex items-center justify-center rounded-full hover:bg-gray-100 transition-colors">
-                <ChevronDownIcon size={20} className="text-gray-500" />
-              </button>
-            </div>
-            <div className="grid grid-cols-2 gap-3">
-              {mealTypes.map(meal => <button key={meal.id} onClick={() => handleLogMeal(meal.id)} className="p-4 bg-gray-50 rounded-2xl hover:bg-emerald-50 hover:border-emerald-200 border-2 border-transparent transition-all active:scale-95">
-                  <div className="text-4xl mb-2">{meal.emoji}</div>
-                  <p className="font-semibold text-gray-900 mb-1">
-                    {meal.label}
-                  </p>
-                  <p className="text-xs text-gray-500">{meal.time}</p>
-                </button>)}
-            </div>
-          </div>
-        </div>}
-    </div>;
 };

@@ -18,9 +18,11 @@ export const CalendarStrip: React.FC<CalendarStripProps> = ({
     return dates;
   };
   const formatDay = (date: Date) => {
-    return date.toLocaleDateString('en-US', {
+    return date.
+    toLocaleDateString('en-US', {
       weekday: 'short'
-    }).toUpperCase();
+    }).
+    toUpperCase();
   };
   const isSelected = (date: Date) => {
     return date.toDateString() === selectedDate.toDateString();
@@ -28,14 +30,26 @@ export const CalendarStrip: React.FC<CalendarStripProps> = ({
   const isToday = (date: Date) => {
     return date.toDateString() === new Date().toDateString();
   };
-  return <div className="flex overflow-x-auto py-4 -mx-6 px-6 space-x-6 no-scrollbar">
-      {getDayDates().map(date => <button key={date.toISOString()} onClick={() => onDateSelect(date)} className="flex flex-col items-center min-w-[48px]">
-          <span className={`text-xs font-medium mb-2 ${isSelected(date) ? 'text-black' : 'text-gray-400'}`}>
+  return (
+    <div className="flex overflow-x-auto py-4 -mx-6 px-6 space-x-6 no-scrollbar">
+      {getDayDates().map((date) =>
+      <button
+        key={date.toISOString()}
+        onClick={() => onDateSelect(date)}
+        className="flex flex-col items-center min-w-[48px]">
+
+          <span
+          className={`text-xs font-medium mb-2 ${isSelected(date) ? 'text-black' : 'text-gray-400'}`}>
+
             {formatDay(date)}
           </span>
-          <div className={`w-10 h-10 flex items-center justify-center rounded-full transition-all ${isSelected(date) ? 'bg-black text-white' : isToday(date) ? 'bg-gray-100 text-black' : 'text-gray-700'}`}>
+          <div
+          className={`w-10 h-10 flex items-center justify-center rounded-full transition-all ${isSelected(date) ? 'bg-black text-white' : isToday(date) ? 'bg-gray-100 text-black' : 'text-gray-700'}`}>
+
             <span className="text-lg font-medium">{date.getDate()}</span>
           </div>
-        </button>)}
-    </div>;
+        </button>
+      )}
+    </div>);
+
 };

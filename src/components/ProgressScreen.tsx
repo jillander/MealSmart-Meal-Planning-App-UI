@@ -1,12 +1,20 @@
 import React, { useState } from 'react';
-import { ArrowLeftIcon, TrendingUpIcon, CalendarIcon, BarChart2Icon, AwardIcon } from 'lucide-react';
+import {
+  ArrowLeftIcon,
+  TrendingUpIcon,
+  CalendarIcon,
+  BarChart2Icon,
+  AwardIcon } from
+'lucide-react';
 interface ProgressScreenProps {
   navigateTo: (screen: string) => void;
 }
 export const ProgressScreen: React.FC<ProgressScreenProps> = ({
   navigateTo
 }) => {
-  const [activeTab, setActiveTab] = useState<'daily' | 'weekly' | 'monthly'>('weekly');
+  const [activeTab, setActiveTab] = useState<'daily' | 'weekly' | 'monthly'>(
+    'weekly'
+  );
   // Mock data for progress stats
   const progressStats = {
     calories: {
@@ -23,36 +31,45 @@ export const ProgressScreen: React.FC<ProgressScreenProps> = ({
     daysOnTrack: 16,
     longestStreak: 21
   };
-  const weeklyData = [{
+  const weeklyData = [
+  {
     day: 'Mon',
     calories: 1650,
     target: 1800
-  }, {
+  },
+  {
     day: 'Tue',
     calories: 1720,
     target: 1800
-  }, {
+  },
+  {
     day: 'Wed',
     calories: 1840,
     target: 1800
-  }, {
+  },
+  {
     day: 'Thu',
     calories: 1790,
     target: 1800
-  }, {
+  },
+  {
     day: 'Fri',
     calories: 1710,
     target: 1800
-  }, {
+  },
+  {
     day: 'Sat',
     calories: 1920,
     target: 1800
-  }, {
+  },
+  {
     day: 'Sun',
     calories: 1650,
     target: 1800
   }];
-  return <div className="flex flex-col min-h-screen bg-[#F8F9FA] max-w-[430px] mx-auto">
+
+  return (
+    <div className="flex flex-col min-h-screen bg-[#F8F9FA] max-w-[430px] mx-auto">
       {/* Status Bar */}
       <div className="flex justify-between items-center px-4 py-3 bg-white text-[#1A1A1A] border-b border-gray-100">
         <span className="text-sm font-medium">9:41 AM</span>
@@ -70,13 +87,22 @@ export const ProgressScreen: React.FC<ProgressScreenProps> = ({
           <h1 className="text-xl font-bold text-[#1A1A1A]">Progress</h1>
         </div>
         <div className="flex space-x-1 bg-gray-100 p-1 rounded-lg">
-          <button className={`px-3 py-1 text-xs font-medium rounded-md ${activeTab === 'daily' ? 'bg-white text-[#1A1A1A] shadow-sm' : 'text-[#757575]'}`} onClick={() => setActiveTab('daily')}>
+          <button
+            className={`px-3 py-1 text-xs font-medium rounded-md ${activeTab === 'daily' ? 'bg-white text-[#1A1A1A] shadow-sm' : 'text-[#757575]'}`}
+            onClick={() => setActiveTab('daily')}>
+
             Daily
           </button>
-          <button className={`px-3 py-1 text-xs font-medium rounded-md ${activeTab === 'weekly' ? 'bg-white text-[#1A1A1A] shadow-sm' : 'text-[#757575]'}`} onClick={() => setActiveTab('weekly')}>
+          <button
+            className={`px-3 py-1 text-xs font-medium rounded-md ${activeTab === 'weekly' ? 'bg-white text-[#1A1A1A] shadow-sm' : 'text-[#757575]'}`}
+            onClick={() => setActiveTab('weekly')}>
+
             Weekly
           </button>
-          <button className={`px-3 py-1 text-xs font-medium rounded-md ${activeTab === 'monthly' ? 'bg-white text-[#1A1A1A] shadow-sm' : 'text-[#757575]'}`} onClick={() => setActiveTab('monthly')}>
+          <button
+            className={`px-3 py-1 text-xs font-medium rounded-md ${activeTab === 'monthly' ? 'bg-white text-[#1A1A1A] shadow-sm' : 'text-[#757575]'}`}
+            onClick={() => setActiveTab('monthly')}>
+
             Monthly
           </button>
         </div>
@@ -168,23 +194,36 @@ export const ProgressScreen: React.FC<ProgressScreenProps> = ({
           <div className="bg-white rounded-xl p-4 shadow-sm border border-gray-100">
             <div className="h-48 flex items-end justify-between">
               {weeklyData.map((day, index) => {
-              const heightPercentage = day.calories / 2000 * 100;
-              const targetPercentage = day.target / 2000 * 100;
-              const isToday = index === 4; // Assuming Friday is today
-              return <div key={day.day} className="flex flex-col items-center flex-1">
+                const heightPercentage = day.calories / 2000 * 100;
+                const targetPercentage = day.target / 2000 * 100;
+                const isToday = index === 4; // Assuming Friday is today
+                return (
+                  <div
+                    key={day.day}
+                    className="flex flex-col items-center flex-1">
+
                     <div className="relative w-full flex justify-center mb-2">
-                      <div className="w-6 bg-[#4CAF50] bg-opacity-20 rounded-t-md" style={{
-                    height: `${heightPercentage}%`
-                  }}></div>
-                      <div className={`absolute w-12 h-0.5 ${isToday ? 'bg-[#4CAF50]' : 'bg-gray-300'}`} style={{
-                    bottom: `${targetPercentage}%`
-                  }}></div>
+                      <div
+                        className="w-6 bg-[#4CAF50] bg-opacity-20 rounded-t-md"
+                        style={{
+                          height: `${heightPercentage}%`
+                        }}>
+                      </div>
+                      <div
+                        className={`absolute w-12 h-0.5 ${isToday ? 'bg-[#4CAF50]' : 'bg-gray-300'}`}
+                        style={{
+                          bottom: `${targetPercentage}%`
+                        }}>
+                      </div>
                     </div>
-                    <span className={`text-xs ${isToday ? 'font-medium text-[#4CAF50]' : 'text-[#757575]'}`}>
+                    <span
+                      className={`text-xs ${isToday ? 'font-medium text-[#4CAF50]' : 'text-[#757575]'}`}>
+
                       {day.day}
                     </span>
-                  </div>;
-            })}
+                  </div>);
+
+              })}
             </div>
             <div className="flex justify-between items-center mt-4 pt-4 border-t border-gray-100">
               <div className="flex items-center">
@@ -206,8 +245,24 @@ export const ProgressScreen: React.FC<ProgressScreenProps> = ({
           <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-100 flex items-center">
             <div className="relative w-24 h-24">
               <svg className="w-full h-full -rotate-90" viewBox="0 0 100 100">
-                <circle cx="50" cy="50" r="45" fill="none" stroke="#E0E0E0" strokeWidth="8" />
-                <circle cx="50" cy="50" r="45" fill="none" stroke="#4CAF50" strokeWidth="8" strokeDasharray={`${progressStats.mealCompletionRate} 100`} strokeLinecap="round" />
+                <circle
+                  cx="50"
+                  cy="50"
+                  r="45"
+                  fill="none"
+                  stroke="#E0E0E0"
+                  strokeWidth="8" />
+
+                <circle
+                  cx="50"
+                  cy="50"
+                  r="45"
+                  fill="none"
+                  stroke="#4CAF50"
+                  strokeWidth="8"
+                  strokeDasharray={`${progressStats.mealCompletionRate} 100`}
+                  strokeLinecap="round" />
+
               </svg>
               <div className="absolute inset-0 flex items-center justify-center">
                 <span className="text-xl font-bold text-[#1A1A1A]">
@@ -228,5 +283,6 @@ export const ProgressScreen: React.FC<ProgressScreenProps> = ({
           </div>
         </div>
       </main>
-    </div>;
+    </div>);
+
 };

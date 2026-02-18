@@ -26,12 +26,30 @@ export const ActivityRings: React.FC<ActivityRingsProps> = ({
   size = 150
 }) => {
   // Calculate percentages
-  const stepsPercentage = Math.min(100, Math.round(data.steps.current / data.steps.goal * 100));
-  const activityPercentage = Math.min(100, Math.round(data.activity.current / data.activity.goal * 100));
-  const standPercentage = Math.min(100, Math.round(data.stand.current / data.stand.goal * 100));
-  const caloriesPercentage = Math.min(100, Math.round(data.calories.current / data.calories.goal * 100));
+  const stepsPercentage = Math.min(
+    100,
+    Math.round(data.steps.current / data.steps.goal * 100)
+  );
+  const activityPercentage = Math.min(
+    100,
+    Math.round(data.activity.current / data.activity.goal * 100)
+  );
+  const standPercentage = Math.min(
+    100,
+    Math.round(data.stand.current / data.stand.goal * 100)
+  );
+  const caloriesPercentage = Math.min(
+    100,
+    Math.round(data.calories.current / data.calories.goal * 100)
+  );
   // Calculate overall percentage
-  const overallPercentage = Math.round((stepsPercentage + activityPercentage + standPercentage + caloriesPercentage) / 4);
+  const overallPercentage = Math.round(
+    (stepsPercentage +
+    activityPercentage +
+    standPercentage +
+    caloriesPercentage) /
+    4
+  );
   // SVG parameters
   const center = size / 2;
   const strokeWidth = 8;
@@ -51,35 +69,119 @@ export const ActivityRings: React.FC<ActivityRingsProps> = ({
   const offset2 = circumference2 * (1 - activityPercentage / 100);
   const offset3 = circumference3 * (1 - standPercentage / 100);
   const offset4 = circumference4 * (1 - caloriesPercentage / 100);
-  return <div className="flex flex-col items-center">
+  return (
+    <div className="flex flex-col items-center">
       {/* Rings Container */}
-      <div className="relative" style={{
-      width: size,
-      height: size
-    }}>
+      <div
+        className="relative"
+        style={{
+          width: size,
+          height: size
+        }}>
+
         {/* Steps Ring (outermost - blue) */}
-        <svg className="absolute inset-0 w-full h-full -rotate-90" viewBox={`0 0 ${size} ${size}`}>
-          <circle cx={center} cy={center} r={radius1} fill="none" stroke="#E0E0E0" strokeWidth={strokeWidth} />
-          <circle cx={center} cy={center} r={radius1} fill="none" stroke="#2196F3" // Blue
-        strokeWidth={strokeWidth} strokeDasharray={circumference1} strokeDashoffset={offset1} strokeLinecap="round" className="activity-ring steps-ring" />
+        <svg
+          className="absolute inset-0 w-full h-full -rotate-90"
+          viewBox={`0 0 ${size} ${size}`}>
+
+          <circle
+            cx={center}
+            cy={center}
+            r={radius1}
+            fill="none"
+            stroke="#E0E0E0"
+            strokeWidth={strokeWidth} />
+
+          <circle
+            cx={center}
+            cy={center}
+            r={radius1}
+            fill="none"
+            stroke="#2196F3" // Blue
+            strokeWidth={strokeWidth}
+            strokeDasharray={circumference1}
+            strokeDashoffset={offset1}
+            strokeLinecap="round"
+            className="activity-ring steps-ring" />
+
         </svg>
         {/* Activity Ring (green) */}
-        <svg className="absolute inset-0 w-full h-full -rotate-90" viewBox={`0 0 ${size} ${size}`}>
-          <circle cx={center} cy={center} r={radius2} fill="none" stroke="#E0E0E0" strokeWidth={strokeWidth} />
-          <circle cx={center} cy={center} r={radius2} fill="none" stroke="#4CAF50" // Green
-        strokeWidth={strokeWidth} strokeDasharray={circumference2} strokeDashoffset={offset2} strokeLinecap="round" className="activity-ring activity-ring-green" />
+        <svg
+          className="absolute inset-0 w-full h-full -rotate-90"
+          viewBox={`0 0 ${size} ${size}`}>
+
+          <circle
+            cx={center}
+            cy={center}
+            r={radius2}
+            fill="none"
+            stroke="#E0E0E0"
+            strokeWidth={strokeWidth} />
+
+          <circle
+            cx={center}
+            cy={center}
+            r={radius2}
+            fill="none"
+            stroke="#4CAF50" // Green
+            strokeWidth={strokeWidth}
+            strokeDasharray={circumference2}
+            strokeDashoffset={offset2}
+            strokeLinecap="round"
+            className="activity-ring activity-ring-green" />
+
         </svg>
         {/* Stand Ring (orange) */}
-        <svg className="absolute inset-0 w-full h-full -rotate-90" viewBox={`0 0 ${size} ${size}`}>
-          <circle cx={center} cy={center} r={radius3} fill="none" stroke="#E0E0E0" strokeWidth={strokeWidth} />
-          <circle cx={center} cy={center} r={radius3} fill="none" stroke="#FF9800" // Orange
-        strokeWidth={strokeWidth} strokeDasharray={circumference3} strokeDashoffset={offset3} strokeLinecap="round" className="activity-ring stand-ring" />
+        <svg
+          className="absolute inset-0 w-full h-full -rotate-90"
+          viewBox={`0 0 ${size} ${size}`}>
+
+          <circle
+            cx={center}
+            cy={center}
+            r={radius3}
+            fill="none"
+            stroke="#E0E0E0"
+            strokeWidth={strokeWidth} />
+
+          <circle
+            cx={center}
+            cy={center}
+            r={radius3}
+            fill="none"
+            stroke="#FF9800" // Orange
+            strokeWidth={strokeWidth}
+            strokeDasharray={circumference3}
+            strokeDashoffset={offset3}
+            strokeLinecap="round"
+            className="activity-ring stand-ring" />
+
         </svg>
         {/* Calories Ring (innermost - red) */}
-        <svg className="absolute inset-0 w-full h-full -rotate-90" viewBox={`0 0 ${size} ${size}`}>
-          <circle cx={center} cy={center} r={radius4} fill="none" stroke="#E0E0E0" strokeWidth={strokeWidth} />
-          <circle cx={center} cy={center} r={radius4} fill="none" stroke="#F44336" // Red
-        strokeWidth={strokeWidth} strokeDasharray={circumference4} strokeDashoffset={offset4} strokeLinecap="round" className="activity-ring calories-ring" />
+        <svg
+          className="absolute inset-0 w-full h-full -rotate-90"
+          viewBox={`0 0 ${size} ${size}`}>
+
+          <circle
+            cx={center}
+            cy={center}
+            r={radius4}
+            fill="none"
+            stroke="#E0E0E0"
+            strokeWidth={strokeWidth} />
+
+          <circle
+            cx={center}
+            cy={center}
+            r={radius4}
+            fill="none"
+            stroke="#F44336" // Red
+            strokeWidth={strokeWidth}
+            strokeDasharray={circumference4}
+            strokeDashoffset={offset4}
+            strokeLinecap="round"
+            className="activity-ring calories-ring" />
+
         </svg>
         {/* Center Text with White Background */}
         <div className="absolute inset-0 flex items-center justify-center">
@@ -188,5 +290,6 @@ export const ActivityRings: React.FC<ActivityRingsProps> = ({
           animation-delay: 0.6s;
         }
       `}</style>
-    </div>;
+    </div>);
+
 };
