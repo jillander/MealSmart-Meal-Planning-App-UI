@@ -367,7 +367,7 @@ export const RecipeRecommendationHub: React.FC<
   };
   const handleConfirmAddToMealPlan = (
   date: Date,
-  mealType: 'breakfast' | 'lunch' | 'dinner') =>
+  mealType: 'breakfast' | 'lunch' | 'dinner' | 'snack') =>
   {
     if (selectedRecipeForPlan) {
       // Add the meal to the context
@@ -418,7 +418,7 @@ export const RecipeRecommendationHub: React.FC<
 
       {/* Main Content - Scrollable */}
       <div className="flex-1 overflow-y-auto pb-20">
-        {/* Collection Shortcuts Grid - Compact Mobb Style */}
+        {/* Collection Shortcuts Grid */}
         <section className="px-6 py-4 bg-white border-b border-gray-100">
           <div className="grid grid-cols-2 gap-3">
             {collections.map((collection) => {
@@ -465,25 +465,22 @@ export const RecipeRecommendationHub: React.FC<
           </div>
         </section>
 
-        {/* Recommended For You - Horizontal Scroll */}
-        <section className="py-4">
-          <div className="px-6 mb-3">
-            <div className="flex items-center justify-between">
-              <h2 className="text-lg font-bold text-[#1A1A1A]">
-                Recommended For You
-              </h2>
-              <button className="text-[#4CAF50] text-sm font-medium flex items-center hover:text-[#43A047] transition-colors">
-                View All
-                <ChevronRightIcon size={16} />
-              </button>
-            </div>
+        {/* Recommended For You */}
+        <section className="py-5">
+          <div className="px-6 mb-3 flex items-center justify-between">
+            <h2 className="text-lg font-bold text-[#1A1A1A]">
+              Recommended For You
+            </h2>
+            <button className="text-[#4CAF50] text-sm font-medium flex items-center hover:text-[#43A047] transition-colors">
+              View All <ChevronRightIcon size={16} />
+            </button>
           </div>
-          <div className="overflow-x-auto scrollbar-hide px-6">
-            <div className="flex space-x-4 pb-2">
+          <div className="overflow-x-auto scrollbar-hide">
+            <div className="flex space-x-3 pl-6 pr-3">
               {forYouRecipes.map((recipe) =>
               <div
                 key={recipe.id}
-                className="flex-shrink-0 w-[180px] bg-white rounded-2xl shadow-sm overflow-hidden hover:shadow-md transition-shadow duration-200">
+                className="flex-shrink-0 w-[220px] bg-white rounded-2xl shadow-sm overflow-hidden">
 
                   <div
                   className="relative cursor-pointer"
@@ -492,57 +489,64 @@ export const RecipeRecommendationHub: React.FC<
                     <img
                     src={recipe.image}
                     alt={recipe.title}
-                    className="w-full h-[180px] object-cover" />
+                    className="w-full h-[150px] object-cover" />
 
-                    {/* Subtle + button in top right */}
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent" />
                     <button
                     onClick={(e) => {
                       e.stopPropagation();
                       handleAddToMealPlan(recipe);
                     }}
-                    className="absolute top-3 right-3 w-8 h-8 bg-white/90 backdrop-blur-sm rounded-full flex items-center justify-center shadow-md hover:bg-white hover:scale-110 transition-all duration-200"
+                    className="absolute top-2.5 right-2.5 w-8 h-8 bg-white/90 backdrop-blur-sm rounded-full flex items-center justify-center shadow-md hover:bg-white hover:scale-110 transition-all duration-200"
                     aria-label="Add to meal plan">
 
-                      <PlusIcon size={18} className="text-[#1A1A1A]" />
+                      <PlusIcon size={16} className="text-[#1A1A1A]" />
                     </button>
+                    <div className="absolute bottom-2.5 left-3">
+                      <span className="text-[10px] font-semibold text-white bg-black/30 backdrop-blur-sm px-2 py-0.5 rounded-full">
+                        {recipe.matchPercentage}% match
+                      </span>
+                    </div>
                   </div>
                   <div className="p-3">
-                    <h3 className="font-semibold text-[#1A1A1A] text-sm mb-1 line-clamp-2">
+                    <h3 className="font-semibold text-[#1A1A1A] text-sm mb-1.5 line-clamp-1">
                       {recipe.title}
                     </h3>
-                    <div className="flex items-center text-xs text-[#64748B]">
-                      <ClockIcon size={12} className="mr-1" />
-                      <span>{recipe.cookingTime}</span>
+                    <div className="flex items-center justify-between text-xs text-[#64748B]">
+                      <div className="flex items-center">
+                        <ClockIcon size={11} className="mr-1" />
+                        <span>{recipe.cookingTime}</span>
+                      </div>
+                      <span>{recipe.calories} cal</span>
                     </div>
                   </div>
                 </div>
               )}
+              {/* Peek spacer */}
+              <div className="flex-shrink-0 w-3" />
             </div>
           </div>
         </section>
 
-        {/* Perfect Match Section - Horizontal Scroll */}
-        <section className="py-4">
-          <div className="px-6 mb-3">
-            <div className="flex items-center justify-between">
-              <h2 className="text-lg font-bold text-[#1A1A1A] flex items-center">
-                Perfect Match
-                <span className="ml-2 text-xs px-2 py-0.5 bg-[#4CAF50] bg-opacity-10 text-[#4CAF50] rounded-full font-medium">
-                  90%+ match
-                </span>
-              </h2>
-              <button className="text-[#4CAF50] text-sm font-medium flex items-center hover:text-[#43A047] transition-colors">
-                View All
-                <ChevronRightIcon size={16} />
-              </button>
-            </div>
+        {/* Perfect Match */}
+        <section className="py-5">
+          <div className="px-6 mb-3 flex items-center justify-between">
+            <h2 className="text-lg font-bold text-[#1A1A1A] flex items-center">
+              Perfect Match
+              <span className="ml-2 text-xs px-2 py-0.5 bg-[#4CAF50]/10 text-[#4CAF50] rounded-full font-medium">
+                90%+ match
+              </span>
+            </h2>
+            <button className="text-[#4CAF50] text-sm font-medium flex items-center hover:text-[#43A047] transition-colors">
+              View All <ChevronRightIcon size={16} />
+            </button>
           </div>
-          <div className="overflow-x-auto scrollbar-hide px-6">
-            <div className="flex space-x-4 pb-2">
+          <div className="overflow-x-auto scrollbar-hide">
+            <div className="flex space-x-3 pl-6 pr-3">
               {perfectMatchRecipes.map((recipe) =>
               <div
                 key={recipe.id}
-                className="flex-shrink-0 w-[180px] bg-white rounded-2xl overflow-hidden shadow-sm border border-[#4CAF50]/20 hover:shadow-md transition-all duration-200">
+                className="flex-shrink-0 w-[220px] bg-white rounded-2xl overflow-hidden shadow-sm border border-[#4CAF50]/20">
 
                   <div
                   className="relative cursor-pointer"
@@ -551,56 +555,63 @@ export const RecipeRecommendationHub: React.FC<
                     <img
                     src={recipe.image}
                     alt={recipe.title}
-                    className="w-full h-[180px] object-cover" />
+                    className="w-full h-[150px] object-cover" />
 
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent" />
                     <button
                     onClick={(e) => {
                       e.stopPropagation();
                       handleAddToMealPlan(recipe);
                     }}
-                    className="absolute top-3 right-3 w-8 h-8 bg-white/90 backdrop-blur-sm rounded-full flex items-center justify-center shadow-md hover:bg-white hover:scale-110 transition-all duration-200"
+                    className="absolute top-2.5 right-2.5 w-8 h-8 bg-white/90 backdrop-blur-sm rounded-full flex items-center justify-center shadow-md hover:bg-white hover:scale-110 transition-all duration-200"
                     aria-label="Add to meal plan">
 
-                      <PlusIcon size={18} className="text-[#1A1A1A]" />
+                      <PlusIcon size={16} className="text-[#1A1A1A]" />
                     </button>
+                    <div className="absolute bottom-2.5 left-3">
+                      <span className="text-[10px] font-semibold text-white bg-[#4CAF50]/80 backdrop-blur-sm px-2 py-0.5 rounded-full">
+                        {recipe.matchPercentage}% match
+                      </span>
+                    </div>
                   </div>
                   <div className="p-3">
-                    <h3 className="font-semibold text-[#1A1A1A] text-sm mb-1 line-clamp-2">
+                    <h3 className="font-semibold text-[#1A1A1A] text-sm mb-1.5 line-clamp-1">
                       {recipe.title}
                     </h3>
-                    <div className="flex items-center text-xs text-[#64748B]">
-                      <ClockIcon size={12} className="mr-1" />
-                      <span>{recipe.cookingTime}</span>
+                    <div className="flex items-center justify-between text-xs text-[#64748B]">
+                      <div className="flex items-center">
+                        <ClockIcon size={11} className="mr-1" />
+                        <span>{recipe.cookingTime}</span>
+                      </div>
+                      <span>{recipe.calories} cal</span>
                     </div>
                   </div>
                 </div>
               )}
+              <div className="flex-shrink-0 w-3" />
             </div>
           </div>
         </section>
 
-        {/* Quick & Easy Section - Horizontal Scroll */}
-        <section className="py-4">
-          <div className="px-6 mb-3">
-            <div className="flex items-center justify-between">
-              <h2 className="text-lg font-bold text-[#1A1A1A] flex items-center">
-                Quick & Easy
-                <span className="ml-2 text-xs px-2 py-0.5 bg-[#2196F3] bg-opacity-10 text-[#2196F3] rounded-full font-medium">
-                  Under 20 min
-                </span>
-              </h2>
-              <button className="text-[#4CAF50] text-sm font-medium flex items-center hover:text-[#43A047] transition-colors">
-                View All
-                <ChevronRightIcon size={16} />
-              </button>
-            </div>
+        {/* Quick & Easy */}
+        <section className="py-5">
+          <div className="px-6 mb-3 flex items-center justify-between">
+            <h2 className="text-lg font-bold text-[#1A1A1A] flex items-center">
+              Quick & Easy
+              <span className="ml-2 text-xs px-2 py-0.5 bg-[#2196F3]/10 text-[#2196F3] rounded-full font-medium">
+                Under 20 min
+              </span>
+            </h2>
+            <button className="text-[#4CAF50] text-sm font-medium flex items-center hover:text-[#43A047] transition-colors">
+              View All <ChevronRightIcon size={16} />
+            </button>
           </div>
-          <div className="overflow-x-auto scrollbar-hide px-6">
-            <div className="flex space-x-4 pb-2">
+          <div className="overflow-x-auto scrollbar-hide">
+            <div className="flex space-x-3 pl-6 pr-3">
               {quickAndEasyRecipes.map((recipe) =>
               <div
                 key={recipe.id}
-                className="flex-shrink-0 w-[180px] bg-white rounded-2xl shadow-sm overflow-hidden hover:shadow-md transition-shadow duration-200">
+                className="flex-shrink-0 w-[220px] bg-white rounded-2xl shadow-sm overflow-hidden">
 
                   <div
                   className="relative cursor-pointer"
@@ -609,54 +620,61 @@ export const RecipeRecommendationHub: React.FC<
                     <img
                     src={recipe.image}
                     alt={recipe.title}
-                    className="w-full h-[180px] object-cover" />
+                    className="w-full h-[150px] object-cover" />
 
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent" />
                     <button
                     onClick={(e) => {
                       e.stopPropagation();
                       handleAddToMealPlan(recipe);
                     }}
-                    className="absolute top-3 right-3 w-8 h-8 bg-white/90 backdrop-blur-sm rounded-full flex items-center justify-center shadow-md hover:bg-white hover:scale-110 transition-all duration-200"
+                    className="absolute top-2.5 right-2.5 w-8 h-8 bg-white/90 backdrop-blur-sm rounded-full flex items-center justify-center shadow-md hover:bg-white hover:scale-110 transition-all duration-200"
                     aria-label="Add to meal plan">
 
-                      <PlusIcon size={18} className="text-[#1A1A1A]" />
+                      <PlusIcon size={16} className="text-[#1A1A1A]" />
                     </button>
+                    <div className="absolute bottom-2.5 left-3">
+                      <span className="text-[10px] font-semibold text-white bg-black/30 backdrop-blur-sm px-2 py-0.5 rounded-full">
+                        {recipe.cookingTime}
+                      </span>
+                    </div>
                   </div>
                   <div className="p-3">
-                    <h3 className="font-semibold text-[#1A1A1A] text-sm mb-1 line-clamp-2">
+                    <h3 className="font-semibold text-[#1A1A1A] text-sm mb-1.5 line-clamp-1">
                       {recipe.title}
                     </h3>
-                    <div className="flex items-center text-xs text-[#64748B]">
-                      <ClockIcon size={12} className="mr-1" />
-                      <span>{recipe.cookingTime}</span>
+                    <div className="flex items-center justify-between text-xs text-[#64748B]">
+                      <div className="flex items-center">
+                        <ClockIcon size={11} className="mr-1" />
+                        <span>{recipe.cookingTime}</span>
+                      </div>
+                      <span>{recipe.calories} cal</span>
                     </div>
                   </div>
                 </div>
               )}
+              <div className="flex-shrink-0 w-3" />
             </div>
           </div>
         </section>
 
-        {/* Trending Now Section - Horizontal Scroll */}
-        <section className="py-4">
-          <div className="px-6 mb-3">
-            <div className="flex items-center justify-between">
-              <h2 className="text-lg font-bold text-[#1A1A1A] flex items-center">
-                Trending Now
-                <FlameIcon size={16} className="ml-2 text-[#F44336]" />
-              </h2>
-              <button className="text-[#4CAF50] text-sm font-medium flex items-center hover:text-[#43A047] transition-colors">
-                View All
-                <ChevronRightIcon size={16} />
-              </button>
-            </div>
+        {/* Trending Now */}
+        <section className="py-5">
+          <div className="px-6 mb-3 flex items-center justify-between">
+            <h2 className="text-lg font-bold text-[#1A1A1A] flex items-center">
+              Trending Now
+              <FlameIcon size={16} className="ml-2 text-[#F44336]" />
+            </h2>
+            <button className="text-[#4CAF50] text-sm font-medium flex items-center hover:text-[#43A047] transition-colors">
+              View All <ChevronRightIcon size={16} />
+            </button>
           </div>
-          <div className="overflow-x-auto scrollbar-hide px-6">
-            <div className="flex space-x-4 pb-2">
+          <div className="overflow-x-auto scrollbar-hide">
+            <div className="flex space-x-3 pl-6 pr-3">
               {trendingRecipes.map((recipe) =>
               <div
                 key={recipe.id}
-                className="flex-shrink-0 w-[180px] bg-white rounded-2xl shadow-sm overflow-hidden hover:shadow-md transition-shadow duration-200">
+                className="flex-shrink-0 w-[220px] bg-white rounded-2xl shadow-sm overflow-hidden">
 
                   <div
                   className="relative cursor-pointer"
@@ -665,36 +683,47 @@ export const RecipeRecommendationHub: React.FC<
                     <img
                     src={recipe.image}
                     alt={recipe.title}
-                    className="w-full h-[180px] object-cover" />
+                    className="w-full h-[150px] object-cover" />
 
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent" />
                     <button
                     onClick={(e) => {
                       e.stopPropagation();
                       handleAddToMealPlan(recipe);
                     }}
-                    className="absolute top-3 right-3 w-8 h-8 bg-white/90 backdrop-blur-sm rounded-full flex items-center justify-center shadow-md hover:bg-white hover:scale-110 transition-all duration-200"
+                    className="absolute top-2.5 right-2.5 w-8 h-8 bg-white/90 backdrop-blur-sm rounded-full flex items-center justify-center shadow-md hover:bg-white hover:scale-110 transition-all duration-200"
                     aria-label="Add to meal plan">
 
-                      <PlusIcon size={18} className="text-[#1A1A1A]" />
+                      <PlusIcon size={16} className="text-[#1A1A1A]" />
                     </button>
+                    <div className="absolute bottom-2.5 left-3 flex items-center space-x-1.5">
+                      <FlameIcon size={12} className="text-[#F44336]" />
+                      <span className="text-[10px] font-semibold text-white bg-black/30 backdrop-blur-sm px-2 py-0.5 rounded-full">
+                        Trending
+                      </span>
+                    </div>
                   </div>
                   <div className="p-3">
-                    <h3 className="font-semibold text-[#1A1A1A] text-sm mb-1 line-clamp-2">
+                    <h3 className="font-semibold text-[#1A1A1A] text-sm mb-1.5 line-clamp-1">
                       {recipe.title}
                     </h3>
-                    <div className="flex items-center text-xs text-[#64748B]">
-                      <ClockIcon size={12} className="mr-1" />
-                      <span>{recipe.cookingTime}</span>
+                    <div className="flex items-center justify-between text-xs text-[#64748B]">
+                      <div className="flex items-center">
+                        <ClockIcon size={11} className="mr-1" />
+                        <span>{recipe.cookingTime}</span>
+                      </div>
+                      <span>{recipe.calories} cal</span>
                     </div>
                   </div>
                 </div>
               )}
+              <div className="flex-shrink-0 w-3" />
             </div>
           </div>
         </section>
 
-        {/* Pantry Challenge Section - Horizontal Scroll */}
-        <section className="py-4">
+        {/* Pantry Challenge */}
+        <section className="py-5">
           <div className="px-6 mb-3">
             <div className="flex items-center justify-between">
               <h2 className="text-lg font-bold text-[#1A1A1A] flex items-center">
@@ -702,20 +731,19 @@ export const RecipeRecommendationHub: React.FC<
                 <LightbulbIcon size={16} className="ml-2 text-[#FFB800]" />
               </h2>
               <button className="text-[#4CAF50] text-sm font-medium flex items-center hover:text-[#43A047] transition-colors">
-                View All
-                <ChevronRightIcon size={16} />
+                View All <ChevronRightIcon size={16} />
               </button>
             </div>
-            <p className="text-sm text-[#64748B] mt-1">
+            <p className="text-sm text-[#64748B] mt-0.5">
               Creative recipes using only what you already have
             </p>
           </div>
-          <div className="overflow-x-auto scrollbar-hide px-6">
-            <div className="flex space-x-4 pb-2">
+          <div className="overflow-x-auto scrollbar-hide">
+            <div className="flex space-x-3 pl-6 pr-3">
               {pantryRecipes.map((recipe) =>
               <div
                 key={recipe.id}
-                className="flex-shrink-0 w-[180px] bg-white rounded-2xl shadow-sm overflow-hidden hover:shadow-md transition-shadow duration-200">
+                className="flex-shrink-0 w-[220px] bg-white rounded-2xl shadow-sm overflow-hidden">
 
                   <div
                   className="relative cursor-pointer"
@@ -724,30 +752,40 @@ export const RecipeRecommendationHub: React.FC<
                     <img
                     src={recipe.image}
                     alt={recipe.title}
-                    className="w-full h-[180px] object-cover" />
+                    className="w-full h-[150px] object-cover" />
 
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent" />
                     <button
                     onClick={(e) => {
                       e.stopPropagation();
                       handleAddToMealPlan(recipe);
                     }}
-                    className="absolute top-3 right-3 w-8 h-8 bg-white/90 backdrop-blur-sm rounded-full flex items-center justify-center shadow-md hover:bg-white hover:scale-110 transition-all duration-200"
+                    className="absolute top-2.5 right-2.5 w-8 h-8 bg-white/90 backdrop-blur-sm rounded-full flex items-center justify-center shadow-md hover:bg-white hover:scale-110 transition-all duration-200"
                     aria-label="Add to meal plan">
 
-                      <PlusIcon size={18} className="text-[#1A1A1A]" />
+                      <PlusIcon size={16} className="text-[#1A1A1A]" />
                     </button>
+                    <div className="absolute bottom-2.5 left-3">
+                      <span className="text-[10px] font-semibold text-white bg-black/30 backdrop-blur-sm px-2 py-0.5 rounded-full">
+                        100% pantry match
+                      </span>
+                    </div>
                   </div>
                   <div className="p-3">
-                    <h3 className="font-semibold text-[#1A1A1A] text-sm mb-1 line-clamp-2">
+                    <h3 className="font-semibold text-[#1A1A1A] text-sm mb-1.5 line-clamp-1">
                       {recipe.title}
                     </h3>
-                    <div className="flex items-center text-xs text-[#64748B]">
-                      <ClockIcon size={12} className="mr-1" />
-                      <span>{recipe.cookingTime}</span>
+                    <div className="flex items-center justify-between text-xs text-[#64748B]">
+                      <div className="flex items-center">
+                        <ClockIcon size={11} className="mr-1" />
+                        <span>{recipe.cookingTime}</span>
+                      </div>
+                      <span>{recipe.calories} cal</span>
                     </div>
                   </div>
                 </div>
               )}
+              <div className="flex-shrink-0 w-3" />
             </div>
           </div>
         </section>

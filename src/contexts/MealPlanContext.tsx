@@ -8,7 +8,7 @@ interface Meal {
   time: string;
   image: string;
   completed: boolean;
-  date: string; // ISO date string
+  date: string;
   progress: {
     hasIngredients: boolean;
     hasRecipe: boolean;
@@ -27,7 +27,7 @@ interface MealPlanContextType {
     calories: number;
   },
   date: Date,
-  mealType: 'breakfast' | 'lunch' | 'dinner')
+  mealType: 'breakfast' | 'lunch' | 'dinner' | 'snack')
   => void;
   updateMeal: (mealId: string, updates: Partial<Meal>) => void;
   getMealsForDate: (date: Date) => Meal[];
@@ -49,7 +49,6 @@ interface MealPlanProviderProps {
 export const MealPlanProvider: React.FC<MealPlanProviderProps> = ({
   children
 }) => {
-  // Initialize with some default meals for today
   const today = new Date().toISOString().split('T')[0];
   const [meals, setMeals] = useState<Meal[]>([
   {
@@ -134,11 +133,12 @@ export const MealPlanProvider: React.FC<MealPlanProviderProps> = ({
     calories: number;
   },
   date: Date,
-  mealType: 'breakfast' | 'lunch' | 'dinner') =>
+  mealType: 'breakfast' | 'lunch' | 'dinner' | 'snack') =>
   {
     const timeMap = {
       breakfast: '8:00 AM',
       lunch: '12:30 PM',
+      snack: '3:30 PM',
       dinner: '7:00 PM'
     };
     const newMeal: Meal = {

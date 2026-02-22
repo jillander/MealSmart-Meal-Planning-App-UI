@@ -607,7 +607,7 @@ export const CategoryBrowseScreen: React.FC<CategoryBrowseScreenProps> = ({
   };
   const handleConfirmAddToMealPlan = (
   date: Date,
-  mealType: 'breakfast' | 'lunch' | 'dinner') =>
+  mealType: 'breakfast' | 'lunch' | 'dinner' | 'snack') =>
   {
     if (selectedRecipeForPlan) {
       // Add the meal to the context

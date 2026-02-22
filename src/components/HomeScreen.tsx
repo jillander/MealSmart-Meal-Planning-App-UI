@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, Component } from 'react';
 import {
   BellIcon,
   HomeIcon,
@@ -8,7 +8,10 @@ import {
   CameraIcon,
   ImportIcon,
   XIcon,
-  BarChartIcon } from
+  BarChartIcon,
+  DumbbellIcon,
+  WheatIcon,
+  DropletIcon } from
 'lucide-react';
 import { CalendarStrip } from './CalendarStrip';
 import { MealRow } from './MealRow';
@@ -26,7 +29,6 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({ navigateTo }) => {
   const [isFirstTimeUser, setIsFirstTimeUser] = useState(false);
   const [showImportGuide, setShowImportGuide] = useState(false);
   const [overallProgress, setOverallProgress] = useState(2);
-  // Use the meal plan context
   const { getMealsForDate, updateMeal } = useMealPlan();
   const meals = getMealsForDate(selectedDate);
   const completedMeals = meals.filter((meal) => meal.completed).length;
@@ -129,9 +131,11 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({ navigateTo }) => {
   const handleViewResults = (uploadId: number) => {
     navigateTo('ingredient-confirmation');
   };
-  // Simulate progress update for the incomplete upload
   useEffect(() => {
-    if (recentUploads.some((upload) => !upload.isComplete)) {
+    const hasIncompleteUploads = recentUploads.some(
+      (upload) => !upload.isComplete
+    );
+    if (hasIncompleteUploads) {
       const interval = setInterval(() => {
         setRecentUploads((prev) =>
         prev.map((upload) =>
@@ -147,13 +151,11 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({ navigateTo }) => {
       }, 300);
       return () => clearInterval(interval);
     }
-  }, [recentUploads]);
+  }, []);
   return (
     <div className="flex flex-col min-h-screen bg-[#FAFAFA] max-w-[430px] mx-auto">
-      {/* Toast Notification */}
       {toast.visible && <ToastNotification message={toast.message} />}
 
-      {/* Recipe Import Guide */}
       {showImportGuide &&
       <RecipeImportGuide
         onClose={() => setShowImportGuide(false)}
@@ -164,7 +166,6 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({ navigateTo }) => {
 
       }
 
-      {/* Status Bar - Refined */}
       <div className="flex justify-between items-center px-5 py-2.5 bg-white text-[#1A1A1A] border-b border-[#F3F4F6]">
         <span className="text-sm font-medium tracking-tight">9:41 AM</span>
         <div className="flex items-center space-x-2.5">
@@ -173,7 +174,6 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({ navigateTo }) => {
         </div>
       </div>
 
-      {/* App Header - Refined */}
       <header className="flex justify-between items-center px-5 py-4 bg-white border-b border-[#F3F4F6]">
         <div className="flex items-center">
           <h1 className="text-2xl font-bold text-[#1A1A1A] tracking-tight">
@@ -193,7 +193,6 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({ navigateTo }) => {
         <MealPrepSetup onComplete={() => setIsFirstTimeUser(false)} /> :
 
         <>
-            {/* Calendar Strip - Refined spacing */}
             <div className="px-5 py-3 bg-white border-b border-[#F3F4F6]">
               <CalendarStrip
               selectedDate={selectedDate}
@@ -201,7 +200,6 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({ navigateTo }) => {
 
             </div>
 
-            {/* Swipeable Dashboard Section - Refined */}
             <div
             className="relative"
             onTouchStart={handleTouchStart}
@@ -281,65 +279,74 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({ navigateTo }) => {
                       label: 'Protein',
                       value: '30g left',
                       color: '#4CAF50',
-                      icon: '🥩',
+                      IconComponent: DumbbellIcon,
                       progress: 75
                     },
                     {
                       label: 'Carbs',
                       value: '37g left',
                       color: '#FF9800',
-                      icon: '🌾',
+                      IconComponent: WheatIcon,
                       progress: 85
                     },
                     {
                       label: 'Fat',
                       value: '11g left',
                       color: '#2196F3',
-                      icon: '🥑',
+                      IconComponent: DropletIcon,
                       progress: 60
                     }].
-                    map((stat) =>
-                    <div
-                      key={stat.label}
-                      className="bg-[#FAFAFA] rounded-xl p-3.5 text-center hover:bg-[#F5F6F7] transition-colors duration-200">
+                    map((stat) => {
+                      const Icon = stat.IconComponent;
+                      return (
+                        <div
+                          key={stat.label}
+                          className="bg-[#FAFAFA] rounded-xl p-3.5 text-center transition-colors duration-200">
 
-                          <div className="relative w-12 h-12 mx-auto mb-2">
-                            <div className="absolute inset-0 flex items-center justify-center z-10">
-                              <span className="text-xl">{stat.icon}</span>
+                            <div className="relative w-12 h-12 mx-auto mb-2">
+                              <div className="absolute inset-0 flex items-center justify-center z-10">
+                                <Icon
+                                size={20}
+                                style={{
+                                  color: stat.color
+                                }}
+                                strokeWidth={2.5} />
+
+                              </div>
+                              <svg
+                              className="w-full h-full -rotate-90 absolute inset-0"
+                              viewBox="0 0 48 48">
+
+                                <circle
+                                cx="24"
+                                cy="24"
+                                r="20"
+                                fill="none"
+                                stroke="#F1F5F9"
+                                strokeWidth="3.5" />
+
+                                <circle
+                                cx="24"
+                                cy="24"
+                                r="20"
+                                fill="none"
+                                stroke={stat.color}
+                                strokeWidth="3.5"
+                                strokeDasharray={`${stat.progress * 1.26} 126`}
+                                strokeLinecap="round"
+                                className="transition-all duration-700 ease-out" />
+
+                              </svg>
                             </div>
-                            <svg
-                          className="w-full h-full -rotate-90 absolute inset-0"
-                          viewBox="0 0 48 48">
+                            <p className="text-sm font-bold text-[#1A1A1A] tracking-tight">
+                              {stat.value}
+                            </p>
+                            <p className="text-xs text-[#94A3B8] font-medium mt-0.5">
+                              {stat.label}
+                            </p>
+                          </div>);
 
-                              <circle
-                            cx="24"
-                            cy="24"
-                            r="20"
-                            fill="none"
-                            stroke="#F1F5F9"
-                            strokeWidth="3.5" />
-
-                              <circle
-                            cx="24"
-                            cy="24"
-                            r="20"
-                            fill="none"
-                            stroke={stat.color}
-                            strokeWidth="3.5"
-                            strokeDasharray={`${stat.progress * 1.26} 126`}
-                            strokeLinecap="round"
-                            className="transition-all duration-700 ease-out" />
-
-                            </svg>
-                          </div>
-                          <p className="text-sm font-bold text-[#1A1A1A] tracking-tight">
-                            {stat.value}
-                          </p>
-                          <p className="text-xs text-[#94A3B8] font-medium mt-0.5">
-                            {stat.label}
-                          </p>
-                        </div>
-                    )}
+                    })}
                     </div>
                   </div>
                 </div>
@@ -355,7 +362,6 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({ navigateTo }) => {
               </div>
             </div>
 
-            {/* Recent Uploads Section - Refined */}
             {recentUploads.length > 0 &&
           <div className="px-5 pt-4 pb-2">
                 <h2 className="text-lg font-bold text-[#1A1A1A] mb-3 tracking-tight">
@@ -375,14 +381,12 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({ navigateTo }) => {
               </div>
           }
 
-            {/* Meals Section Header - Refined */}
             <div className="px-5 pt-4 pb-2">
               <h2 className="text-xl font-bold text-[#1A1A1A] tracking-tight">
                 Today's Meals
               </h2>
             </div>
 
-            {/* Meals List Section - Refined spacing */}
             <div className="flex-1 overflow-y-auto pb-24">
               <div className="px-5 py-2 space-y-4">
                 {['breakfast', 'lunch', 'snack', 'dinner'].map((mealType) => {
@@ -434,7 +438,6 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({ navigateTo }) => {
         }
       </main>
 
-      {/* Bottom Navigation - Refined */}
       <nav className="fixed bottom-0 left-0 right-0 max-w-[430px] mx-auto bg-white/95 backdrop-blur-lg border-t border-[#F3F4F6] z-20">
         <div className="flex justify-around items-center py-3 px-5 relative">
           <button className="flex flex-col items-center p-2 text-[#4CAF50] transition-all duration-200">

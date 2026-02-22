@@ -7,7 +7,8 @@ import {
   CheckIcon,
   SunriseIcon,
   SunIcon,
-  MoonIcon } from
+  MoonIcon,
+  CoffeeIcon } from
 'lucide-react';
 interface AddToMealPlanModalProps {
   recipe: {
@@ -18,7 +19,10 @@ interface AddToMealPlanModalProps {
     calories: number;
   };
   onClose: () => void;
-  onAdd: (date: Date, mealType: 'breakfast' | 'lunch' | 'dinner') => void;
+  onAdd: (
+  date: Date,
+  mealType: 'breakfast' | 'lunch' | 'dinner' | 'snack')
+  => void;
 }
 export const AddToMealPlanModal: React.FC<AddToMealPlanModalProps> = ({
   recipe,
@@ -27,7 +31,7 @@ export const AddToMealPlanModal: React.FC<AddToMealPlanModalProps> = ({
 }) => {
   const [selectedDate, setSelectedDate] = useState<Date>(new Date());
   const [selectedMealType, setSelectedMealType] = useState<
-    'breakfast' | 'lunch' | 'dinner' | null>(
+    'breakfast' | 'lunch' | 'dinner' | 'snack' | null>(
     null);
   const [currentMonth, setCurrentMonth] = useState(new Date());
   // Generate calendar days
@@ -96,6 +100,15 @@ export const AddToMealPlanModal: React.FC<AddToMealPlanModalProps> = ({
     bgColor: 'bg-yellow-50',
     textColor: 'text-yellow-600',
     borderColor: 'border-yellow-200'
+  },
+  {
+    id: 'snack' as const,
+    label: 'Snack',
+    icon: CoffeeIcon,
+    color: 'from-pink-400 to-rose-400',
+    bgColor: 'bg-pink-50',
+    textColor: 'text-pink-600',
+    borderColor: 'border-pink-200'
   },
   {
     id: 'dinner' as const,
