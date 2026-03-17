@@ -22,7 +22,7 @@ export const RecipeImportGuide: React.FC<RecipeImportGuideProps> = ({
           <button
             onClick={onClose}
             className="w-8 h-8 flex items-center justify-center rounded-full hover:bg-gray-100">
-
+            
             <XIcon size={20} />
           </button>
         </div>
@@ -80,7 +80,7 @@ export const RecipeImportGuide: React.FC<RecipeImportGuideProps> = ({
         <button
           onClick={onImport}
           className="w-full py-3 bg-[#4CAF50] text-white rounded-full font-medium">
-
+          
           Continue
         </button>
       </div>

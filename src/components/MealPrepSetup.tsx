@@ -100,7 +100,7 @@ export const MealPrepSetup: React.FC<MealPrepSetupProps> = ({ onComplete }) => {
                 setStep(2);
               }}
               className="w-full p-4 bg-white rounded-xl border border-gray-100 flex items-center justify-between hover:shadow-md transition-all duration-200">
-
+              
                 <span className="font-medium">{number} meals</span>
                 <ChevronRightIcon size={20} className="text-[#4CAF50]" />
               </button>
@@ -124,7 +124,7 @@ export const MealPrepSetup: React.FC<MealPrepSetupProps> = ({ onComplete }) => {
                 setStep(3);
               }}
               className="w-full p-4 bg-white rounded-xl border border-gray-100 hover:shadow-md transition-all duration-200">
-
+              
                 <div className="flex items-center justify-between">
                   <div className="text-left">
                     <p className="font-medium text-[#1A1A1A]">{diet.name}</p>
@@ -149,7 +149,7 @@ export const MealPrepSetup: React.FC<MealPrepSetupProps> = ({ onComplete }) => {
                 key={cuisine.id}
                 onClick={() => handleCuisineToggle(cuisine.id)}
                 className={`p-4 rounded-xl border ${preferences.cuisine.includes(cuisine.id) ? 'border-[#4CAF50] bg-[#4CAF50]/10' : 'border-gray-100 bg-white'} transition-all duration-200`}>
-
+                
                   <div className="flex flex-col items-center text-center">
                     <span className="text-2xl mb-2">{cuisine.emoji}</span>
                     <span className="text-sm font-medium">{cuisine.name}</span>
@@ -163,7 +163,7 @@ export const MealPrepSetup: React.FC<MealPrepSetupProps> = ({ onComplete }) => {
             <button
               onClick={() => setStep(4)}
               className="w-full mt-4 py-3 bg-[#4CAF50] text-white rounded-full font-medium flex items-center justify-center">
-
+              
               Continue
               <ArrowRightIcon size={18} className="ml-2" />
             </button>
@@ -186,7 +186,7 @@ export const MealPrepSetup: React.FC<MealPrepSetupProps> = ({ onComplete }) => {
                 setStep(5);
               }}
               className="w-full p-4 bg-white rounded-xl border border-gray-100 flex items-center justify-between hover:shadow-md transition-all duration-200">
-
+              
                 <span className="font-medium">{dayCount} days</span>
                 <ChevronRightIcon size={20} className="text-[#4CAF50]" />
               </button>
@@ -234,7 +234,7 @@ export const MealPrepSetup: React.FC<MealPrepSetupProps> = ({ onComplete }) => {
             <button
               onClick={onComplete}
               className="w-full py-4 bg-[#4CAF50] text-white rounded-full font-medium text-lg shadow-sm hover:bg-opacity-90 transition-colors">
-
+              
               Start My Meal Plan
             </button>
           </div>);

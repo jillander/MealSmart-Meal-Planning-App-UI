@@ -18,12 +18,12 @@ export const RecentUploadCard: React.FC<RecentUploadCardProps> = ({
         ${isComplete ? 'hover:border-[#4CAF50] cursor-pointer' : ''}
         transition-all duration-300`}
       onClick={isComplete ? onClick : undefined}>
-
+      
       <div className="flex items-center">
         <div
           className={`w-10 h-10 rounded-full flex items-center justify-center 
           ${isComplete ? 'bg-[#4CAF50]/10' : 'bg-gray-100'}`}>
-
+          
           {isComplete ?
           <CheckIcon size={16} className="text-[#4CAF50]" /> :
 
@@ -43,7 +43,7 @@ export const RecentUploadCard: React.FC<RecentUploadCardProps> = ({
             e.stopPropagation();
             onClick();
           }}>
-
+          
             View results
             <ArrowRightIcon size={12} className="ml-1" />
           </button> :
@@ -55,7 +55,7 @@ export const RecentUploadCard: React.FC<RecentUploadCardProps> = ({
               style={{
                 width: `${progress}%`
               }} />
-
+            
             </div>
             <p className="text-xs text-right text-[#757575] mt-1">
               {progress}%

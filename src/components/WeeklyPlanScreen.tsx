@@ -66,7 +66,7 @@ export const WeeklyPlanScreen: React.FC<WeeklyPlanScreenProps> = ({
             style={{
               width: `${progressPercentage}%`
             }} />
-
+          
         </div>
         <p className="text-sm text-[#757575] mt-2">
           {completedDays} of {totalDays} days completed
@@ -83,7 +83,7 @@ export const WeeklyPlanScreen: React.FC<WeeklyPlanScreenProps> = ({
                 ref={provided.innerRef}
                 {...provided.droppableProps}
                 className={`bg-white rounded-xl p-4 ${snapshot.isDraggingOver ? 'bg-gray-50' : ''}`}>
-
+                
                     <h2 className="font-medium text-[#1A1A1A] mb-2">
                       {day.title}
                       <span className="text-sm text-[#757575] ml-2">
@@ -96,28 +96,28 @@ export const WeeklyPlanScreen: React.FC<WeeklyPlanScreenProps> = ({
                     key={meal.id}
                     draggableId={meal.id}
                     index={index}>
-
+                    
                           {(provided, snapshot) =>
                     <div
                       ref={provided.innerRef}
                       {...provided.draggableProps}
                       className={`bg-white rounded-lg border border-gray-100 p-3 ${snapshot.isDragging ? 'shadow-lg' : ''}`}>
-
+                      
                               <div className="flex items-center">
                                 <div
                           {...provided.dragHandleProps}
                           className="mr-3">
-
+                          
                                   <GripHorizontalIcon
                             size={16}
                             className="text-gray-400" />
-
+                          
                                 </div>
                                 <img
                           src={meal.image}
                           alt={meal.name}
                           className="w-12 h-12 rounded-lg object-cover" />
-
+                        
                                 <div className="ml-3 flex-1">
                                   <p className="text-xs text-[#757575]">
                                     {meal.type}

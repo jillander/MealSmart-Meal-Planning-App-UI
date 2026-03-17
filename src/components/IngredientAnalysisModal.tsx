@@ -258,7 +258,7 @@ export const IngredientAnalysisModal: React.FC<
       <div
         className="absolute inset-0 bg-black/30 backdrop-blur-sm"
         onClick={onClose} />
-
+      
       {/* Modal Content */}
       <div className="relative w-full max-w-[430px] bg-white rounded-t-[24px] shadow-xl transform transition-transform duration-300 ease-out animate-slide-up">
         <div className="absolute top-0 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
@@ -285,7 +285,7 @@ export const IngredientAnalysisModal: React.FC<
           <button
             onClick={onClose}
             className="w-8 h-8 flex items-center justify-center rounded-full text-[#757575] hover:bg-gray-100">
-
+            
             <XIcon size={20} />
           </button>
         </div>
@@ -295,7 +295,7 @@ export const IngredientAnalysisModal: React.FC<
             progress={progress}
             size={64}
             hasError={hasError} />
-
+          
         </div>
         {/* Steps Indicator */}
         <div className="px-6 mt-2">
@@ -304,7 +304,7 @@ export const IngredientAnalysisModal: React.FC<
             currentStep={currentStep}
             hasError={hasError}
             onRetry={retryAnalysis} />
-
+          
         </div>
         {/* Test Mode Controls */}
         {testMode &&
@@ -317,14 +317,14 @@ export const IngredientAnalysisModal: React.FC<
                 <button
                 onClick={goToNextStep}
                 className="flex-1 py-2 px-3 bg-red-600 text-white text-sm rounded-lg flex items-center justify-center">
-
+                
                   <PlayIcon size={14} className="mr-1" />
                   Next Step
                 </button>
                 <button
                 onClick={skipToCompletion}
                 className="flex-1 py-2 px-3 bg-red-600 text-white text-sm rounded-lg flex items-center justify-center">
-
+                
                   <SkipForwardIcon size={14} className="mr-1" />
                   Complete
                 </button>
@@ -337,7 +337,7 @@ export const IngredientAnalysisModal: React.FC<
           <button
             onClick={() => setShowDetails(!showDetails)}
             className="flex items-center text-sm text-[#757575] font-medium">
-
+            
             {showDetails ?
             <ChevronUpIcon size={16} className="mr-1" /> :
 
@@ -359,12 +359,12 @@ export const IngredientAnalysisModal: React.FC<
                   className="w-5 h-5"
                   viewBox="0 0 20 20"
                   fill="currentColor">
-
+                  
                     <path
                     fillRule="evenodd"
                     d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z"
                     clipRule="evenodd" />
-
+                  
                   </svg>
                 </div>
                 <div className="ml-3">
@@ -378,7 +378,7 @@ export const IngredientAnalysisModal: React.FC<
                   <button
                   onClick={retryAnalysis}
                   className="mt-2 inline-flex items-center px-3 py-1.5 border border-transparent text-xs font-medium rounded-md text-white bg-red-600 hover:bg-red-700 focus:outline-none">
-
+                  
                     <RefreshCwIcon size={14} className="mr-1" />
                     Retry Analysis
                   </button>

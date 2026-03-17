@@ -133,7 +133,7 @@ export const AddToMealPlanModal: React.FC<AddToMealPlanModalProps> = ({
               onClick={onClose}
               className="w-8 h-8 flex items-center justify-center rounded-full hover:bg-gray-100 transition-colors"
               aria-label="Close">
-
+              
               <XIcon size={20} />
             </button>
           </div>
@@ -143,7 +143,7 @@ export const AddToMealPlanModal: React.FC<AddToMealPlanModalProps> = ({
               src={recipe.image}
               alt={recipe.title}
               className="w-16 h-16 rounded-lg object-cover" />
-
+            
             <div className="ml-3 flex-1">
               <h3 className="font-medium text-[#1A1A1A] text-sm line-clamp-1">
                 {recipe.title}
@@ -168,7 +168,7 @@ export const AddToMealPlanModal: React.FC<AddToMealPlanModalProps> = ({
                 onClick={handlePrevMonth}
                 className="w-8 h-8 flex items-center justify-center rounded-full hover:bg-gray-100 transition-colors"
                 aria-label="Previous month">
-
+                
                 <ChevronLeftIcon size={20} />
               </button>
               <h4 className="font-semibold text-[#1A1A1A]">
@@ -181,7 +181,7 @@ export const AddToMealPlanModal: React.FC<AddToMealPlanModalProps> = ({
                 onClick={handleNextMonth}
                 className="w-8 h-8 flex items-center justify-center rounded-full hover:bg-gray-100 transition-colors"
                 aria-label="Next month">
-
+                
                 <ChevronRightIcon size={20} />
               </button>
             </div>
@@ -192,7 +192,7 @@ export const AddToMealPlanModal: React.FC<AddToMealPlanModalProps> = ({
               <div
                 key={index}
                 className="text-center text-xs font-medium text-[#64748B] pb-2">
-
+                
                   {day}
                 </div>
               )}
@@ -215,7 +215,7 @@ export const AddToMealPlanModal: React.FC<AddToMealPlanModalProps> = ({
                       ${!isSelected && !isToday && !isPast ? 'hover:bg-gray-100 text-[#1A1A1A]' : ''}
                       ${isPast ? 'text-gray-300 cursor-not-allowed' : 'cursor-pointer'}
                     `}>
-
+                    
                     {day.getDate()}
                   </button>);
 
@@ -240,10 +240,10 @@ export const AddToMealPlanModal: React.FC<AddToMealPlanModalProps> = ({
                       w-full p-4 rounded-xl border-2 transition-all duration-200 flex items-center
                       ${isSelected ? `${mealType.borderColor} ${mealType.bgColor}` : 'border-gray-200 hover:border-gray-300'}
                     `}>
-
+                    
                     <div
                       className={`w-12 h-12 rounded-full bg-gradient-to-br ${mealType.color} flex items-center justify-center mr-4`}>
-
+                      
                       <Icon size={24} className="text-white" />
                     </div>
                     <div className="flex-1 text-left">
@@ -273,14 +273,14 @@ export const AddToMealPlanModal: React.FC<AddToMealPlanModalProps> = ({
             <button
               onClick={onClose}
               className="flex-1 py-3 border border-gray-200 text-[#1A1A1A] rounded-full font-medium hover:bg-gray-50 transition-colors">
-
+              
               Cancel
             </button>
             <button
               onClick={handleAddToMealPlan}
               disabled={!selectedMealType}
               className={`flex-1 py-3 rounded-full font-medium transition-colors ${selectedMealType ? 'bg-[#4CAF50] text-white hover:bg-[#43A047]' : 'bg-gray-200 text-gray-400 cursor-not-allowed'}`}>
-
+              
               Add to Plan
             </button>
           </div>

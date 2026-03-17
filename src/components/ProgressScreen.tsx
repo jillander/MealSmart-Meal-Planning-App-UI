@@ -147,7 +147,7 @@ export const ProgressScreen: React.FC<ProgressScreenProps> = ({
           <div
             key={index}
             className="flex items-center justify-between gap-4 mb-0.5">
-
+            
               <span className="capitalize text-gray-600 flex items-center gap-1">
                 <span
                 className="w-2 h-2 rounded-full"
@@ -186,7 +186,7 @@ export const ProgressScreen: React.FC<ProgressScreenProps> = ({
           <button
             onClick={() => navigateTo('home')}
             className="mr-3 p-2 -ml-2 hover:bg-gray-50 rounded-full transition-colors">
-
+            
             <ArrowLeftIcon size={20} className="text-gray-900" />
           </button>
           <h1 className="text-xl font-bold text-[#1A1A1A]">Progress</h1>
@@ -198,7 +198,7 @@ export const ProgressScreen: React.FC<ProgressScreenProps> = ({
             key={tab}
             className={`px-3 py-1.5 text-xs font-semibold rounded-lg capitalize transition-all duration-200 ${activeTab === tab ? 'bg-white text-[#1A1A1A] shadow-sm' : 'text-gray-500 hover:text-gray-700'}`}
             onClick={() => setActiveTab(tab)}>
-
+            
               {tab.charAt(0).toUpperCase() + tab.slice(1)}
             </button>
           )}
@@ -304,12 +304,12 @@ export const ProgressScreen: React.FC<ProgressScreenProps> = ({
                   left: -20,
                   bottom: 0
                 }}>
-
+                
                 <CartesianGrid
                   strokeDasharray="3 3"
                   vertical={false}
                   stroke="#F3F4F6" />
-
+                
                 <XAxis
                   dataKey="day"
                   axisLine={false}
@@ -319,7 +319,7 @@ export const ProgressScreen: React.FC<ProgressScreenProps> = ({
                     fill: '#9CA3AF'
                   }}
                   dy={10} />
-
+                
                 <YAxis
                   axisLine={false}
                   tickLine={false}
@@ -327,18 +327,18 @@ export const ProgressScreen: React.FC<ProgressScreenProps> = ({
                     fontSize: 11,
                     fill: '#9CA3AF'
                   }} />
-
+                
                 <Tooltip
                   content={<CustomTooltip />}
                   cursor={{
                     fill: '#F9FAFB'
                   }} />
-
+                
                 <ReferenceLine
                   y={1800}
                   stroke="#EF4444"
                   strokeDasharray="3 3" />
-
+                
                 <Legend
                   verticalAlign="top"
                   height={36}
@@ -348,35 +348,35 @@ export const ProgressScreen: React.FC<ProgressScreenProps> = ({
                     fontSize: '10px',
                     color: '#6B7280'
                   }} />
-
+                
                 <Bar
                   dataKey="breakfast"
                   name="Breakfast"
                   stackId="a"
                   fill="#F59E0B"
                   radius={[0, 0, 0, 0]} />
-
+                
                 <Bar
                   dataKey="lunch"
                   name="Lunch"
                   stackId="a"
                   fill="#4CAF50"
                   radius={[0, 0, 0, 0]} />
-
+                
                 <Bar
                   dataKey="snack"
                   name="Snack"
                   stackId="a"
                   fill="#60A5FA"
                   radius={[0, 0, 0, 0]} />
-
+                
                 <Bar
                   dataKey="dinner"
                   name="Dinner"
                   stackId="a"
                   fill="#8B5CF6"
                   radius={[4, 4, 0, 0]} />
-
+                
               </BarChart>
             </ResponsiveContainer>
           </div>
@@ -407,7 +407,7 @@ export const ProgressScreen: React.FC<ProgressScreenProps> = ({
                     width: `${Math.min(macro.current / macro.target * 100, 100)}%`,
                     backgroundColor: macro.color
                   }} />
-
+                
                 </div>
               </div>
             )}
@@ -439,7 +439,7 @@ export const ProgressScreen: React.FC<ProgressScreenProps> = ({
                   fill="none"
                   stroke="#F3F4F6"
                   strokeWidth="8" />
-
+                
                 <circle
                   cx="50"
                   cy="50"
@@ -449,7 +449,7 @@ export const ProgressScreen: React.FC<ProgressScreenProps> = ({
                   strokeWidth="8"
                   strokeDasharray={`${progressStats.mealCompletionRate * 2.51} 251`}
                   strokeLinecap="round" />
-
+                
                 <defs>
                   <linearGradient
                     id="gradient"
@@ -457,7 +457,7 @@ export const ProgressScreen: React.FC<ProgressScreenProps> = ({
                     y1="0%"
                     x2="100%"
                     y2="0%">
-
+                    
                     <stop offset="0%" stopColor="#4CAF50" />
                     <stop offset="100%" stopColor="#81C784" />
                   </linearGradient>
@@ -483,10 +483,10 @@ export const ProgressScreen: React.FC<ProgressScreenProps> = ({
                   <div
                     key={day.day}
                     className="flex flex-col items-center gap-2">
-
+                    
                     <div
                       className={`w-8 h-8 rounded-full flex items-center justify-center ${isOnTrack ? 'bg-green-50 text-green-600' : 'bg-red-50 text-red-500'}`}>
-
+                      
                       {isOnTrack ?
                       <CheckCircleIcon size={14} /> :
 

@@ -56,7 +56,7 @@ export const EmptyMealSlot: React.FC<EmptyMealSlotProps> = ({
         <button
           onClick={onCapture}
           className="w-10 h-10 rounded-full bg-[#4CAF50] text-white flex items-center justify-center hover:bg-[#45a049] transition-all duration-200 transform hover:scale-110">
-
+          
           <PlusIcon size={20} />
         </button>
       </div>

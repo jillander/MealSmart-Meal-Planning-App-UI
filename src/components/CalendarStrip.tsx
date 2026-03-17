@@ -37,15 +37,15 @@ export const CalendarStrip: React.FC<CalendarStripProps> = ({
         key={date.toISOString()}
         onClick={() => onDateSelect(date)}
         className="flex flex-col items-center min-w-[48px]">
-
+        
           <span
           className={`text-xs font-medium mb-2 ${isSelected(date) ? 'text-black' : 'text-gray-400'}`}>
-
+          
             {formatDay(date)}
           </span>
           <div
           className={`w-10 h-10 flex items-center justify-center rounded-full transition-all ${isSelected(date) ? 'bg-black text-white' : isToday(date) ? 'bg-gray-100 text-black' : 'text-gray-700'}`}>
-
+          
             <span className="text-lg font-medium">{date.getDate()}</span>
           </div>
         </button>

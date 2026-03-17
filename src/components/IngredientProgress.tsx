@@ -46,12 +46,12 @@ export const IngredientProgress: React.FC<IngredientProgressProps> = ({
         <div
           key={index}
           className="w-10 h-10 rounded-full overflow-hidden shadow-sm">
-
+          
             <img
             src={ingredient.image}
             alt={ingredient.name}
             className="w-full h-full object-cover" />
-
+          
           </div>
         )}
       </div>

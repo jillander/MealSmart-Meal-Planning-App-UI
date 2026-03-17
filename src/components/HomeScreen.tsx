@@ -11,7 +11,10 @@ import {
   BarChartIcon,
   DumbbellIcon,
   WheatIcon,
-  DropletIcon } from
+  DropletIcon,
+  BookmarkIcon,
+  ChevronRightIcon,
+  ClockIcon } from
 'lucide-react';
 import { CalendarStrip } from './CalendarStrip';
 import { MealRow } from './MealRow';
@@ -28,11 +31,8 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({ navigateTo }) => {
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [isFirstTimeUser, setIsFirstTimeUser] = useState(false);
   const [showImportGuide, setShowImportGuide] = useState(false);
-  const [overallProgress, setOverallProgress] = useState(2);
-  const { getMealsForDate, updateMeal } = useMealPlan();
+  const { getMealsForDate, updateMeal, savedRecipes } = useMealPlan();
   const meals = getMealsForDate(selectedDate);
-  const completedMeals = meals.filter((meal) => meal.completed).length;
-  const totalMeals = meals.length;
   const [toast, setToast] = useState<{
     message: string;
     visible: boolean;
@@ -111,23 +111,6 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({ navigateTo }) => {
       3000
     );
   };
-  const dailyCalorieGoal = 1800;
-  const consumedCalories = 1250;
-  const remainingCalories = dailyCalorieGoal - consumedCalories;
-  const macros = {
-    protein: {
-      consumed: 90,
-      goal: 120
-    },
-    carbs: {
-      consumed: 243,
-      goal: 280
-    },
-    fat: {
-      consumed: 49,
-      goal: 60
-    }
-  };
   const handleViewResults = (uploadId: number) => {
     navigateTo('ingredient-confirmation');
   };
@@ -176,10 +159,79 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({ navigateTo }) => {
 
       <header className="flex justify-between items-center px-5 py-4 bg-white border-b border-[#F3F4F6]">
         <div className="flex items-center">
-          <h1 className="text-2xl font-bold text-[#1A1A1A] tracking-tight">
-            MealSmart
-          </h1>
-          <span className="ml-2.5 text-[10px] px-2 py-0.5 bg-[#4CAF50]/8 text-[#4CAF50] rounded-full font-semibold tracking-wide">
+          {/* Banana Mascot Logo */}
+          <div
+            className="w-9 h-9 bg-[#FFD600] rounded-xl flex items-center justify-center mr-2.5 shadow-sm"
+            style={{
+              boxShadow: '0 2px 8px rgba(255, 214, 0, 0.35)'
+            }}>
+            
+            <svg
+              width="22"
+              height="22"
+              viewBox="0 0 24 24"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg">
+              
+              {/* Banana body */}
+              <path
+                d="M6.5 4C5.5 6 4 9.5 4 13C4 16.5 6 19 9 20.5C12 22 15.5 21 17.5 19C19.5 17 20.5 14 20 11C19.5 8 17.5 6 15 5C12.5 4 9.5 3.5 6.5 4Z"
+                fill="#1A1A1A" />
+              
+              <path
+                d="M7.5 5C6.5 7 5.5 10 5.5 13C5.5 16 7 18.5 9.5 19.8C12 21 15 20.5 16.8 18.8C18.5 17 19.3 14.5 18.8 11.8C18.3 9 16.5 7 14.5 6C12.5 5 10 4.5 7.5 5Z"
+                fill="#FFD600" />
+              
+              {/* Banana highlight */}
+              <path
+                d="M8.5 7C8 8.5 7.5 10.5 7.5 12.5C7.5 14.5 8.5 16.5 10 17.5"
+                stroke="#FFF176"
+                strokeWidth="1.5"
+                strokeLinecap="round"
+                fill="none" />
+              
+              {/* Banana tip */}
+              <path
+                d="M6.5 4C6 3.5 5.8 3 6 2.5C6.2 2 6.8 1.8 7.2 2.2C7.5 2.5 7.5 3.2 7 3.8L6.5 4Z"
+                fill="#1A1A1A" />
+              
+              {/* Cute face - eyes */}
+              <circle cx="11" cy="12" r="1" fill="#1A1A1A" />
+              <circle cx="14.5" cy="11" r="1" fill="#1A1A1A" />
+              {/* Eye shine */}
+              <circle cx="11.3" cy="11.6" r="0.35" fill="white" />
+              <circle cx="14.8" cy="10.6" r="0.35" fill="white" />
+              {/* Cute smile */}
+              <path
+                d="M11.5 14C12 14.8 13.5 14.8 14 14"
+                stroke="#1A1A1A"
+                strokeWidth="0.8"
+                strokeLinecap="round"
+                fill="none" />
+              
+              {/* Rosy cheeks */}
+              <circle cx="10" cy="13.5" r="0.8" fill="#FFB74D" opacity="0.5" />
+              <circle
+                cx="15.5"
+                cy="12.5"
+                r="0.8"
+                fill="#FFB74D"
+                opacity="0.5" />
+              
+            </svg>
+          </div>
+          <div>
+            <h1
+              className="text-2xl font-extrabold tracking-tight"
+              style={{
+                fontFamily: 'var(--font-heading)'
+              }}>
+              
+              <span className="text-[#1A1A1A]">Kcal</span>
+              <span className="text-[#FFD600]"> Pal</span>
+            </h1>
+          </div>
+          <span className="ml-2.5 text-[10px] px-2 py-0.5 bg-[#1A1A1A]/8 text-[#1A1A1A] rounded-full font-semibold tracking-wide border border-[#FFD600]/40">
             AI
           </span>
         </div>
@@ -197,7 +249,7 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({ navigateTo }) => {
               <CalendarStrip
               selectedDate={selectedDate}
               onDateSelect={setSelectedDate} />
-
+            
             </div>
 
             <div
@@ -205,18 +257,18 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({ navigateTo }) => {
             onTouchStart={handleTouchStart}
             onTouchMove={handleTouchMove}
             onTouchEnd={handleTouchEnd}>
-
+            
               <div className="flex justify-center mt-3 space-x-2 px-5">
                 <button
                 onClick={() => setActiveTab('nutrition')}
                 className={`px-4 py-1.5 rounded-full text-sm font-semibold transition-all duration-300 ${activeTab === 'nutrition' ? 'bg-[#4CAF50] text-white shadow-sm' : 'bg-white text-[#64748B] hover:bg-[#F8F9FA] border border-[#E5E7EB]'}`}>
-
+                
                   Nutrition
                 </button>
                 <button
                 onClick={() => setActiveTab('health')}
                 className={`px-4 py-1.5 rounded-full text-sm font-semibold transition-all duration-300 ${activeTab === 'health' ? 'bg-[#4CAF50] text-white shadow-sm' : 'bg-white text-[#64748B] hover:bg-[#F8F9FA] border border-[#E5E7EB]'}`}>
-
+                
                   Health
                 </button>
               </div>
@@ -224,7 +276,7 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({ navigateTo }) => {
               <div className="relative h-[320px] overflow-hidden">
                 <div
                 className={`absolute inset-0 transition-all duration-300 ease-out transform ${activeTab === 'nutrition' ? 'translate-x-0 opacity-100' : 'translate-x-[-100%] opacity-0'}`}>
-
+                
                   <div className="mx-5 mt-4 p-5 bg-white rounded-2xl shadow-sm border border-[#F3F4F6]">
                     <div className="flex items-center justify-between mb-5">
                       <div className="flex-1">
@@ -244,7 +296,7 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({ navigateTo }) => {
                         <svg
                         className="w-full h-full -rotate-90"
                         viewBox="0 0 100 100">
-
+                        
                           <circle
                           cx="50"
                           cy="50"
@@ -252,7 +304,7 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({ navigateTo }) => {
                           fill="none"
                           stroke="#F1F5F9"
                           strokeWidth="5" />
-
+                        
                           <circle
                           cx="50"
                           cy="50"
@@ -264,7 +316,7 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({ navigateTo }) => {
                           strokeDashoffset="84.81"
                           strokeLinecap="round"
                           className="transition-all duration-700 ease-out" />
-
+                        
                         </svg>
                         <div className="absolute inset-0 flex flex-col items-center justify-center">
                           <span className="text-xl font-bold text-[#1A1A1A] tracking-tight">
@@ -302,7 +354,7 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({ navigateTo }) => {
                         <div
                           key={stat.label}
                           className="bg-[#FAFAFA] rounded-xl p-3.5 text-center transition-colors duration-200">
-
+                          
                             <div className="relative w-12 h-12 mx-auto mb-2">
                               <div className="absolute inset-0 flex items-center justify-center z-10">
                                 <Icon
@@ -311,12 +363,12 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({ navigateTo }) => {
                                   color: stat.color
                                 }}
                                 strokeWidth={2.5} />
-
+                              
                               </div>
                               <svg
                               className="w-full h-full -rotate-90 absolute inset-0"
                               viewBox="0 0 48 48">
-
+                              
                                 <circle
                                 cx="24"
                                 cy="24"
@@ -324,7 +376,7 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({ navigateTo }) => {
                                 fill="none"
                                 stroke="#F1F5F9"
                                 strokeWidth="3.5" />
-
+                              
                                 <circle
                                 cx="24"
                                 cy="24"
@@ -335,7 +387,7 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({ navigateTo }) => {
                                 strokeDasharray={`${stat.progress * 1.26} 126`}
                                 strokeLinecap="round"
                                 className="transition-all duration-700 ease-out" />
-
+                              
                               </svg>
                             </div>
                             <p className="text-sm font-bold text-[#1A1A1A] tracking-tight">
@@ -352,42 +404,96 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({ navigateTo }) => {
                 </div>
                 <div
                 className={`absolute inset-0 transition-all duration-300 ease-out transform ${activeTab === 'health' ? 'translate-x-0 opacity-100' : 'translate-x-[100%] opacity-0'}`}>
-
+                
                   <div className="mx-5 mt-4">
                     <HealthDashboard
                     onSwipe={() => setActiveTab('nutrition')} />
-
+                  
                   </div>
                 </div>
               </div>
             </div>
 
-            {recentUploads.length > 0 &&
-          <div className="px-5 pt-4 pb-2">
-                <h2 className="text-lg font-bold text-[#1A1A1A] mb-3 tracking-tight">
-                  Recent Uploads
-                </h2>
-                <div className="space-y-3 mb-3">
-                  {recentUploads.map((upload) =>
-              <RecentUploadCard
-                key={upload.id}
-                progress={upload.progress}
-                isComplete={upload.isComplete}
-                timestamp={upload.timestamp}
-                onClick={() => handleViewResults(upload.id)} />
-
-              )}
-                </div>
-              </div>
-          }
-
-            <div className="px-5 pt-4 pb-2">
-              <h2 className="text-xl font-bold text-[#1A1A1A] tracking-tight">
-                Today's Meals
-              </h2>
-            </div>
-
             <div className="flex-1 overflow-y-auto pb-24">
+              {/* Saved Recipes Section */}
+              {savedRecipes.length > 0 &&
+            <div className="px-5 pt-4 pb-2">
+                  <div className="flex items-center justify-between mb-3">
+                    <h2 className="text-lg font-bold text-[#1A1A1A] tracking-tight flex items-center">
+                      <BookmarkIcon
+                    size={18}
+                    className="mr-2 text-[#4CAF50] fill-[#4CAF50]" />
+                  
+                      Saved Recipes
+                    </h2>
+                    <button className="text-[#4CAF50] text-sm font-medium flex items-center hover:text-[#43A047]">
+                      View All <ChevronRightIcon size={16} />
+                    </button>
+                  </div>
+                  <div className="flex overflow-x-auto space-x-3 pb-2 scrollbar-hide -mx-5 px-5">
+                    {savedRecipes.map((recipe) =>
+                <div
+                  key={recipe.id}
+                  className="flex-shrink-0 w-[160px] bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden cursor-pointer hover:shadow-md transition-shadow"
+                  onClick={() => navigateTo('recipe-detail')}>
+                  
+                        <div className="relative h-24">
+                          <img
+                      src={recipe.image}
+                      alt={recipe.name}
+                      className="w-full h-full object-cover" />
+                    
+                          <div className="absolute top-2 right-2 bg-white/90 backdrop-blur-sm rounded-full px-2 py-0.5 flex items-center shadow-sm">
+                            <span className="text-[10px] font-bold text-[#4CAF50]">
+                              {recipe.matchPercentage}%
+                            </span>
+                          </div>
+                        </div>
+                        <div className="p-2.5">
+                          <h3 className="font-semibold text-sm text-[#1A1A1A] line-clamp-1 mb-1">
+                            {recipe.name}
+                          </h3>
+                          <div className="flex items-center justify-between text-xs text-gray-500">
+                            <div className="flex items-center">
+                              <ClockIcon size={10} className="mr-1" />
+                              <span>{recipe.cookingTime}</span>
+                            </div>
+                            <span>{recipe.calories} cal</span>
+                          </div>
+                        </div>
+                      </div>
+                )}
+                  </div>
+                </div>
+            }
+
+              {/* Recent Uploads */}
+              {recentUploads.length > 0 &&
+            <div className="px-5 pt-4 pb-2">
+                  <h2 className="text-lg font-bold text-[#1A1A1A] mb-3 tracking-tight">
+                    Recent Uploads
+                  </h2>
+                  <div className="space-y-3 mb-3">
+                    {recentUploads.map((upload) =>
+                <RecentUploadCard
+                  key={upload.id}
+                  progress={upload.progress}
+                  isComplete={upload.isComplete}
+                  timestamp={upload.timestamp}
+                  onClick={() => handleViewResults(upload.id)} />
+
+                )}
+                  </div>
+                </div>
+            }
+
+              {/* Today's Meals */}
+              <div className="px-5 pt-4 pb-2">
+                <h2 className="text-xl font-bold text-[#1A1A1A] tracking-tight">
+                  Today's Meals
+                </h2>
+              </div>
+
               <div className="px-5 py-2 space-y-4">
                 {['breakfast', 'lunch', 'snack', 'dinner'].map((mealType) => {
                 const mealItems = meals.filter(
@@ -451,7 +557,7 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({ navigateTo }) => {
           <button
             className="flex flex-col items-center p-2 text-[#94A3B8] hover:text-[#64748B] transition-all duration-200"
             onClick={() => navigateTo('meal-prep')}>
-
+            
             <div className="w-10 h-10 rounded-xl flex items-center justify-center mb-1 hover:bg-[#F8F9FA] transition-colors duration-200">
               <CalendarIcon size={20} strokeWidth={2} />
             </div>
@@ -463,7 +569,7 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({ navigateTo }) => {
             <button
               onClick={() => setShowPlusOptions(!showPlusOptions)}
               className="w-14 h-14 bg-[#1A1A1A] rounded-2xl flex items-center justify-center text-white shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 active:scale-95 -mt-6">
-
+              
               {showPlusOptions ?
               <XIcon
                 size={24}
@@ -485,20 +591,20 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({ navigateTo }) => {
                 bottom: '88px',
                 animation: 'scale-up 0.2s ease-out forwards'
               }}>
-
+              
                 <button
                 className="w-full px-5 py-4 flex items-center text-left hover:bg-[#FAFAFA] border-b border-[#F3F4F6] transition-colors duration-200"
                 onClick={() => {
                   navigateTo('ingredient-capture');
                   setShowPlusOptions(false);
                 }}>
-
+                
                   <div className="w-11 h-11 rounded-xl bg-[#4CAF50]/10 flex items-center justify-center mr-3.5">
                     <CameraIcon
                     size={20}
                     className="text-[#4CAF50]"
                     strokeWidth={2} />
-
+                  
                   </div>
                   <div>
                     <p className="text-sm font-semibold text-[#1A1A1A] tracking-tight">
@@ -515,13 +621,13 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({ navigateTo }) => {
                   setShowImportGuide(true);
                   setShowPlusOptions(false);
                 }}>
-
+                
                   <div className="w-11 h-11 rounded-xl bg-[#2196F3]/10 flex items-center justify-center mr-3.5">
                     <ImportIcon
                     size={20}
                     className="text-[#2196F3]"
                     strokeWidth={2} />
-
+                  
                   </div>
                   <div>
                     <p className="text-sm font-semibold text-[#1A1A1A] tracking-tight">
@@ -538,13 +644,13 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({ navigateTo }) => {
                   navigateTo('meal-prep');
                   setShowPlusOptions(false);
                 }}>
-
+                
                   <div className="w-11 h-11 rounded-xl bg-[#FF9800]/10 flex items-center justify-center mr-3.5">
                     <CalendarIcon
                     size={20}
                     className="text-[#FF9800]"
                     strokeWidth={2} />
-
+                  
                   </div>
                   <div>
                     <p className="text-sm font-semibold text-[#1A1A1A] tracking-tight">
@@ -561,7 +667,7 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({ navigateTo }) => {
           <button
             className="flex flex-col items-center p-2 text-[#94A3B8] hover:text-[#64748B] transition-all duration-200"
             onClick={() => navigateTo('progress')}>
-
+            
             <div className="w-10 h-10 rounded-xl flex items-center justify-center mb-1 hover:bg-[#F8F9FA] transition-colors duration-200">
               <BarChartIcon size={20} strokeWidth={2} />
             </div>

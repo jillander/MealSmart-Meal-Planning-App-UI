@@ -40,13 +40,13 @@ export const MealCompletionScreen: React.FC<MealCompletionScreenProps> = ({
           <button
             className="w-full bg-[#FF6B6B] text-white py-3 px-6 rounded-full font-medium shadow-sm hover:bg-opacity-90 transition-colors"
             onClick={onClose}>
-
+            
             Submit Feedback
           </button>
           <button
             className="w-full py-3 px-6 text-[#2B394A] font-medium"
             onClick={onClose}>
-
+            
             Skip
           </button>
         </div>

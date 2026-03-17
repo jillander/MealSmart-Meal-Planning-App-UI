@@ -62,10 +62,10 @@ export const ProgressFlowBar: React.FC<ProgressFlowBarProps> = ({
             <div
               key={step.id}
               className="flex flex-col items-center relative z-10">
-
+              
               <div
                 className={`w-12 h-12 rounded-full border-2 flex items-center justify-center transition-all duration-300 ${getStepStyles(status)}`}>
-
+                
                 {status === 'completed' ?
                 <CheckIcon size={20} className="animate-scale-in" /> :
 
@@ -74,7 +74,7 @@ export const ProgressFlowBar: React.FC<ProgressFlowBarProps> = ({
               </div>
               <span
                 className={`text-xs mt-2 text-center font-medium max-w-[80px] ${status === 'completed' ? 'text-[#4CAF50]' : status === 'active' ? 'text-[#FF9800]' : 'text-[#757575]'}`}>
-
+                
                 {step.label}
               </span>
               {/* Connector Line */}
@@ -82,7 +82,7 @@ export const ProgressFlowBar: React.FC<ProgressFlowBarProps> = ({
               <div className="absolute top-6 left-12 w-[calc(100vw/4-3rem)] h-0.5 -z-10">
                   <div
                   className={`h-full transition-all duration-500 ${getConnectorStyles(step.id)}`} />
-
+                
                 </div>
               }
             </div>);

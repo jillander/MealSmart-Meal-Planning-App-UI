@@ -78,12 +78,12 @@ export const ActivityRings: React.FC<ActivityRingsProps> = ({
           width: size,
           height: size
         }}>
-
+        
         {/* Steps Ring (outermost - blue) */}
         <svg
           className="absolute inset-0 w-full h-full -rotate-90"
           viewBox={`0 0 ${size} ${size}`}>
-
+          
           <circle
             cx={center}
             cy={center}
@@ -91,7 +91,7 @@ export const ActivityRings: React.FC<ActivityRingsProps> = ({
             fill="none"
             stroke="#E0E0E0"
             strokeWidth={strokeWidth} />
-
+          
           <circle
             cx={center}
             cy={center}
@@ -103,13 +103,13 @@ export const ActivityRings: React.FC<ActivityRingsProps> = ({
             strokeDashoffset={offset1}
             strokeLinecap="round"
             className="activity-ring steps-ring" />
-
+          
         </svg>
         {/* Activity Ring (green) */}
         <svg
           className="absolute inset-0 w-full h-full -rotate-90"
           viewBox={`0 0 ${size} ${size}`}>
-
+          
           <circle
             cx={center}
             cy={center}
@@ -117,7 +117,7 @@ export const ActivityRings: React.FC<ActivityRingsProps> = ({
             fill="none"
             stroke="#E0E0E0"
             strokeWidth={strokeWidth} />
-
+          
           <circle
             cx={center}
             cy={center}
@@ -129,13 +129,13 @@ export const ActivityRings: React.FC<ActivityRingsProps> = ({
             strokeDashoffset={offset2}
             strokeLinecap="round"
             className="activity-ring activity-ring-green" />
-
+          
         </svg>
         {/* Stand Ring (orange) */}
         <svg
           className="absolute inset-0 w-full h-full -rotate-90"
           viewBox={`0 0 ${size} ${size}`}>
-
+          
           <circle
             cx={center}
             cy={center}
@@ -143,7 +143,7 @@ export const ActivityRings: React.FC<ActivityRingsProps> = ({
             fill="none"
             stroke="#E0E0E0"
             strokeWidth={strokeWidth} />
-
+          
           <circle
             cx={center}
             cy={center}
@@ -155,13 +155,13 @@ export const ActivityRings: React.FC<ActivityRingsProps> = ({
             strokeDashoffset={offset3}
             strokeLinecap="round"
             className="activity-ring stand-ring" />
-
+          
         </svg>
         {/* Calories Ring (innermost - red) */}
         <svg
           className="absolute inset-0 w-full h-full -rotate-90"
           viewBox={`0 0 ${size} ${size}`}>
-
+          
           <circle
             cx={center}
             cy={center}
@@ -169,7 +169,7 @@ export const ActivityRings: React.FC<ActivityRingsProps> = ({
             fill="none"
             stroke="#E0E0E0"
             strokeWidth={strokeWidth} />
-
+          
           <circle
             cx={center}
             cy={center}
@@ -181,7 +181,7 @@ export const ActivityRings: React.FC<ActivityRingsProps> = ({
             strokeDashoffset={offset4}
             strokeLinecap="round"
             className="activity-ring calories-ring" />
-
+          
         </svg>
         {/* Center Text with White Background */}
         <div className="absolute inset-0 flex items-center justify-center">

@@ -48,13 +48,13 @@ export const IngredientCaptureScreen: React.FC<
           <button
             className={`mr-2 px-3 py-1 rounded-full text-xs ${testMode ? 'bg-[#FF6B6B] text-white' : 'bg-gray-200 text-[#1A3A3A]'}`}
             onClick={() => setTestMode(!testMode)}>
-
+            
             {testMode ? 'Test Mode ON' : 'Test Mode'}
           </button>
           <button
             className="p-2 text-[#1A3A3A]"
             onClick={() => navigateTo('home')}>
-
+            
             <XIcon size={24} />
           </button>
         </div>
@@ -65,13 +65,13 @@ export const IngredientCaptureScreen: React.FC<
           <button
             className={`flex-1 py-2 px-4 rounded-full text-center transition-all duration-200 ${activeTab === 'fridge' ? 'bg-[#FF6B6B] text-white' : 'text-[#1A3A3A]'}`}
             onClick={() => setActiveTab('fridge')}>
-
+            
             Fridge Photo
           </button>
           <button
             className={`flex-1 py-2 px-4 rounded-full text-center transition-all duration-200 ${activeTab === 'receipt' ? 'bg-[#FF6B6B] text-white' : 'text-[#1A3A3A]'}`}
             onClick={() => setActiveTab('receipt')}>
-
+            
             Receipt Scan
           </button>
         </div>
@@ -154,19 +154,19 @@ export const IngredientCaptureScreen: React.FC<
             <button
             onClick={handleCapture}
             className="px-3 py-2 bg-red-600 text-white rounded-lg text-sm">
-
+            
               1. Open Analysis Modal
             </button>
             <button
             onClick={() => navigateTo('ingredient-confirmation')}
             className="px-3 py-2 bg-red-600 text-white rounded-lg text-sm">
-
+            
               2. Skip to Confirmation
             </button>
             <button
             onClick={() => navigateTo('recipe-suggestions')}
             className="px-3 py-2 bg-red-600 text-white rounded-lg text-sm">
-
+            
               3. Skip to Recipes
             </button>
           </div>
@@ -177,7 +177,7 @@ export const IngredientCaptureScreen: React.FC<
         <button
           onClick={handleCapture}
           className="w-20 h-20 bg-[#FF6B6B] rounded-full flex items-center justify-center mb-4 shadow-lg hover:bg-opacity-90 transition-transform active:scale-95">
-
+          
           <div className="w-16 h-16 border-4 border-white rounded-full"></div>
         </button>
         <button className="flex items-center text-[#1A3A3A] font-medium hover:opacity-80 transition-opacity">
@@ -191,7 +191,7 @@ export const IngredientCaptureScreen: React.FC<
         onClose={() => setShowAnalysisModal(false)}
         onComplete={handleAnalysisComplete}
         testMode={testMode} />
-
+      
       {/* Add the animations to the global styles */}
       <style jsx global>{`
         @keyframes scan {

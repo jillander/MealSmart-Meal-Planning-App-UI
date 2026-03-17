@@ -72,7 +72,7 @@ export const MealRow: React.FC<MealRowProps> = ({
         className="group relative bg-white rounded-2xl overflow-hidden transition-all duration-300 hover:shadow-lg border border-gray-100"
         onMouseEnter={() => setIsHovered(true)}
         onMouseLeave={() => setIsHovered(false)}>
-
+        
         <div className="flex items-start p-4">
           {/* Checkbox with improved animation */}
           <button
@@ -81,7 +81,7 @@ export const MealRow: React.FC<MealRowProps> = ({
             aria-label={
             meal.completed ? 'Mark as incomplete' : 'Mark as complete'
             }>
-
+            
             {meal.completed &&
             <CheckIcon size={14} className="text-white animate-bounce-in" />
             }
@@ -92,7 +92,7 @@ export const MealRow: React.FC<MealRowProps> = ({
               src={meal.image}
               alt={meal.name}
               className={`w-full h-full object-cover transition-transform duration-500 ${isHovered ? 'scale-110' : 'scale-100'}`} />
-
+            
           </div>
           {/* Content */}
           <div className="ml-4 flex-1">
@@ -115,11 +115,11 @@ export const MealRow: React.FC<MealRowProps> = ({
               onClick={() => setShowOptions(!showOptions)}
               className={`w-8 h-8 flex items-center justify-center rounded-full transition-all duration-200 ${isHovered ? 'text-[#4CAF50] bg-[#4CAF50]/10 shadow-sm' : 'text-gray-400 hover:text-gray-600 hover:bg-gray-50'} hover:scale-110`}
               aria-label="View meal options">
-
+              
               <PlusIcon
                 size={20}
                 className={`transition-transform duration-300 ${showOptions ? 'rotate-45' : 'rotate-0'}`} />
-
+              
             </button>
             {showOptions &&
             <div
@@ -131,14 +131,14 @@ export const MealRow: React.FC<MealRowProps> = ({
                 animation: 'fade-in 0.2s ease-out forwards',
                 transformOrigin: 'top right'
               }}>
-
+              
                 <button
                 onClick={() => {
                   onCreateRecipe();
                   setShowOptions(false);
                 }}
                 className="w-full px-4 py-3 text-left text-sm hover:bg-gray-50 text-gray-700 border-b border-gray-100 transition-colors duration-200">
-
+                
                   Plan a Recipe
                 </button>
                 <button
@@ -147,7 +147,7 @@ export const MealRow: React.FC<MealRowProps> = ({
                   setShowOptions(false);
                 }}
                 className="w-full px-4 py-3 text-left text-sm hover:bg-gray-50 text-gray-700 transition-colors duration-200">
-
+                
                   Import Recipe
                 </button>
               </div>
@@ -162,12 +162,12 @@ export const MealRow: React.FC<MealRowProps> = ({
               <button
               onClick={() => setShowDetails(!showDetails)}
               className="text-xs text-[#4CAF50] font-medium flex items-center">
-
+              
                 {showDetails ? 'Hide' : 'Details'}
                 <ChevronRightIcon
                 size={14}
                 className={`ml-1 transition-transform ${showDetails ? 'rotate-90' : ''}`} />
-
+              
               </button>
             </div>
             <div className="w-full h-1.5 bg-gray-100 rounded-full overflow-hidden">
@@ -194,7 +194,7 @@ export const MealRow: React.FC<MealRowProps> = ({
             <li className="flex items-center">
               <div
               className={`w-4 h-4 rounded-full border flex items-center justify-center mr-2 ${meal.progress.hasIngredients ? 'bg-[#4CAF50] border-[#4CAF50]' : 'border-gray-300'}`}>
-
+              
                 {meal.progress.hasIngredients &&
               <CheckIcon size={10} className="text-white" />
               }
@@ -205,14 +205,14 @@ export const MealRow: React.FC<MealRowProps> = ({
               'line-through text-[#757575]' :
               ''
               }>
-
+              
                 Gather ingredients
               </span>
             </li>
             <li className="flex items-center">
               <div
               className={`w-4 h-4 rounded-full border flex items-center justify-center mr-2 ${meal.progress.hasRecipe ? 'bg-[#4CAF50] border-[#4CAF50]' : 'border-gray-300'}`}>
-
+              
                 {meal.progress.hasRecipe &&
               <CheckIcon size={10} className="text-white" />
               }
@@ -221,14 +221,14 @@ export const MealRow: React.FC<MealRowProps> = ({
               className={
               meal.progress.hasRecipe ? 'line-through text-[#757575]' : ''
               }>
-
+              
                 Review recipe
               </span>
             </li>
             <li className="flex items-center">
               <div
               className={`w-4 h-4 rounded-full border flex items-center justify-center mr-2 ${meal.progress.viewedRecipe ? 'bg-[#4CAF50] border-[#4CAF50]' : 'border-gray-300'}`}>
-
+              
                 {meal.progress.viewedRecipe &&
               <CheckIcon size={10} className="text-white" />
               }
@@ -239,14 +239,14 @@ export const MealRow: React.FC<MealRowProps> = ({
               'line-through text-[#757575]' :
               ''
               }>
-
+              
                 Prepare meal
               </span>
             </li>
             <li className="flex items-center">
               <div
               className={`w-4 h-4 rounded-full border flex items-center justify-center mr-2 ${meal.progress.completed ? 'bg-[#4CAF50] border-[#4CAF50]' : 'border-gray-300'}`}>
-
+              
                 {meal.progress.completed &&
               <CheckIcon size={10} className="text-white" />
               }
@@ -255,7 +255,7 @@ export const MealRow: React.FC<MealRowProps> = ({
               className={
               meal.progress.completed ? 'line-through text-[#757575]' : ''
               }>
-
+              
                 Log meal
               </span>
             </li>

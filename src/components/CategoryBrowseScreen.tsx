@@ -677,7 +677,7 @@ export const CategoryBrowseScreen: React.FC<CategoryBrowseScreenProps> = ({
               onClick={() => navigateTo('recipe-discovery')}
               className="mr-3 p-2 -ml-2 hover:bg-gray-100 rounded-full transition-colors"
               aria-label="Go back">
-
+              
               <ArrowLeftIcon size={20} />
             </button>
             <div>
@@ -694,7 +694,7 @@ export const CategoryBrowseScreen: React.FC<CategoryBrowseScreenProps> = ({
             onClick={() => setShowFilters(true)}
             className="w-10 h-10 flex items-center justify-center rounded-full bg-gray-100 hover:bg-gray-200 transition-colors"
             aria-label="Open filters">
-
+            
             <FilterIcon size={20} />
           </button>
         </div>
@@ -709,7 +709,7 @@ export const CategoryBrowseScreen: React.FC<CategoryBrowseScreenProps> = ({
             key={filter}
             onClick={() => toggleFilter(filter)}
             className="px-3 py-1.5 bg-[#4CAF50] text-white rounded-full text-sm font-medium flex items-center hover:bg-[#43A047] transition-colors">
-
+            
                 {filter}
                 <XIcon size={14} className="ml-1.5" />
               </button>
@@ -717,7 +717,7 @@ export const CategoryBrowseScreen: React.FC<CategoryBrowseScreenProps> = ({
             <button
             onClick={() => setActiveFilters([])}
             className="px-3 py-1.5 text-gray-600 text-sm font-medium hover:text-gray-800 transition-colors">
-
+            
               Clear all
             </button>
           </div>
@@ -740,7 +740,7 @@ export const CategoryBrowseScreen: React.FC<CategoryBrowseScreenProps> = ({
             <button
             onClick={() => setActiveFilters([])}
             className="px-4 py-2 bg-[#4CAF50] text-white rounded-full text-sm font-medium hover:bg-[#43A047] transition-colors">
-
+            
               Clear all filters
             </button>
           </div> :
@@ -750,17 +750,17 @@ export const CategoryBrowseScreen: React.FC<CategoryBrowseScreenProps> = ({
           <div
             key={recipe.id}
             className="bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition-all duration-200">
-
+            
                 {/* Recipe Image */}
                 <div
               className="relative cursor-pointer"
               onClick={() => navigateTo('recipe-detail')}>
-
+              
                   <img
                 src={recipe.image}
                 alt={recipe.title}
                 className="w-full h-40 object-cover" />
-
+              
                   {/* Subtle + button in top right */}
                   <button
                 onClick={(e) => {
@@ -769,7 +769,7 @@ export const CategoryBrowseScreen: React.FC<CategoryBrowseScreenProps> = ({
                 }}
                 className="absolute top-3 right-3 w-8 h-8 bg-white/90 backdrop-blur-sm rounded-full flex items-center justify-center shadow-md hover:bg-white hover:scale-110 transition-all duration-200"
                 aria-label="Add to meal plan">
-
+                
                     <PlusIcon size={18} className="text-[#1A1A1A]" />
                   </button>
                 </div>
@@ -800,7 +800,7 @@ export const CategoryBrowseScreen: React.FC<CategoryBrowseScreenProps> = ({
               onClick={() => setShowFilters(false)}
               className="w-8 h-8 flex items-center justify-center rounded-full hover:bg-gray-100 transition-colors"
               aria-label="Close filters">
-
+              
                 <XIcon size={20} />
               </button>
             </div>
@@ -816,7 +816,7 @@ export const CategoryBrowseScreen: React.FC<CategoryBrowseScreenProps> = ({
                 key={filter}
                 onClick={() => toggleFilter(filter)}
                 className={`px-4 py-2 rounded-full text-sm font-medium transition-all duration-200 ${activeFilters.includes(filter) ? 'bg-[#4CAF50] text-white shadow-sm' : 'bg-gray-100 text-[#757575] hover:bg-gray-200'}`}>
-
+                
                     {filter}
                   </button>
               )}
@@ -834,7 +834,7 @@ export const CategoryBrowseScreen: React.FC<CategoryBrowseScreenProps> = ({
                 key={option.id}
                 onClick={() => setSortBy(option.id as typeof sortBy)}
                 className={`px-4 py-2 rounded-full text-sm font-medium transition-all duration-200 ${sortBy === option.id ? 'bg-[#4CAF50] text-white shadow-sm' : 'bg-gray-100 text-[#757575] hover:bg-gray-200'}`}>
-
+                
                     {option.label}
                   </button>
               )}
@@ -849,13 +849,13 @@ export const CategoryBrowseScreen: React.FC<CategoryBrowseScreenProps> = ({
                 setSortBy('match');
               }}
               className="flex-1 py-3 border border-gray-200 text-[#1A1A1A] rounded-full font-medium hover:bg-gray-50 transition-colors">
-
+              
                 Reset All
               </button>
               <button
               onClick={() => setShowFilters(false)}
               className="flex-1 py-3 bg-[#4CAF50] text-white rounded-full font-medium hover:bg-[#43A047] transition-colors">
-
+              
                 Apply Filters
               </button>
             </div>

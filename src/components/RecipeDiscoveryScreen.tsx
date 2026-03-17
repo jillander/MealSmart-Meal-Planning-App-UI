@@ -189,7 +189,7 @@ export const RecipeDiscoveryScreen: React.FC<RecipeDiscoveryScreenProps> = ({
       <div
         ref={ref}
         className="bg-white rounded-2xl overflow-hidden mb-6 shadow-sm">
-
+        
         {/* Creator Header */}
         <div className="flex items-center justify-between p-4">
           <div className="flex items-center">
@@ -197,7 +197,7 @@ export const RecipeDiscoveryScreen: React.FC<RecipeDiscoveryScreenProps> = ({
               src={recipe.creator.avatar}
               alt={recipe.creator.name}
               className="w-10 h-10 rounded-full object-cover" />
-
+            
             <div className="ml-3">
               <p className="font-medium text-[#1A1A1A]">
                 {recipe.creator.name}
@@ -208,7 +208,7 @@ export const RecipeDiscoveryScreen: React.FC<RecipeDiscoveryScreenProps> = ({
           <button
             onClick={() => setSelectedRecipe(recipe)}
             className="text-[#4CAF50]">
-
+            
             <ChevronDownIcon size={20} />
           </button>
         </div>
@@ -222,7 +222,7 @@ export const RecipeDiscoveryScreen: React.FC<RecipeDiscoveryScreenProps> = ({
             muted
             playsInline
             className="w-full h-full object-cover">
-
+            
             <source src={recipe.video} type="video/mp4" />
           </video>
           <button
@@ -237,7 +237,7 @@ export const RecipeDiscoveryScreen: React.FC<RecipeDiscoveryScreenProps> = ({
               }
             }}
             className="absolute bottom-4 right-4 w-10 h-10 bg-black/50 rounded-full flex items-center justify-center text-white backdrop-blur-sm">
-
+            
             {isPlaying ? <PauseIcon size={20} /> : <PlayIcon size={20} />}
           </button>
 
@@ -265,11 +265,11 @@ export const RecipeDiscoveryScreen: React.FC<RecipeDiscoveryScreenProps> = ({
             <button
               onClick={() => toggleLike(recipe.id)}
               className="flex items-center space-x-1">
-
+              
               <HeartIcon
                 size={24}
                 className={`${recipe.liked ? 'text-red-500 fill-red-500' : 'text-[#1A1A1A]'} transition-colors`} />
-
+              
               <span className="text-sm font-medium">
                 {recipe.likes.toLocaleString()}
               </span>
@@ -280,7 +280,7 @@ export const RecipeDiscoveryScreen: React.FC<RecipeDiscoveryScreenProps> = ({
                 setShowSchedule(true);
               }}
               className="flex items-center space-x-1">
-
+              
               <CalendarIcon size={24} className="text-[#1A1A1A]" />
             </button>
           </div>
@@ -289,7 +289,7 @@ export const RecipeDiscoveryScreen: React.FC<RecipeDiscoveryScreenProps> = ({
               <BookmarkIcon
                 size={24}
                 className={`${recipe.saved ? 'text-[#4CAF50] fill-[#4CAF50]' : 'text-[#1A1A1A]'} transition-colors`} />
-
+              
             </button>
             <button>
               <ShareIcon size={24} className="text-[#1A1A1A]" />
@@ -316,7 +316,7 @@ export const RecipeDiscoveryScreen: React.FC<RecipeDiscoveryScreenProps> = ({
             type="text"
             className="block w-full pl-10 pr-3 py-3 border border-gray-200 rounded-xl leading-5 bg-gray-50 placeholder-gray-500 focus:outline-none focus:bg-white focus:ring-2 focus:ring-[#4CAF50] focus:border-transparent transition-all"
             placeholder="Search recipes, ingredients..." />
-
+          
         </div>
 
         {/* Collections Grid */}
@@ -337,15 +337,15 @@ export const RecipeDiscoveryScreen: React.FC<RecipeDiscoveryScreenProps> = ({
                     flex flex-col items-center p-4 rounded-xl border transition-all duration-200 active:scale-95
                     ${isSelected ? 'bg-blue-50 border-blue-200 shadow-sm' : 'bg-white border-gray-200 shadow-sm hover:border-gray-300'}
                   `}>
-
+                  
                   <div
                     className={`w-12 h-12 rounded-full flex items-center justify-center mb-3 ${collection.color}`}>
-
+                    
                     {collection.icon}
                   </div>
                   <span
                     className={`text-sm text-center ${isSelected ? 'font-semibold text-blue-900' : 'font-medium text-gray-700'}`}>
-
+                    
                     {collection.label}
                   </span>
                 </button>);
@@ -364,7 +364,7 @@ export const RecipeDiscoveryScreen: React.FC<RecipeDiscoveryScreenProps> = ({
               key={category}
               onClick={() => setActiveCategory(category)}
               className={`px-4 py-2 rounded-full text-sm font-medium whitespace-nowrap transition-all ${activeCategory === category ? 'bg-[#4CAF50] text-white shadow-md' : 'bg-gray-100 text-[#757575] hover:bg-gray-200'}`}>
-
+              
                 {category}
               </button>
             )}
@@ -395,7 +395,7 @@ export const RecipeDiscoveryScreen: React.FC<RecipeDiscoveryScreenProps> = ({
                 navigateTo('meal-prep');
               }}
               className="w-full p-4 bg-gray-50 rounded-xl flex items-center justify-between hover:bg-gray-100 transition-all">
-
+              
                   <span className="font-medium">{mealType}</span>
                   <ChevronDownIcon size={20} className="text-[#4CAF50]" />
                 </button>
@@ -404,7 +404,7 @@ export const RecipeDiscoveryScreen: React.FC<RecipeDiscoveryScreenProps> = ({
             <button
             onClick={() => setShowSchedule(false)}
             className="w-full py-3 bg-[#4CAF50] text-white rounded-full font-medium">
-
+            
               Cancel
             </button>
           </div>

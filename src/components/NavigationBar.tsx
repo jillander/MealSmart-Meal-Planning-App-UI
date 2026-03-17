@@ -27,21 +27,21 @@ export const NavigationBar: React.FC<NavigationBarProps> = ({
           <button
             onClick={() => navigateTo('home')}
             className={`flex flex-col items-center p-2 ${currentScreen === 'home' ? 'text-[#4CAF50]' : 'text-[#757575]'}`}>
-
+            
             <HomeIcon
               size={24}
               className="transition-transform hover:scale-110 duration-200" />
-
+            
             <span className="text-xs mt-1 font-medium">Home</span>
           </button>
           <button
             onClick={() => navigateTo('recipe-discovery')}
             className={`flex flex-col items-center p-2 ${currentScreen === 'recipe-discovery' ? 'text-[#4CAF50]' : 'text-[#757575]'}`}>
-
+            
             <CompassIcon
               size={24}
               className="transition-transform hover:scale-110 duration-200" />
-
+            
             <span className="text-xs mt-1 font-medium">Discovery</span>
           </button>
           {/* Plus Button with Menu */}
@@ -49,7 +49,7 @@ export const NavigationBar: React.FC<NavigationBarProps> = ({
             <button
               onClick={() => setShowPlusOptions(!showPlusOptions)}
               className="w-14 h-14 bg-[#1A1A1A] rounded-full flex items-center justify-center text-white shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 -mt-5">
-
+              
               {showPlusOptions ?
               <XIcon size={24} className="animate-spin-once" /> :
 
@@ -68,7 +68,7 @@ export const NavigationBar: React.FC<NavigationBarProps> = ({
                   setShowPlusOptions(false);
                 }}
                 className="w-full px-4 py-4 flex items-center text-left hover:bg-gray-50 border-b border-gray-100">
-
+                
                   <div className="w-10 h-10 rounded-full bg-[#4CAF50] bg-opacity-10 flex items-center justify-center mr-3">
                     <CameraIcon size={18} className="text-[#4CAF50]" />
                   </div>
@@ -89,7 +89,7 @@ export const NavigationBar: React.FC<NavigationBarProps> = ({
                   setShowPlusOptions(false);
                 }}
                 className="w-full px-4 py-4 flex items-center text-left hover:bg-gray-50">
-
+                
                   <div className="w-10 h-10 rounded-full bg-[#2196F3] bg-opacity-10 flex items-center justify-center mr-3">
                     <ImportIcon size={18} className="text-[#2196F3]" />
                   </div>
@@ -108,21 +108,21 @@ export const NavigationBar: React.FC<NavigationBarProps> = ({
           <button
             onClick={() => navigateTo('progress')}
             className={`flex flex-col items-center p-2 ${currentScreen === 'progress' ? 'text-[#4CAF50]' : 'text-[#757575]'}`}>
-
+            
             <BarChartIcon
               size={24}
               className="transition-transform hover:scale-110 duration-200" />
-
+            
             <span className="text-xs mt-1 font-medium">Progress</span>
           </button>
           <button
             onClick={() => navigateTo('settings')}
             className={`flex flex-col items-center p-2 ${currentScreen === 'settings' ? 'text-[#4CAF50]' : 'text-[#757575]'}`}>
-
+            
             <SettingsIcon
               size={24}
               className="transition-transform hover:scale-110 duration-200" />
-
+            
             <span className="text-xs mt-1 font-medium">Settings</span>
           </button>
         </div>

@@ -202,19 +202,19 @@ export const RecipeDetailScreen: React.FC<RecipeDetailScreenProps> = ({
           src="https://images.unsplash.com/photo-1565299585323-38d6b0865b47?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2000&q=80"
           alt="Sticky Gochujang Chicken"
           className="w-full h-full object-cover" />
-
+        
         <div className="absolute top-0 left-0 right-0 p-4 flex justify-between">
           <button
             className="w-10 h-10 bg-white rounded-full flex items-center justify-center shadow-lg hover:bg-gray-50 transition-colors"
             onClick={() => navigateTo('recipe-discovery')}
             aria-label="Go back">
-
+            
             <ArrowLeftIcon size={20} className="text-[#1A1A1A]" />
           </button>
           <button
             className="w-10 h-10 bg-white rounded-full flex items-center justify-center shadow-lg hover:bg-gray-50 transition-colors"
             aria-label="Save recipe">
-
+            
             <BookmarkIcon size={20} className="text-[#1A1A1A]" />
           </button>
         </div>
@@ -279,19 +279,19 @@ export const RecipeDetailScreen: React.FC<RecipeDetailScreenProps> = ({
           <button
             onClick={() => setActiveTab('ingredients')}
             className={`flex-1 py-2.5 rounded-full text-sm font-medium transition-all duration-200 ${activeTab === 'ingredients' ? 'bg-white text-[#1A1A1A] shadow-sm' : 'text-[#64748B]'}`}>
-
+            
             Ingredients
           </button>
           <button
             onClick={() => setActiveTab('method')}
             className={`flex-1 py-2.5 rounded-full text-sm font-medium transition-all duration-200 ${activeTab === 'method' ? 'bg-white text-[#1A1A1A] shadow-sm' : 'text-[#64748B]'}`}>
-
+            
             Method
           </button>
           <button
             onClick={() => setActiveTab('nutrition')}
             className={`flex-1 py-2.5 rounded-full text-sm font-medium transition-all duration-200 ${activeTab === 'nutrition' ? 'bg-white text-[#1A1A1A] shadow-sm' : 'text-[#64748B]'}`}>
-
+            
             Nutrition
           </button>
         </div>
@@ -333,18 +333,18 @@ export const RecipeDetailScreen: React.FC<RecipeDetailScreenProps> = ({
                     key={item.id}
                     onClick={() => toggleIngredient(item.id)}
                     className="w-full flex items-center p-3 rounded-xl hover:bg-gray-50 transition-colors">
-
+                    
                         <div className="flex items-center flex-1">
                           <span className="text-2xl mr-3">{item.emoji}</span>
                           <span
                         className={`text-base ${isChecked ? 'text-[#94A3B8] line-through' : 'text-[#1A1A1A]'}`}>
-
+                        
                             {item.name}
                           </span>
                         </div>
                         <div
                       className={`w-6 h-6 rounded-full border-2 flex items-center justify-center transition-all ${isChecked ? 'bg-[#4CAF50] border-[#4CAF50]' : 'border-gray-300'}`}>
-
+                      
                           {isChecked &&
                       <CheckIcon size={14} className="text-white" />
                       }
@@ -405,7 +405,7 @@ export const RecipeDetailScreen: React.FC<RecipeDetailScreenProps> = ({
                         <div
                           key={ingredientId}
                           className="inline-flex items-center px-3 py-1.5 bg-gray-100 rounded-full">
-
+                          
                                     <span className="text-base mr-1.5">
                                       {ingredient.emoji}
                                     </span>
@@ -541,7 +541,7 @@ export const RecipeDetailScreen: React.FC<RecipeDetailScreenProps> = ({
         <button
           className="w-full bg-[#4CAF50] text-white py-4 rounded-full font-semibold text-base shadow-lg hover:bg-[#43A047] transition-colors"
           onClick={onMarkAsPrepared}>
-
+          
           Mark as Prepared
         </button>
       </div>

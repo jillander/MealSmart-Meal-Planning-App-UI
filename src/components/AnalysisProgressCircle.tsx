@@ -20,12 +20,12 @@ export const AnalysisProgressCircle: React.FC<AnalysisProgressCircleProps> = ({
         width: size,
         height: size
       }}>
-
+      
       {/* Background Circle */}
       <svg
         className="w-full h-full transform -rotate-90"
         viewBox={`0 0 ${size} ${size}`}>
-
+        
         <circle
           cx={size / 2}
           cy={size / 2}
@@ -33,7 +33,7 @@ export const AnalysisProgressCircle: React.FC<AnalysisProgressCircleProps> = ({
           fill="none"
           stroke="#E0E0E0"
           strokeWidth="4" />
-
+        
         {/* Progress Circle */}
         <circle
           cx={size / 2}
@@ -46,7 +46,7 @@ export const AnalysisProgressCircle: React.FC<AnalysisProgressCircleProps> = ({
           strokeDashoffset={offset}
           strokeLinecap="round"
           className="transition-all duration-300 ease-out" />
-
+        
       </svg>
       {/* Center Content */}
       <div className="absolute inset-0 flex items-center justify-center">

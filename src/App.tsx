@@ -13,6 +13,7 @@ import { IngredientConfirmationScreen } from './components/IngredientConfirmatio
 import { RecipeSuggestionScreen } from './components/RecipeSuggestionScreen';
 import { RecipeRecommendationHub } from './components/RecipeRecommendationHub';
 import { CategoryBrowseScreen } from './components/CategoryBrowseScreen';
+import { SubscriptionScreen } from './components/SubscriptionScreen';
 import { MealPlanProvider } from './contexts/MealPlanContext';
 export function App() {
   const [currentScreen, setCurrentScreen] = useState('recipe-discovery');
@@ -39,10 +40,10 @@ export function App() {
   };
   return (
     <MealPlanProvider>
-      <div className="w-full min-h-screen bg-[#F8F9FA] font-['Roboto']">
+      <div className="w-full min-h-screen bg-[#F8F9FA] font-['Inter']">
         {/* Import Google Fonts */}
         <style jsx global>{`
-          @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&family=Open+Sans:wght@400;600&display=swap');
+          @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Inter:wght@400;500;600;700&display=swap');
         `}</style>
         <div className="max-w-[430px] mx-auto relative min-h-screen pb-[72px]">
           {currentScreen === 'home' && <HomeScreen navigateTo={navigateTo} />}
@@ -66,6 +67,9 @@ export function App() {
           }
           {currentScreen === 'weekly-plan' &&
           <WeeklyPlanScreen navigateTo={navigateTo} />
+          }
+          {currentScreen === 'subscription' &&
+          <SubscriptionScreen navigateTo={navigateTo} />
           }
           {showMealCompletion &&
           <MealCompletionScreen
@@ -106,11 +110,13 @@ export function App() {
             categoryLabel={categoryData.label} />
 
           }
+
+          {/* Show navigation bar on all screens */}
           <NavigationBar
             currentScreen={currentScreen}
             navigateTo={navigateTo}
             onShowImportGuide={() => setShowImportGuide(true)} />
-
+          
         </div>
       </div>
     </MealPlanProvider>);

@@ -62,7 +62,7 @@ export const RecipeRecommendationHub: React.FC<
     visible: false
   });
   // Use the meal plan context
-  const { addMeal } = useMealPlan();
+  const { addMeal, generatedRecipes } = useMealPlan();
   const collections: CollectionShortcut[] = [
   {
     id: 'high-protein',
@@ -431,17 +431,17 @@ export const RecipeRecommendationHub: React.FC<
                     flex items-center p-2.5 rounded-2xl transition-all duration-200 active:scale-95
                     ${isSelected ? 'bg-[#E8F5E9] shadow-sm' : 'bg-[#F5F5F5] hover:bg-[#EEEEEE]'}
                   `}>
-
+                  
                   <div className="w-14 h-14 rounded-xl overflow-hidden flex-shrink-0 bg-white">
                     <img
                       src={collection.image}
                       alt={collection.label}
                       className="w-full h-full object-cover" />
-
+                    
                   </div>
                   <span
                     className={`ml-3 text-sm text-left leading-tight ${isSelected ? 'font-semibold text-[#1A1A1A]' : 'font-medium text-[#424242]'}`}>
-
+                    
                     {collection.label}
                   </span>
                 </button>);
@@ -458,12 +458,91 @@ export const RecipeRecommendationHub: React.FC<
               key={filter}
               onClick={() => toggleFilter(filter)}
               className={`px-3 py-1.5 rounded-full text-sm font-medium whitespace-nowrap transition-all ${activeFilters.includes(filter) ? 'bg-[#4CAF50] text-white shadow-sm' : 'bg-gray-100 text-[#757575] hover:bg-gray-200'}`}>
-
+              
                 {filter}
               </button>
             )}
           </div>
         </section>
+
+        {/* Your Generated Recipes */}
+        {generatedRecipes && generatedRecipes.length > 0 &&
+        <section className="py-5">
+            <div className="px-6 mb-3 flex items-center justify-between">
+              <h2 className="text-lg font-bold text-[#1A1A1A] flex items-center">
+                Your Generated Recipes
+                <SparklesIcon size={16} className="ml-2 text-[#4CAF50]" />
+              </h2>
+              <button
+              onClick={() => navigateTo('recipe-suggestions')}
+              className="text-[#4CAF50] text-sm font-medium flex items-center hover:text-[#43A047] transition-colors">
+              
+                View All <ChevronRightIcon size={16} />
+              </button>
+            </div>
+            <div className="overflow-x-auto scrollbar-hide">
+              <div className="flex space-x-3 pl-6 pr-3">
+                {generatedRecipes.map((recipe) =>
+              <div
+                key={recipe.id}
+                className="flex-shrink-0 w-[220px] bg-white rounded-2xl shadow-sm overflow-hidden border border-[#4CAF50]/20">
+                
+                    <div
+                  className="relative cursor-pointer"
+                  onClick={() => navigateTo('recipe-detail')}>
+                  
+                      <img
+                    src={recipe.image}
+                    alt={recipe.name}
+                    className="w-full h-[150px] object-cover" />
+                  
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent" />
+                      <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleAddToMealPlan({
+                        id: recipe.id,
+                        title: recipe.name,
+                        image: recipe.image,
+                        cookingTime: recipe.prepTime,
+                        calories: recipe.calories,
+                        matchPercentage: recipe.matchPercentage,
+                        difficulty: recipe.difficulty,
+                        tags: recipe.dietaryTags,
+                        saved: false,
+                        liked: false
+                      });
+                    }}
+                    className="absolute top-2.5 right-2.5 w-8 h-8 bg-white/90 backdrop-blur-sm rounded-full flex items-center justify-center shadow-md hover:bg-white hover:scale-110 transition-all duration-200"
+                    aria-label="Add to meal plan">
+                    
+                        <PlusIcon size={16} className="text-[#1A1A1A]" />
+                      </button>
+                      <div className="absolute bottom-2.5 left-3">
+                        <span className="text-[10px] font-semibold text-white bg-[#4CAF50]/80 backdrop-blur-sm px-2 py-0.5 rounded-full">
+                          {recipe.matchPercentage}% match
+                        </span>
+                      </div>
+                    </div>
+                    <div className="p-3">
+                      <h3 className="font-semibold text-[#1A1A1A] text-sm mb-1.5 line-clamp-1">
+                        {recipe.name}
+                      </h3>
+                      <div className="flex items-center justify-between text-xs text-[#64748B]">
+                        <div className="flex items-center">
+                          <ClockIcon size={11} className="mr-1" />
+                          <span>{recipe.prepTime}</span>
+                        </div>
+                        <span>{recipe.calories} cal</span>
+                      </div>
+                    </div>
+                  </div>
+              )}
+                <div className="flex-shrink-0 w-3" />
+              </div>
+            </div>
+          </section>
+        }
 
         {/* Recommended For You */}
         <section className="py-5">
@@ -481,16 +560,16 @@ export const RecipeRecommendationHub: React.FC<
               <div
                 key={recipe.id}
                 className="flex-shrink-0 w-[220px] bg-white rounded-2xl shadow-sm overflow-hidden">
-
+                
                   <div
                   className="relative cursor-pointer"
                   onClick={() => navigateTo('recipe-detail')}>
-
+                  
                     <img
                     src={recipe.image}
                     alt={recipe.title}
                     className="w-full h-[150px] object-cover" />
-
+                  
                     <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent" />
                     <button
                     onClick={(e) => {
@@ -499,7 +578,7 @@ export const RecipeRecommendationHub: React.FC<
                     }}
                     className="absolute top-2.5 right-2.5 w-8 h-8 bg-white/90 backdrop-blur-sm rounded-full flex items-center justify-center shadow-md hover:bg-white hover:scale-110 transition-all duration-200"
                     aria-label="Add to meal plan">
-
+                    
                       <PlusIcon size={16} className="text-[#1A1A1A]" />
                     </button>
                     <div className="absolute bottom-2.5 left-3">
@@ -547,16 +626,16 @@ export const RecipeRecommendationHub: React.FC<
               <div
                 key={recipe.id}
                 className="flex-shrink-0 w-[220px] bg-white rounded-2xl overflow-hidden shadow-sm border border-[#4CAF50]/20">
-
+                
                   <div
                   className="relative cursor-pointer"
                   onClick={() => navigateTo('recipe-detail')}>
-
+                  
                     <img
                     src={recipe.image}
                     alt={recipe.title}
                     className="w-full h-[150px] object-cover" />
-
+                  
                     <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent" />
                     <button
                     onClick={(e) => {
@@ -565,7 +644,7 @@ export const RecipeRecommendationHub: React.FC<
                     }}
                     className="absolute top-2.5 right-2.5 w-8 h-8 bg-white/90 backdrop-blur-sm rounded-full flex items-center justify-center shadow-md hover:bg-white hover:scale-110 transition-all duration-200"
                     aria-label="Add to meal plan">
-
+                    
                       <PlusIcon size={16} className="text-[#1A1A1A]" />
                     </button>
                     <div className="absolute bottom-2.5 left-3">
@@ -612,16 +691,16 @@ export const RecipeRecommendationHub: React.FC<
               <div
                 key={recipe.id}
                 className="flex-shrink-0 w-[220px] bg-white rounded-2xl shadow-sm overflow-hidden">
-
+                
                   <div
                   className="relative cursor-pointer"
                   onClick={() => navigateTo('recipe-detail')}>
-
+                  
                     <img
                     src={recipe.image}
                     alt={recipe.title}
                     className="w-full h-[150px] object-cover" />
-
+                  
                     <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent" />
                     <button
                     onClick={(e) => {
@@ -630,7 +709,7 @@ export const RecipeRecommendationHub: React.FC<
                     }}
                     className="absolute top-2.5 right-2.5 w-8 h-8 bg-white/90 backdrop-blur-sm rounded-full flex items-center justify-center shadow-md hover:bg-white hover:scale-110 transition-all duration-200"
                     aria-label="Add to meal plan">
-
+                    
                       <PlusIcon size={16} className="text-[#1A1A1A]" />
                     </button>
                     <div className="absolute bottom-2.5 left-3">
@@ -675,16 +754,16 @@ export const RecipeRecommendationHub: React.FC<
               <div
                 key={recipe.id}
                 className="flex-shrink-0 w-[220px] bg-white rounded-2xl shadow-sm overflow-hidden">
-
+                
                   <div
                   className="relative cursor-pointer"
                   onClick={() => navigateTo('recipe-detail')}>
-
+                  
                     <img
                     src={recipe.image}
                     alt={recipe.title}
                     className="w-full h-[150px] object-cover" />
-
+                  
                     <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent" />
                     <button
                     onClick={(e) => {
@@ -693,7 +772,7 @@ export const RecipeRecommendationHub: React.FC<
                     }}
                     className="absolute top-2.5 right-2.5 w-8 h-8 bg-white/90 backdrop-blur-sm rounded-full flex items-center justify-center shadow-md hover:bg-white hover:scale-110 transition-all duration-200"
                     aria-label="Add to meal plan">
-
+                    
                       <PlusIcon size={16} className="text-[#1A1A1A]" />
                     </button>
                     <div className="absolute bottom-2.5 left-3 flex items-center space-x-1.5">
@@ -744,16 +823,16 @@ export const RecipeRecommendationHub: React.FC<
               <div
                 key={recipe.id}
                 className="flex-shrink-0 w-[220px] bg-white rounded-2xl shadow-sm overflow-hidden">
-
+                
                   <div
                   className="relative cursor-pointer"
                   onClick={() => navigateTo('recipe-detail')}>
-
+                  
                     <img
                     src={recipe.image}
                     alt={recipe.title}
                     className="w-full h-[150px] object-cover" />
-
+                  
                     <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent" />
                     <button
                     onClick={(e) => {
@@ -762,7 +841,7 @@ export const RecipeRecommendationHub: React.FC<
                     }}
                     className="absolute top-2.5 right-2.5 w-8 h-8 bg-white/90 backdrop-blur-sm rounded-full flex items-center justify-center shadow-md hover:bg-white hover:scale-110 transition-all duration-200"
                     aria-label="Add to meal plan">
-
+                    
                       <PlusIcon size={16} className="text-[#1A1A1A]" />
                     </button>
                     <div className="absolute bottom-2.5 left-3">

@@ -160,19 +160,19 @@ export const MealPrepScreen: React.FC<MealPrepScreenProps> = ({
               <button
                 onClick={() => setViewType('daily')}
                 className={`px-3 py-1.5 text-sm font-medium rounded-md transition-all ${viewType === 'daily' ? 'bg-white text-[#4CAF50] shadow-sm' : 'text-gray-500'}`}>
-
+                
                 Daily
               </button>
               <button
                 onClick={() => setViewType('weekly')}
                 className={`px-3 py-1.5 text-sm font-medium rounded-md transition-all ${viewType === 'weekly' ? 'bg-white text-[#4CAF50] shadow-sm' : 'text-gray-500'}`}>
-
+                
                 Weekly
               </button>
               <button
                 onClick={() => setViewType('monthly')}
                 className={`px-3 py-1.5 text-sm font-medium rounded-md transition-all ${viewType === 'monthly' ? 'bg-white text-[#4CAF50] shadow-sm' : 'text-gray-500'}`}>
-
+                
                 Monthly
               </button>
             </div>
@@ -199,17 +199,17 @@ export const MealPrepScreen: React.FC<MealPrepScreenProps> = ({
                   key={index}
                   onClick={() => setSelectedDay(index)}
                   className={`w-full py-4 flex flex-col items-center transition-all duration-200 ${isSelected ? 'bg-[#E8F5E9] border-r-2 border-[#4CAF50]' : 'hover:bg-[#F5F7FA]'}`}>
-
+                  
                   <span
                     className={`text-sm font-medium ${isSelected ? 'text-[#4CAF50]' : 'text-[#64748B]'}`}>
-
+                    
                     {date.toLocaleDateString('en-US', {
                       weekday: 'short'
                     })}
                   </span>
                   <span
                     className={`text-xl font-bold mt-1 ${isSelected ? 'text-[#4CAF50]' : 'text-[#64748B]'}`}>
-
+                    
                     {date.getDate()}
                   </span>
                   <span className="text-xs text-[#94A3B8] mt-1">
@@ -275,7 +275,7 @@ export const MealPrepScreen: React.FC<MealPrepScreenProps> = ({
                     ref={provided.innerRef}
                     {...provided.droppableProps}
                     className="space-y-3">
-
+                    
                         {mealData[selectedDay].meals.
                     filter(
                       (meal) => meal.type.toLowerCase() === mealType
@@ -285,20 +285,20 @@ export const MealPrepScreen: React.FC<MealPrepScreenProps> = ({
                       key={`${selectedDay}-${mealType}-${index}`}
                       draggableId={`${selectedDay}-${mealType}-${index}`}
                       index={index}>
-
+                      
                               {(provided, snapshot) =>
                       <div
                         ref={provided.innerRef}
                         {...provided.draggableProps}
                         {...provided.dragHandleProps}
                         className={`bg-white rounded-xl p-4 border border-gray-100 transition-all duration-200 ${snapshot.isDragging ? 'shadow-lg scale-[1.02]' : ''}`}>
-
+                        
                                   <div className="flex items-center">
                                     <img
                             src={meal.image}
                             alt={meal.name}
                             className="w-20 h-20 rounded-lg object-cover" />
-
+                          
                                     <div className="ml-4 flex-1">
                                       <h4 className="font-medium text-[#1A1A1A]">
                                         {meal.name}

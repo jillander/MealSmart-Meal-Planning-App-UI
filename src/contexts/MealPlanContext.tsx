@@ -16,8 +16,39 @@ interface Meal {
     completed: boolean;
   };
 }
+export interface SavedRecipe {
+  id: string;
+  name: string;
+  image: string;
+  calories: number;
+  cookingTime: string;
+  matchPercentage: number;
+  savedAt: string;
+}
+export interface GeneratedRecipe {
+  id: string;
+  name: string;
+  image: string;
+  matchPercentage: number;
+  prepTime: string;
+  calories: number;
+  protein: number;
+  carbs: number;
+  fat: number;
+  missingIngredients: string[];
+  cuisine: string;
+  dietaryTags: string[];
+  difficulty: string;
+  inspiredBy: {
+    name: string;
+    handle: string;
+    avatar: string;
+  };
+}
 interface MealPlanContextType {
   meals: Meal[];
+  savedRecipes: SavedRecipe[];
+  generatedRecipes: GeneratedRecipe[];
   addMeal: (
   recipe: {
     id: string;
@@ -32,6 +63,11 @@ interface MealPlanContextType {
   updateMeal: (mealId: string, updates: Partial<Meal>) => void;
   getMealsForDate: (date: Date) => Meal[];
   removeMeal: (mealId: string) => void;
+  addSavedRecipe: (recipe: SavedRecipe) => void;
+  removeSavedRecipe: (recipeId: string) => void;
+  isRecipeSaved: (recipeId: string) => boolean;
+  addGeneratedRecipe: (recipe: GeneratedRecipe) => void;
+  getGeneratedRecipes: () => GeneratedRecipe[];
 }
 const MealPlanContext = createContext<MealPlanContextType | undefined>(
   undefined
@@ -50,6 +86,74 @@ export const MealPlanProvider: React.FC<MealPlanProviderProps> = ({
   children
 }) => {
   const today = new Date().toISOString().split('T')[0];
+  const [generatedRecipes, setGeneratedRecipes] = useState<GeneratedRecipe[]>([
+  {
+    id: 'gen-1',
+    name: 'One-Pan Chicken and Rice',
+    image:
+    'https://images.unsplash.com/photo-1512621776951-a57141f2eefd?ixlib=rb-1.2.1&auto=format&fit=crop&w=1000&q=80',
+    matchPercentage: 95,
+    prepTime: '30 min',
+    calories: 450,
+    protein: 38,
+    carbs: 42,
+    fat: 14,
+    missingIngredients: ['Garlic', 'Thyme'],
+    cuisine: 'Mediterranean',
+    dietaryTags: ['High Protein', 'Gluten Free'],
+    difficulty: 'Easy',
+    inspiredBy: {
+      name: 'Chef Maria',
+      handle: '@chefmaria',
+      avatar:
+      'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?ixlib=rb-1.2.1&auto=format&fit=crop&w=200&q=80'
+    }
+  },
+  {
+    id: 'gen-2',
+    name: 'Stir-Fried Rice Bowl',
+    image:
+    'https://images.unsplash.com/photo-1567337710282-00832b415979?ixlib=rb-1.2.1&auto=format&fit=crop&w=1000&q=80',
+    matchPercentage: 85,
+    prepTime: '20 min',
+    calories: 380,
+    protein: 22,
+    carbs: 52,
+    fat: 11,
+    missingIngredients: ['Soy Sauce', 'Ginger'],
+    cuisine: 'Asian',
+    dietaryTags: ['Vegetarian'],
+    difficulty: 'Medium',
+    inspiredBy: {
+      name: 'Wok Master',
+      handle: '@wokmaster',
+      avatar:
+      'https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&auto=format&fit=crop&w=200&q=80'
+    }
+  },
+  {
+    id: 'gen-3',
+    name: 'Mediterranean Vegetable Bowl',
+    image:
+    'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?ixlib=rb-1.2.1&auto=format&fit=crop&w=1000&q=80',
+    matchPercentage: 78,
+    prepTime: '25 min',
+    calories: 320,
+    protein: 18,
+    carbs: 38,
+    fat: 12,
+    missingIngredients: ['Feta Cheese', 'Olives'],
+    cuisine: 'Mediterranean',
+    dietaryTags: ['Vegetarian', 'Low Carb'],
+    difficulty: 'Easy',
+    inspiredBy: {
+      name: 'Green Kitchen',
+      handle: '@greenkitchen',
+      avatar:
+      'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-1.2.1&auto=format&fit=crop&w=200&q=80'
+    }
+  }]
+  );
   const [meals, setMeals] = useState<Meal[]>([
   {
     id: 'meal-1',
@@ -124,6 +228,16 @@ export const MealPlanProvider: React.FC<MealPlanProviderProps> = ({
     }
   }]
   );
+  const [savedRecipes, setSavedRecipes] = useState<SavedRecipe[]>([]);
+  const addGeneratedRecipe = (recipe: GeneratedRecipe) => {
+    setGeneratedRecipes((prev) => {
+      if (prev.some((r) => r.id === recipe.id)) return prev;
+      return [recipe, ...prev];
+    });
+  };
+  const getGeneratedRecipes = () => {
+    return generatedRecipes;
+  };
   const addMeal = (
   recipe: {
     id: string;
@@ -179,16 +293,35 @@ export const MealPlanProvider: React.FC<MealPlanProviderProps> = ({
   const removeMeal = (mealId: string) => {
     setMeals((prevMeals) => prevMeals.filter((meal) => meal.id !== mealId));
   };
+  const addSavedRecipe = (recipe: SavedRecipe) => {
+    setSavedRecipes((prev) => {
+      if (prev.some((r) => r.id === recipe.id)) return prev;
+      return [recipe, ...prev];
+    });
+  };
+  const removeSavedRecipe = (recipeId: string) => {
+    setSavedRecipes((prev) => prev.filter((r) => r.id !== recipeId));
+  };
+  const isRecipeSaved = (recipeId: string) => {
+    return savedRecipes.some((r) => r.id === recipeId);
+  };
   return (
     <MealPlanContext.Provider
       value={{
         meals,
+        savedRecipes,
+        generatedRecipes,
         addMeal,
         updateMeal,
         getMealsForDate,
-        removeMeal
+        removeMeal,
+        addSavedRecipe,
+        removeSavedRecipe,
+        isRecipeSaved,
+        addGeneratedRecipe,
+        getGeneratedRecipes
       }}>
-
+      
       {children}
     </MealPlanContext.Provider>);
 

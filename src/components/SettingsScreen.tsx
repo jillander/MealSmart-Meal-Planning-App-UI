@@ -86,16 +86,16 @@ export const SettingsScreen: React.FC<SettingsScreenProps> = ({
   <div
     className={`px-4 py-3.5 flex items-center hover:bg-gray-50 transition-colors cursor-pointer ${!isLast ? 'border-b border-gray-100' : ''}`}
     onClick={onClick}>
-
+    
       <div
       className={`w-9 h-9 rounded-full flex items-center justify-center mr-3 ${iconColor}`}>
-
+      
         <Icon size={18} className="text-current" />
       </div>
       <div className="flex-1">
         <p
         className={`font-medium text-sm ${isDestructive ? 'text-red-500' : 'text-[#1A1A1A]'}`}>
-
+        
           {label}
         </p>
       </div>
@@ -112,10 +112,10 @@ export const SettingsScreen: React.FC<SettingsScreenProps> = ({
           e.stopPropagation();
           onToggle && onToggle();
         }}>
-
+        
             <div
           className={`w-5 h-5 bg-white rounded-full shadow-sm transform transition-transform duration-200 ease-in-out ${toggleValue ? 'translate-x-5' : 'translate-x-0'}`} />
-
+        
           </div>
       }
         {showChevron && !showToggle &&
@@ -144,7 +144,7 @@ export const SettingsScreen: React.FC<SettingsScreenProps> = ({
           <button
             onClick={() => navigateTo('home')}
             className="mr-3 p-2 -ml-2 hover:bg-gray-50 rounded-full transition-colors">
-
+            
             <ArrowLeftIcon size={20} className="text-gray-900" />
           </button>
           <h1 className="text-xl font-bold text-[#1A1A1A]">Settings</h1>
@@ -158,7 +158,7 @@ export const SettingsScreen: React.FC<SettingsScreenProps> = ({
             src={user.avatar}
             alt={user.name}
             className="w-14 h-14 rounded-full object-cover border-2 border-white shadow-sm" />
-
+          
           <div className="ml-4 flex-1">
             <div className="flex items-center">
               <h2 className="font-bold text-[#1A1A1A]">{user.name}</h2>
@@ -181,21 +181,21 @@ export const SettingsScreen: React.FC<SettingsScreenProps> = ({
               label="Current Weight"
               value="72 kg"
               showChevron={false} />
-
+            
             <SettingRow
               icon={TargetIcon}
               iconColor="bg-green-50 text-green-600"
               label="Goal Weight"
               value="68 kg"
               showChevron={false} />
-
+            
             <SettingRow
               icon={RulerIcon}
               iconColor="bg-purple-50 text-purple-600"
               label="Height"
               value="178 cm"
               showChevron={false} />
-
+            
             <SettingRow
               icon={FlameIcon}
               iconColor="bg-orange-50 text-orange-600"
@@ -203,7 +203,7 @@ export const SettingsScreen: React.FC<SettingsScreenProps> = ({
               value="1800 cal"
               showChevron={false}
               isLast={true} />
-
+            
           </div>
         </div>
 
@@ -216,14 +216,14 @@ export const SettingsScreen: React.FC<SettingsScreenProps> = ({
               iconColor="bg-emerald-50 text-emerald-600"
               label="Macro Targets"
               value="120g P / 250g C / 65g F" />
-
+            
             <SettingRow
               icon={HeartIcon}
               iconColor="bg-rose-50 text-rose-600"
               label="Diet Preferences"
               value={`${dietPreferences.length} selected`}
               isLast={true} />
-
+            
           </div>
 
           {/* Diet Tags */}
@@ -235,7 +235,7 @@ export const SettingsScreen: React.FC<SettingsScreenProps> = ({
                   key={pref}
                   onClick={() => toggleDietPreference(pref)}
                   className={`px-3 py-1.5 rounded-full text-xs font-medium transition-all duration-200 ${isActive ? 'bg-[#4CAF50] text-white shadow-sm' : 'bg-white text-gray-600 border border-gray-100 hover:bg-gray-50'}`}>
-
+                  
                   {pref}
                 </button>);
 
@@ -257,7 +257,7 @@ export const SettingsScreen: React.FC<SettingsScreenProps> = ({
               toggleValue={appleHealthConnected}
               onToggle={() => setAppleHealthConnected(!appleHealthConnected)}
               isLast={true} />
-
+            
           </div>
         </div>
 
@@ -269,19 +269,20 @@ export const SettingsScreen: React.FC<SettingsScreenProps> = ({
               icon={CreditCardIcon}
               iconColor="bg-indigo-50 text-indigo-600"
               label="Subscription"
-              value="Manage" />
-
+              value="Manage"
+              onClick={() => navigateTo('subscription')} />
+            
             <SettingRow
               icon={BellIcon}
               iconColor="bg-yellow-50 text-yellow-600"
               label="Notifications" />
-
+            
             <SettingRow
               icon={HelpCircleIcon}
               iconColor="bg-cyan-50 text-cyan-600"
               label="Help & Support"
               isLast={true} />
-
+            
           </div>
         </div>
 
@@ -293,13 +294,13 @@ export const SettingsScreen: React.FC<SettingsScreenProps> = ({
               icon={FileTextIcon}
               iconColor="bg-gray-100 text-gray-600"
               label="Terms and Conditions" />
-
+            
             <SettingRow
               icon={ShieldCheckIcon}
               iconColor="bg-gray-100 text-gray-600"
               label="Privacy Policy"
               isLast={true} />
-
+            
           </div>
         </div>
 
@@ -310,7 +311,7 @@ export const SettingsScreen: React.FC<SettingsScreenProps> = ({
             <div
               className="px-4 py-3.5 flex items-center hover:bg-gray-50 transition-colors cursor-pointer border-b border-gray-100"
               onClick={() => console.log('Logout')}>
-
+              
               <div className="w-9 h-9 rounded-full flex items-center justify-center mr-3 bg-amber-50 text-amber-600">
                 <LogOutIcon size={18} className="text-current" />
               </div>
@@ -323,7 +324,7 @@ export const SettingsScreen: React.FC<SettingsScreenProps> = ({
             <div
               className="px-4 py-3.5 flex items-center hover:bg-gray-50 transition-colors cursor-pointer"
               onClick={() => console.log('Delete Account')}>
-
+              
               <div className="w-9 h-9 rounded-full flex items-center justify-center mr-3 bg-red-50 text-red-500">
                 <Trash2Icon size={18} className="text-current" />
               </div>

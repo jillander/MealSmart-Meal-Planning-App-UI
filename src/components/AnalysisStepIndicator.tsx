@@ -61,12 +61,12 @@ export const AnalysisStepIndicator: React.FC<AnalysisStepIndicatorProps> = ({
                   ${isComplete ? 'bg-[#4CAF50]/10' : isActive ? 'bg-[#FF9800]/10' : 'bg-gray-100'}
                   ${isError ? 'bg-red-50' : ''}
                   transition-all duration-250`}>
-
+                
                 {isError ?
                 <button
                   onClick={onRetry}
                   className="text-red-500 hover:text-red-600">
-
+                  
                     <RefreshCwIcon size={18} />
                   </button> :
 
@@ -79,7 +79,7 @@ export const AnalysisStepIndicator: React.FC<AnalysisStepIndicatorProps> = ({
                   ${isComplete ? 'text-[#4CAF50]' : isActive ? 'text-[#FF9800]' : 'text-[#BDBDBD]'}
                   ${isError ? 'text-red-500' : ''}
                   transition-colors duration-250`}>
-
+                
                 {step.name}
               </span>
               {/* Connector Line */}

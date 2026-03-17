@@ -99,7 +99,7 @@ export const HealthDashboard: React.FC<HealthDashboardProps> = ({
       onTouchStart={handleTouchStart}
       onTouchMove={handleTouchMove}
       onTouchEnd={handleTouchEnd}>
-
+      
       <div className="flex justify-between items-center mb-4">
         <h2 className="text-lg font-semibold text-[#1A1A1A]">
           Activity Summary
@@ -114,7 +114,7 @@ export const HealthDashboard: React.FC<HealthDashboardProps> = ({
             stand: healthData.stand,
             calories: healthData.caloriesBurned
           }} />
-
+        
       </div>
       {/* Distance Progress - New section */}
       <div className="mb-4">
@@ -159,7 +159,7 @@ export const HealthDashboard: React.FC<HealthDashboardProps> = ({
           <div
             key={index}
             className="flex items-center p-3 bg-gray-50 rounded-xl hover:bg-gray-100 transition-colors duration-200">
-
+            
               <div className="w-8 h-8 rounded-full bg-green-100 flex items-center justify-center mr-3">
                 <Dumbbell size={16} className="text-green-500" />
               </div>
