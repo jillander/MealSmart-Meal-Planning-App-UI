@@ -687,7 +687,7 @@ export const IngredientConfirmationScreen: React.FC<
           <button
             onClick={() => {
               onConfirm(ingredients);
-              navigateTo('recipe-suggestions');
+              navigateTo('recipe-loading');
             }}
             className="py-3.5 bg-[#1A1A1A] text-white rounded-2xl font-semibold hover:bg-black flex items-center justify-center shadow-sm transition-all w-[65%] text-sm">
             

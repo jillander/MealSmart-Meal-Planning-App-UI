@@ -164,7 +164,7 @@ export const IngredientCaptureScreen: React.FC<
               2. Skip to Confirmation
             </button>
             <button
-            onClick={() => navigateTo('recipe-suggestions')}
+            onClick={() => navigateTo('recipe-loading')}
             className="px-3 py-2 bg-red-600 text-white rounded-lg text-sm">
             
               3. Skip to Recipes

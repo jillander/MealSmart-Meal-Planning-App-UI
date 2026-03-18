@@ -14,6 +14,7 @@ import { RecipeSuggestionScreen } from './components/RecipeSuggestionScreen';
 import { RecipeRecommendationHub } from './components/RecipeRecommendationHub';
 import { CategoryBrowseScreen } from './components/CategoryBrowseScreen';
 import { SubscriptionScreen } from './components/SubscriptionScreen';
+import { RecipeLoadingScreen } from './components/RecipeLoadingScreen';
 import { MealPlanProvider } from './contexts/MealPlanContext';
 export function App() {
   const [currentScreen, setCurrentScreen] = useState('recipe-discovery');
@@ -96,6 +97,9 @@ export function App() {
               // Add any additional logic here
             }} />
 
+          }
+          {currentScreen === 'recipe-loading' &&
+          <RecipeLoadingScreen navigateTo={navigateTo} />
           }
           {currentScreen === 'recipe-suggestions' &&
           <RecipeSuggestionScreen navigateTo={navigateTo} />
