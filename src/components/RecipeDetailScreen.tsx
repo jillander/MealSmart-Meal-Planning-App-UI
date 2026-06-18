@@ -3,54 +3,121 @@ import {
   ArrowLeftIcon,
   BookmarkIcon,
   ClockIcon,
-  BarChartIcon,
   DumbbellIcon,
-  PlayIcon,
   CheckIcon,
-  XIcon,
   ChefHatIcon,
-  FlameIcon } from
+  FlameIcon,
+  MinusIcon,
+  PlusIcon,
+  PlusSquareIcon } from
 'lucide-react';
+import { useMealPlan } from '../contexts/MealPlanContext';
+import { AddToMealPlanModal } from './AddToMealPlanModal';
+import { ToastNotification } from './ToastNotification';
 interface RecipeDetailScreenProps {
   navigateTo: (screen: string) => void;
   onMarkAsPrepared: () => void;
 }
+interface IngredientItem {
+  id: string;
+  // The quantity that scales with servings. null = no numeric quantity (e.g. "Olive Oil")
+  qty: number | null;
+  // Unit/descriptor that follows the quantity (e.g. "tbsp", "Garlic Cloves", "Boneless Skinless Chicken Thighs")
+  label: string;
+  emoji: string;
+}
+// The recipe is written for this many servings.
+const BASE_SERVINGS = 4;
 export const RecipeDetailScreen: React.FC<RecipeDetailScreenProps> = ({
   navigateTo,
   onMarkAsPrepared
 }) => {
+  const { addMeal } = useMealPlan();
   const [activeTab, setActiveTab] = useState<
     'ingredients' | 'method' | 'nutrition'>(
     'ingredients');
   const [checkedIngredients, setCheckedIngredients] = useState<string[]>([]);
+  const [servings, setServings] = useState<number>(BASE_SERVINGS);
+  const [showAddToMealPlan, setShowAddToMealPlan] = useState(false);
+  const [toast, setToast] = useState<{
+    visible: boolean;
+    message: string;
+  }>({
+    visible: false,
+    message: ''
+  });
+  const showToast = (message: string) => {
+    setToast({
+      visible: true,
+      message
+    });
+    window.setTimeout(
+      () =>
+      setToast({
+        visible: false,
+        message: ''
+      }),
+      3000
+    );
+  };
   const toggleIngredient = (id: string) => {
     setCheckedIngredients((prev) =>
     prev.includes(id) ? prev.filter((item) => item !== id) : [...prev, id]
     );
   };
-  // Organized ingredient groups
-  const ingredientGroups = [
+  // Format a base quantity scaled to the current servings.
+  const formatQty = (baseQty: number | null) => {
+    if (baseQty === null) return '';
+    const scaled = baseQty * servings / BASE_SERVINGS;
+    // Round to a sensible precision, supporting common fractions
+    const rounded = Math.round(scaled * 4) / 4;
+    const whole = Math.floor(rounded);
+    const frac = rounded - whole;
+    const fracMap: Record<string, string> = {
+      '0.25': '¼',
+      '0.5': '½',
+      '0.75': '¾'
+    };
+    const fracStr = fracMap[frac.toString()] || '';
+    if (whole === 0 && fracStr) return fracStr;
+    if (fracStr) return `${whole}${fracStr}`;
+    return `${whole}`;
+  };
+  // Build the display name for an ingredient at the current serving size.
+  const ingredientName = (item: IngredientItem) => {
+    const q = formatQty(item.qty);
+    return q ? `${q} ${item.label}` : item.label;
+  };
+  // Organized ingredient groups (quantities expressed for BASE_SERVINGS).
+  const ingredientGroups: {
+    title: string;
+    items: IngredientItem[];
+  }[] = [
   {
     title: 'Main Ingredients',
     items: [
     {
       id: 'chicken',
-      name: '8 Boneless Skinless Chicken Thighs',
+      qty: 8,
+      label: 'Boneless Skinless Chicken Thighs',
       emoji: '🍗'
     },
     {
       id: 'broccoli',
-      name: '1 Broccoli',
+      qty: 1,
+      label: 'Broccoli',
       emoji: '🥦'
     },
     {
       id: 'rice',
-      name: '300g Jasmine Rice',
+      qty: 300,
+      label: 'g Jasmine Rice',
       emoji: '🍚'
     },
     {
       id: 'onions',
-      name: '3 Spring Onions',
+      qty: 3,
+      label: 'Spring Onions',
       emoji: '🧅'
     }]
 
@@ -60,17 +127,20 @@ export const RecipeDetailScreen: React.FC<RecipeDetailScreenProps> = ({
     items: [
     {
       id: 'garlic-powder',
-      name: '1 tbsp Garlic Powder',
+      qty: 1,
+      label: 'tbsp Garlic Powder',
       emoji: '🧄'
     },
     {
       id: 'chilli',
-      name: '½ tbsp Chilli Powder',
+      qty: 0.5,
+      label: 'tbsp Chilli Powder',
       emoji: '🌶️'
     },
     {
       id: 'flour',
-      name: '2 tbsp Plain Flour',
+      qty: 2,
+      label: 'tbsp Plain Flour',
       emoji: '🌾'
     }]
 
@@ -80,27 +150,32 @@ export const RecipeDetailScreen: React.FC<RecipeDetailScreenProps> = ({
     items: [
     {
       id: 'garlic',
-      name: '4 Garlic Cloves',
+      qty: 4,
+      label: 'Garlic Cloves',
       emoji: '🧄'
     },
     {
       id: 'gochujang',
-      name: '2 tbsp Gochujang',
+      qty: 2,
+      label: 'tbsp Gochujang',
       emoji: '🌶️'
     },
     {
       id: 'soy',
-      name: '2 tbsp Soy Sauce',
+      qty: 2,
+      label: 'tbsp Soy Sauce',
       emoji: '🥢'
     },
     {
       id: 'honey',
-      name: '3 tbsp Honey',
+      qty: 3,
+      label: 'tbsp Honey',
       emoji: '🍯'
     },
     {
       id: 'lime',
-      name: '2 Limes',
+      qty: 2,
+      label: 'Limes',
       emoji: '🍋'
     }]
 
@@ -110,12 +185,14 @@ export const RecipeDetailScreen: React.FC<RecipeDetailScreenProps> = ({
     items: [
     {
       id: 'sesame',
-      name: '2 tbsp Sesame Seeds',
+      qty: 2,
+      label: 'tbsp Sesame Seeds',
       emoji: '🌰'
     },
     {
       id: 'oil',
-      name: 'Olive Oil',
+      qty: null,
+      label: 'Olive Oil',
       emoji: '🫒'
     }]
 
@@ -185,8 +262,28 @@ export const RecipeDetailScreen: React.FC<RecipeDetailScreenProps> = ({
 
   }];
 
+  const recipeForPlan = {
+    id: 'sticky-gochujang-chicken',
+    title: 'Sticky Gochujang Chicken',
+    image:
+    'https://images.unsplash.com/photo-1565299585323-38d6b0865b47?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2000&q=80',
+    cookingTime: '35 mins',
+    calories: 520
+  };
+  const handleConfirmAddToMealPlan = (
+  date: Date,
+  mealType: 'breakfast' | 'lunch' | 'dinner' | 'snack') =>
+  {
+    addMeal(recipeForPlan, date, mealType);
+    showToast(
+      `${recipeForPlan.title} added to ${mealType} on ${date.toLocaleDateString()}`
+    );
+  };
   return (
-    <div className="flex flex-col min-h-screen bg-white">
+    <div className="flex flex-col min-h-screen bg-white font-['Inter']">
+      {/* Toast Notification */}
+      {toast.visible && <ToastNotification message={toast.message} />}
+
       {/* Status Bar */}
       <div className="flex justify-between items-center px-4 py-3 bg-white text-[#1A1A1A]">
         <span className="text-sm font-medium">9:41 AM</span>
@@ -222,7 +319,12 @@ export const RecipeDetailScreen: React.FC<RecipeDetailScreenProps> = ({
 
       {/* Recipe Header */}
       <div className="px-6 pt-6 pb-4 bg-white">
-        <h1 className="text-2xl font-bold text-[#1A1A1A] mb-2">
+        <h1
+          className="text-2xl font-bold text-[#1A1A1A] mb-2"
+          style={{
+            fontFamily: 'var(--font-heading)'
+          }}>
+          
           Sticky Gochujang Chicken
         </h1>
         <div className="flex items-center mb-4">
@@ -270,6 +372,41 @@ export const RecipeDetailScreen: React.FC<RecipeDetailScreenProps> = ({
               Medium
             </span>
           </div>
+        </div>
+
+        {/* Serving size + Add recipe pills */}
+        <div className="flex items-center gap-3">
+          {/* Serving size stepper pill */}
+          <div className="flex items-center bg-gray-100 rounded-full p-1.5 flex-1 max-w-[230px]">
+            <button
+              onClick={() => setServings((s) => Math.max(1, s - 1))}
+              disabled={servings <= 1}
+              className="w-9 h-9 rounded-full bg-white flex items-center justify-center shadow-sm disabled:opacity-40 disabled:shadow-none hover:bg-gray-50 transition-colors"
+              aria-label="Decrease servings">
+              
+              <MinusIcon size={18} className="text-[#1A1A1A]" />
+            </button>
+            <span className="flex-1 text-center text-sm font-semibold text-[#1A1A1A]">
+              {servings} {servings === 1 ? 'serving' : 'servings'}
+            </span>
+            <button
+              onClick={() => setServings((s) => Math.min(20, s + 1))}
+              disabled={servings >= 20}
+              className="w-9 h-9 rounded-full bg-white flex items-center justify-center shadow-sm disabled:opacity-40 disabled:shadow-none hover:bg-gray-50 transition-colors"
+              aria-label="Increase servings">
+              
+              <PlusIcon size={18} className="text-[#1A1A1A]" />
+            </button>
+          </div>
+
+          {/* Add recipe pill */}
+          <button
+            onClick={() => setShowAddToMealPlan(true)}
+            className="flex items-center justify-center gap-2 bg-[#1A1A1A] text-white px-5 h-12 rounded-full font-semibold text-sm shadow-sm hover:bg-gray-800 transition-colors flex-shrink-0">
+            
+            <PlusSquareIcon size={18} />
+            Add recipe
+          </button>
         </div>
       </div>
 
@@ -337,9 +474,9 @@ export const RecipeDetailScreen: React.FC<RecipeDetailScreenProps> = ({
                         <div className="flex items-center flex-1">
                           <span className="text-2xl mr-3">{item.emoji}</span>
                           <span
-                        className={`text-base ${isChecked ? 'text-[#94A3B8] line-through' : 'text-[#1A1A1A]'}`}>
+                        className={`text-base text-left ${isChecked ? 'text-[#94A3B8] line-through' : 'text-[#1A1A1A]'}`}>
                         
-                            {item.name}
+                            {ingredientName(item)}
                           </span>
                         </div>
                         <div
@@ -410,10 +547,7 @@ export const RecipeDetailScreen: React.FC<RecipeDetailScreenProps> = ({
                                       {ingredient.emoji}
                                     </span>
                                     <span className="text-xs text-[#64748B]">
-                                      {ingredient.name.
-                            split(' ').
-                            slice(1).
-                            join(' ')}
+                                      {ingredient.label}
                                     </span>
                                   </div> :
                         null;
@@ -545,6 +679,15 @@ export const RecipeDetailScreen: React.FC<RecipeDetailScreenProps> = ({
           Mark as Prepared
         </button>
       </div>
+
+      {/* Add to Meal Plan Modal */}
+      {showAddToMealPlan &&
+      <AddToMealPlanModal
+        recipe={recipeForPlan}
+        onClose={() => setShowAddToMealPlan(false)}
+        onAdd={handleConfirmAddToMealPlan} />
+
+      }
     </div>);
 
 };
