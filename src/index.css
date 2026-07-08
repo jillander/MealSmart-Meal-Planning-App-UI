@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@500;600;700&family=Pacifico&family=Nunito:wght@400;600;700;800;900&family=Inter:wght@400;500;600;700&display=swap');
+
 @import 'tailwindcss/base';
 @import 'tailwindcss/components';
 @import 'tailwindcss/utilities';
@@ -6,6 +8,10 @@
 :root {
   --font-heading: 'Nunito', system-ui, sans-serif;
   --font-body: 'Inter', system-ui, sans-serif;
+  /* Brand wordmark — geometric rounded sans for a professional, aesthetic look */
+  --font-wordmark: 'Quicksand', system-ui, sans-serif;
+  /* Cursive script accent for "Pal" */
+  --font-wordmark-script: 'Pacifico', cursive;
 }
 /* Apply heading font to all headings */
 h1, h2, h3, h4, h5, h6 {

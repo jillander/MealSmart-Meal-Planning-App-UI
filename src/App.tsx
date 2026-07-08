@@ -15,6 +15,7 @@ import { RecipeRecommendationHub } from './components/RecipeRecommendationHub';
 import { CategoryBrowseScreen } from './components/CategoryBrowseScreen';
 import { SubscriptionScreen } from './components/SubscriptionScreen';
 import { RecipeLoadingScreen } from './components/RecipeLoadingScreen';
+import { LogoConceptsScreen } from './components/LogoConceptsScreen';
 import { MealPlanProvider } from './contexts/MealPlanContext';
 export function App() {
   const [currentScreen, setCurrentScreen] = useState('recipe-discovery');
@@ -42,11 +43,10 @@ export function App() {
   return (
     <MealPlanProvider>
       <div className="w-full min-h-screen bg-[#F8F9FA] font-['Inter']">
-        {/* Import Google Fonts */}
-        <style jsx global>{`
-          @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Inter:wght@400;500;600;700&display=swap');
-        `}</style>
         <div className="max-w-[430px] mx-auto relative min-h-screen pb-[72px]">
+          {currentScreen === 'logo-concepts' &&
+          <LogoConceptsScreen navigateTo={navigateTo} />
+          }
           {currentScreen === 'home' && <HomeScreen navigateTo={navigateTo} />}
           {currentScreen === 'ingredient-capture' &&
           <IngredientCaptureScreen navigateTo={navigateTo} />

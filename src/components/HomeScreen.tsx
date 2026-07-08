@@ -14,7 +14,9 @@ import {
   DropletIcon,
   BookmarkIcon,
   ChevronRightIcon,
-  ClockIcon } from
+  ClockIcon,
+  ScanLineIcon,
+  SearchIcon } from
 'lucide-react';
 import { CalendarStrip } from './CalendarStrip';
 import { MealRow } from './MealRow';
@@ -44,6 +46,8 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({ navigateTo }) => {
     'nutrition'
   );
   const [showPlusOptions, setShowPlusOptions] = useState(false);
+  // Tracks which meal section's "add" action sheet is open (e.g. 'breakfast'), or null
+  const [addMealFor, setAddMealFor] = useState<string | null>(null);
   const [touchStart, setTouchStart] = useState(0);
   const [touchEnd, setTouchEnd] = useState(0);
   const [recentUploads, setRecentUploads] = useState([
@@ -158,83 +162,32 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({ navigateTo }) => {
       </div>
 
       <header className="flex justify-between items-center px-5 py-4 bg-white border-b border-[#F3F4F6]">
-        <div className="flex items-center">
-          {/* Banana Mascot Logo */}
-          <div
-            className="w-9 h-9 bg-[#FFD600] rounded-xl flex items-center justify-center mr-2.5 shadow-sm"
+        <button
+          onClick={() => navigateTo('logo-concepts')}
+          className="flex items-center active:scale-[0.98] transition-transform"
+          aria-label="View Cal Pal logo concepts">
+          
+          {/* Cal Pal — Midnight wordmark */}
+          <h1
+            className="flex items-baseline tracking-tight text-[#1A1A1A]"
             style={{
-              boxShadow: '0 2px 8px rgba(255, 214, 0, 0.35)'
+              fontFamily: 'var(--font-wordmark)'
             }}>
             
-            <svg
-              width="22"
-              height="22"
-              viewBox="0 0 24 24"
-              fill="none"
-              xmlns="http://www.w3.org/2000/svg">
-              
-              {/* Banana body */}
-              <path
-                d="M6.5 4C5.5 6 4 9.5 4 13C4 16.5 6 19 9 20.5C12 22 15.5 21 17.5 19C19.5 17 20.5 14 20 11C19.5 8 17.5 6 15 5C12.5 4 9.5 3.5 6.5 4Z"
-                fill="#1A1A1A" />
-              
-              <path
-                d="M7.5 5C6.5 7 5.5 10 5.5 13C5.5 16 7 18.5 9.5 19.8C12 21 15 20.5 16.8 18.8C18.5 17 19.3 14.5 18.8 11.8C18.3 9 16.5 7 14.5 6C12.5 5 10 4.5 7.5 5Z"
-                fill="#FFD600" />
-              
-              {/* Banana highlight */}
-              <path
-                d="M8.5 7C8 8.5 7.5 10.5 7.5 12.5C7.5 14.5 8.5 16.5 10 17.5"
-                stroke="#FFF176"
-                strokeWidth="1.5"
-                strokeLinecap="round"
-                fill="none" />
-              
-              {/* Banana tip */}
-              <path
-                d="M6.5 4C6 3.5 5.8 3 6 2.5C6.2 2 6.8 1.8 7.2 2.2C7.5 2.5 7.5 3.2 7 3.8L6.5 4Z"
-                fill="#1A1A1A" />
-              
-              {/* Cute face - eyes */}
-              <circle cx="11" cy="12" r="1" fill="#1A1A1A" />
-              <circle cx="14.5" cy="11" r="1" fill="#1A1A1A" />
-              {/* Eye shine */}
-              <circle cx="11.3" cy="11.6" r="0.35" fill="white" />
-              <circle cx="14.8" cy="10.6" r="0.35" fill="white" />
-              {/* Cute smile */}
-              <path
-                d="M11.5 14C12 14.8 13.5 14.8 14 14"
-                stroke="#1A1A1A"
-                strokeWidth="0.8"
-                strokeLinecap="round"
-                fill="none" />
-              
-              {/* Rosy cheeks */}
-              <circle cx="10" cy="13.5" r="0.8" fill="#FFB74D" opacity="0.5" />
-              <circle
-                cx="15.5"
-                cy="12.5"
-                r="0.8"
-                fill="#FFB74D"
-                opacity="0.5" />
-              
-            </svg>
-          </div>
-          <div>
-            <h1
-              className="text-2xl font-extrabold tracking-tight"
+            <span className="text-2xl font-bold">Cal</span>
+            <span
+              className="text-[26px] font-normal ml-1.5 text-[#1A1A1A]"
               style={{
-                fontFamily: 'var(--font-heading)'
+                fontFamily: 'var(--font-wordmark-script)'
               }}>
               
-              <span className="text-[#1A1A1A]">Kcal</span>
-              <span className="text-[#FFD600]"> Pal</span>
-            </h1>
-          </div>
-          <span className="ml-2.5 text-[10px] px-2 py-0.5 bg-[#1A1A1A]/8 text-[#1A1A1A] rounded-full font-semibold tracking-wide border border-[#FFD600]/40">
+              Pal
+            </span>
+          </h1>
+          <span className="ml-2.5 text-[10px] px-2 py-0.5 bg-[#1A1A1A]/8 text-[#1A1A1A] rounded-full font-semibold tracking-wide border border-[#1A1A1A]/15">
             AI
           </span>
-        </div>
+        </button>
         <button className="w-10 h-10 flex items-center justify-center rounded-xl bg-[#F8F9FA] text-[#1A1A1A] hover:bg-[#F0F1F3] active:scale-95 transition-all duration-200">
           <BellIcon size={18} strokeWidth={2} />
         </button>
@@ -534,6 +487,68 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({ navigateTo }) => {
                         }} />
 
                       )}
+
+                        {/* Add-to-section trigger */}
+                        {addMealFor === mealType ?
+                      <div className="grid grid-cols-2 gap-3 animate-fade-in">
+                            <button
+                          onClick={() => {
+                            setAddMealFor(null);
+                            navigateTo('ingredient-capture');
+                          }}
+                          className="flex flex-col items-start p-4 bg-white rounded-2xl border border-[#E5E7EB] hover:border-[#4CAF50] hover:shadow-sm transition-all duration-200 text-left active:scale-[0.98]">
+                          
+                              <div className="w-9 h-9 rounded-xl bg-[#4CAF50]/10 flex items-center justify-center mb-2">
+                                <ScanLineIcon
+                              size={18}
+                              className="text-[#4CAF50]"
+                              strokeWidth={2} />
+                            
+                              </div>
+                              <span className="text-sm font-semibold text-[#1A1A1A] tracking-tight">
+                                Scan ingredients
+                              </span>
+                              <span className="text-xs text-[#94A3B8] mt-0.5">
+                                Snap what you have
+                              </span>
+                            </button>
+                            <button
+                          onClick={() => {
+                            setAddMealFor(null);
+                            navigateTo('recipe-discovery');
+                          }}
+                          className="flex flex-col items-start p-4 bg-white rounded-2xl border border-[#E5E7EB] hover:border-[#2196F3] hover:shadow-sm transition-all duration-200 text-left active:scale-[0.98]">
+                          
+                              <div className="w-9 h-9 rounded-xl bg-[#2196F3]/10 flex items-center justify-center mb-2">
+                                <SearchIcon
+                              size={18}
+                              className="text-[#2196F3]"
+                              strokeWidth={2} />
+                            
+                              </div>
+                              <span className="text-sm font-semibold text-[#1A1A1A] tracking-tight">
+                                Find a recipe
+                              </span>
+                              <span className="text-xs text-[#94A3B8] mt-0.5">
+                                Browse meal ideas
+                              </span>
+                            </button>
+                          </div> :
+
+                      <button
+                        onClick={() => setAddMealFor(mealType)}
+                        className="w-full flex items-center justify-center py-3 rounded-2xl border-2 border-dashed border-[#E0E0E0] text-[#64748B] hover:border-[#4CAF50] hover:text-[#4CAF50] hover:bg-[#4CAF50]/5 transition-all duration-200 active:scale-[0.99]">
+                        
+                            <PlusIcon
+                          size={18}
+                          strokeWidth={2.5}
+                          className="mr-1.5" />
+                        
+                            <span className="text-sm font-semibold tracking-tight capitalize">
+                              Add {mealType}
+                            </span>
+                          </button>
+                      }
                       </div>
                     </div>);
 
