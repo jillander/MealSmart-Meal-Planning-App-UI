@@ -10,6 +10,7 @@ import {
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 interface MealPrepScreenProps {
   navigateTo: (screen: string) => void;
+  initialViewType?: ViewType;
 }
 type ViewType = 'daily' | 'weekly' | 'monthly';
 // Helper function to generate meal data
@@ -64,11 +65,12 @@ const initialMonthData = Array.from({
   meals: generateMeals(index < 2)
 }));
 export const MealPrepScreen: React.FC<MealPrepScreenProps> = ({
-  navigateTo
+  navigateTo,
+  initialViewType = 'weekly'
 }) => {
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [selectedDay, setSelectedDay] = useState(0);
-  const [viewType, setViewType] = useState<ViewType>('weekly');
+  const [viewType, setViewType] = useState<ViewType>(initialViewType);
   const [mealData, setMealData] = useState(initialMonthData);
   // Calculate progress based on view type
   const getProgress = () => {

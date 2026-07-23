@@ -22,12 +22,14 @@ import {
 'recharts';
 interface ProgressScreenProps {
   navigateTo: (screen: string) => void;
+  initialPeriod?: 'daily' | 'weekly' | 'monthly';
 }
 export const ProgressScreen: React.FC<ProgressScreenProps> = ({
-  navigateTo
+  navigateTo,
+  initialPeriod = 'weekly'
 }) => {
   const [activeTab, setActiveTab] = useState<'daily' | 'weekly' | 'monthly'>(
-    'weekly'
+    initialPeriod
   );
   // Mock data for progress stats
   const progressStats = {

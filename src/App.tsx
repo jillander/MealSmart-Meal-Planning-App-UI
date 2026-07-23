@@ -16,9 +16,22 @@ import { CategoryBrowseScreen } from './components/CategoryBrowseScreen';
 import { SubscriptionScreen } from './components/SubscriptionScreen';
 import { RecipeLoadingScreen } from './components/RecipeLoadingScreen';
 import { LogoConceptsScreen } from './components/LogoConceptsScreen';
+import { OnboardingFlow } from './components/onboarding/OnboardingFlow';
+import { ReferenceScreen } from './components/reference/ReferenceScreen';
 import { MealPlanProvider } from './contexts/MealPlanContext';
+import { useScreenInit } from './useScreenInit.js';
 export function App() {
-  const [currentScreen, setCurrentScreen] = useState('recipe-discovery');
+  const screenInit = useScreenInit();
+  const [currentScreen, setCurrentScreen] = useState(
+    () => screenInit.currentScreen ?? 'home'
+  );
+  const [hasCompletedOnboarding, setHasCompletedOnboarding] = useState(() => {
+    return (
+      Boolean(screenInit.currentScreen) ||
+      typeof window !== 'undefined' &&
+      window.localStorage.getItem('cal-pal-onboarding-complete') === 'true');
+
+  });
   const [showMealCompletion, setShowMealCompletion] = useState(false);
   const [showImportGuide, setShowImportGuide] = useState(false);
   const [categoryData, setCategoryData] = useState<{
@@ -40,16 +53,57 @@ export function App() {
       setCurrentScreen(screen);
     }
   };
+  if (screenInit.reference) {
+    return (
+      <div className="w-full min-h-screen bg-black font-['Inter']">
+        <div className="max-w-[430px] mx-auto relative min-h-screen">
+          <ReferenceScreen
+            reference={screenInit.reference}
+            index={screenInit.refIndex ?? 0} />
+          
+        </div>
+      </div>);
+
+  }
   return (
     <MealPlanProvider>
       <div className="w-full min-h-screen bg-[#F8F9FA] font-['Inter']">
+        {!hasCompletedOnboarding ?
+        <OnboardingFlow
+          initialStep={screenInit.onboardingStep}
+          onSignIn={() => {
+            window.localStorage.setItem('cal-pal-onboarding-complete', 'true');
+            setHasCompletedOnboarding(true);
+            setCurrentScreen('settings');
+          }}
+          onComplete={(path) => {
+            window.localStorage.setItem('cal-pal-onboarding-complete', 'true');
+            setHasCompletedOnboarding(true);
+            setCurrentScreen(
+              path === 'scan' ?
+              'ingredient-capture' :
+              path === 'plan' ?
+              'meal-prep' :
+              'home'
+            );
+          }} /> :
+
+
         <div className="max-w-[430px] mx-auto relative min-h-screen pb-[72px]">
           {currentScreen === 'logo-concepts' &&
           <LogoConceptsScreen navigateTo={navigateTo} />
           }
-          {currentScreen === 'home' && <HomeScreen navigateTo={navigateTo} />}
+          {currentScreen === 'home' &&
+          <HomeScreen
+            navigateTo={navigateTo}
+            initialTab={screenInit.activeTab} />
+
+          }
           {currentScreen === 'ingredient-capture' &&
-          <IngredientCaptureScreen navigateTo={navigateTo} />
+          <IngredientCaptureScreen
+            navigateTo={navigateTo}
+            initialTab={screenInit.activeCaptureTab} />
+
           }
           {currentScreen === 'recipe-detail' &&
           <RecipeDetailScreen
@@ -58,10 +112,16 @@ export function App() {
 
           }
           {currentScreen === 'meal-prep' &&
-          <MealPrepScreen navigateTo={navigateTo} />
+          <MealPrepScreen
+            navigateTo={navigateTo}
+            initialViewType={screenInit.mealPlanView} />
+
           }
           {currentScreen === 'progress' &&
-          <ProgressScreen navigateTo={navigateTo} />
+          <ProgressScreen
+            navigateTo={navigateTo}
+            initialPeriod={screenInit.progressPeriod} />
+
           }
           {currentScreen === 'settings' &&
           <SettingsScreen navigateTo={navigateTo} />
@@ -121,7 +181,8 @@ export function App() {
             navigateTo={navigateTo}
             onShowImportGuide={() => setShowImportGuide(true)} />
           
-        </div>
+          </div>
+        }
       </div>
     </MealPlanProvider>);
 

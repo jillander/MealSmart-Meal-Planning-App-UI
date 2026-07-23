@@ -28,8 +28,12 @@ import { RecentUploadCard } from './RecentUploadCard';
 import { useMealPlan } from '../contexts/MealPlanContext';
 interface HomeScreenProps {
   navigateTo: (screen: string) => void;
+  initialTab?: 'nutrition' | 'health';
 }
-export const HomeScreen: React.FC<HomeScreenProps> = ({ navigateTo }) => {
+export const HomeScreen: React.FC<HomeScreenProps> = ({
+  navigateTo,
+  initialTab = 'nutrition'
+}) => {
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [isFirstTimeUser, setIsFirstTimeUser] = useState(false);
   const [showImportGuide, setShowImportGuide] = useState(false);
@@ -43,7 +47,7 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({ navigateTo }) => {
     visible: false
   });
   const [activeTab, setActiveTab] = useState<'nutrition' | 'health'>(
-    'nutrition'
+    initialTab
   );
   const [showPlusOptions, setShowPlusOptions] = useState(false);
   // Tracks which meal section's "add" action sheet is open (e.g. 'breakfast'), or null

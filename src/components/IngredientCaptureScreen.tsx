@@ -11,11 +11,12 @@ import {
 import { IngredientAnalysisModal } from './IngredientAnalysisModal';
 interface IngredientCaptureScreenProps {
   navigateTo: (screen: string) => void;
+  initialTab?: 'fridge' | 'receipt';
 }
 export const IngredientCaptureScreen: React.FC<
   IngredientCaptureScreenProps> =
-({ navigateTo }) => {
-  const [activeTab, setActiveTab] = useState('fridge');
+({ navigateTo, initialTab = 'fridge' }) => {
+  const [activeTab, setActiveTab] = useState(initialTab);
   const [showAnalysisModal, setShowAnalysisModal] = useState(false);
   const [testMode, setTestMode] = useState(false);
   const handleCapture = () => {
