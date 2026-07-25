@@ -26,6 +26,9 @@ export function App() {
     () => screenInit.currentScreen ?? 'home'
   );
   const [hasCompletedOnboarding, setHasCompletedOnboarding] = useState(() => {
+    // A canvas/preview screen that targets an onboarding step must always show
+    // the onboarding flow, regardless of any saved completion flag.
+    if (screenInit.onboardingStep != null) return false;
     return (
       Boolean(screenInit.currentScreen) ||
       typeof window !== 'undefined' &&
@@ -76,16 +79,12 @@ export function App() {
             setHasCompletedOnboarding(true);
             setCurrentScreen('settings');
           }}
-          onComplete={(path) => {
+          onComplete={() => {
             window.localStorage.setItem('cal-pal-onboarding-complete', 'true');
             setHasCompletedOnboarding(true);
-            setCurrentScreen(
-              path === 'scan' ?
-              'ingredient-capture' :
-              path === 'plan' ?
-              'meal-prep' :
-              'home'
-            );
+            // The selected activation action is already complete before membership.
+            // Land on Today so the newly added meal is immediately visible.
+            setCurrentScreen('home');
           }} /> :
 
 

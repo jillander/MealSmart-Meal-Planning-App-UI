@@ -30,15 +30,15 @@ import { FirstRecipeStep } from './FirstRecipeStep';
 type Goal = 'lose' | 'maintain' | 'muscle' | 'consistent' | 'healthy';
 type Activity = 'low' | 'light' | 'moderate' | 'high';
 type Pace = 'gentle' | 'steady' | 'focused';
-type StartPath = 'scan' | 'plan' | 'log';
+type StartPath = 'scan' | 'plan';
 
 interface OnboardingFlowProps {
-  onComplete: (path: StartPath) => void;
+  onComplete: () => void;
   onSignIn: () => void;
   initialStep?: number;
 }
 
-const TOTAL_STEPS = 14;
+const TOTAL_STEPS = 12;
 
 const goals: Array<{
   id: Goal;
@@ -115,9 +115,9 @@ export function OnboardingFlow({
   const [activity, setActivity] = useState<Activity>('moderate');
   const [pace, setPace] = useState<Pace>('steady');
   const [startPath, setStartPath] = useState<StartPath | null>(null);
-  const [isSaving, setIsSaving] = useState<string | null>(null);
-  const [name, setName] = useState('');
-  const [profile, setProfile] = useState({ age: '31', height: '170', weight: '72', calculation: 'female' });
+  const [profile, setProfile] = useState({ age: '31', height: '170', weight: '72', goalWeight: '66', calculation: 'female' });
+
+  const wantsWeightTarget = goal === 'lose' || goal === 'maintain' || goal === 'muscle';
 
   const dailyTarget = useMemo(() => {
     if (goal === 'muscle') return 2220;
@@ -138,11 +138,10 @@ export function OnboardingFlow({
   const suggestedPath: StartPath =
   barrierPrimary === 'what-to-cook' || barrierPrimary === 'waste' ?
   'scan' :
-  barrierPrimary === 'lose-track' || barrierPrimary === 'snacking' ?
-  'log' :
   'plan';
 
-  const commitmentLine =
+  const commitmentLine = wantsWeightTarget && profile.goalWeight ?
+  `Built to reach ${profile.goalWeight} kg, with a protein target of ${proteinTarget}g/day.` :
   `Built for ${goalLabel.toLowerCase()}, with a protein target of ${proteinTarget}g/day.`;
   const commitmentDetail = selectedPreferences.includes('quick') ?
   'We’ll prioritize meals you can make in under 30 minutes.' :
@@ -157,17 +156,9 @@ export function OnboardingFlow({
     setValues(values.includes(id) ? values.filter((item) => item !== id) : [...values, id]);
   };
 
-  const handleProvider = (provider: string) => {
-    setIsSaving(provider);
-    window.setTimeout(() => {
-      setIsSaving(null);
-      next();
-    }, 900);
-  };
-
   // Guide the user toward the first action that best fits their stated barrier.
   useEffect(() => {
-    if (step === 11 && !startPath) setStartPath(suggestedPath);
+    if (step === 10 && !startPath) setStartPath(suggestedPath);
   }, [step, startPath, suggestedPath]);
 
   const renderStep = () => {
@@ -225,6 +216,16 @@ export function OnboardingFlow({
                 <NumberField label="Age" value={profile.age} suffix="yrs" onChange={(value) => setProfile({ ...profile, age: value })} />
                 <NumberField label="Height" value={profile.height} suffix="cm" onChange={(value) => setProfile({ ...profile, height: value })} />
                 <NumberField label="Weight" value={profile.weight} suffix="kg" onChange={(value) => setProfile({ ...profile, weight: value })} />
+              </div>
+              <div>
+                <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-[#68736D]">
+                  {goal === 'muscle' ? 'Target weight' : 'Goal weight'}
+                  {!wantsWeightTarget && <span className="ml-1 normal-case text-[#9AA39E]">(optional)</span>}
+                </p>
+                <div className="grid grid-cols-2 gap-3">
+                  <NumberField label="Current" value={profile.weight} suffix="kg" onChange={(value) => setProfile({ ...profile, weight: value })} />
+                  <NumberField label="Goal" value={profile.goalWeight} suffix="kg" onChange={(value) => setProfile({ ...profile, goalWeight: value })} />
+                </div>
               </div>
               <div>
                 <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-[#68736D]">Calculation profile</p>
@@ -337,24 +338,19 @@ export function OnboardingFlow({
 
 
       case 10:
-        return <OnboardingPaywall goalLabel={goalLabel} onContinue={next} onSkip={next} />;
-      case 11:
         return (
           <QuestionLayout title="How would you like to start today?" subtitle="We’ve highlighted the best first step for you — you can change it.">
             <div className="space-y-3">
-              <OnboardingChoiceCard label="Scan ingredients I have" description="Turn your groceries into meals that fit your plan" icon={ScanLineIcon} selected={startPath === 'scan'} onClick={() => setStartPath('scan')} />
-              <OnboardingChoiceCard label="Plan today’s meals" description="Start with a balanced day, already mapped out" icon={CalendarDaysIcon} selected={startPath === 'plan'} onClick={() => setStartPath('plan')} />
-              <OnboardingChoiceCard label="Log a meal I ate" description="See where today stands in just a few taps" icon={CameraIcon} selected={startPath === 'log'} onClick={() => setStartPath('log')} />
+              <OnboardingChoiceCard label="Scan ingredients I have" description="Capture what’s in your kitchen, then get recipe matches" icon={ScanLineIcon} selected={startPath === 'scan'} onClick={() => setStartPath('scan')} />
+              <OnboardingChoiceCard label="Plan today’s meals" description="Browse balanced meal ideas and add one to today’s plan" icon={CalendarDaysIcon} selected={startPath === 'plan'} onClick={() => setStartPath('plan')} />
             </div>
-            <ContinueButton disabled={!startPath} label="Save my plan" onClick={next} />
+            <ContinueButton disabled={!startPath} label="Show me my options" onClick={next} />
           </QuestionLayout>);
 
+      case 11:
+        return <FirstRecipeStep path={startPath ?? 'scan'} onDone={next} />;
       case 12:
-        return <SavePlanStep name={name} onName={setName} isSaving={isSaving} onProvider={handleProvider} onGuest={next} />;
-      case 13:
-        return <FirstRecipeStep onDone={next} />;
-      case 14:
-        return <ReadyStep path={startPath ?? 'scan'} name={name} onStart={() => onComplete(startPath ?? 'scan')} />;
+        return <OnboardingPaywall goalLabel={goalLabel} onContinue={onComplete} onSkip={onComplete} />;
       default:
         return null;
     }
@@ -567,8 +563,8 @@ function SavePlanStep({ name, onName, isSaving, onProvider, onGuest }: {name: st
   return (
     <section className="flex min-h-[calc(100vh-104px)] flex-col text-center">
       <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-3xl bg-[#E6F6E8] text-[#4CAF50]"><ShieldCheckIcon size={31} /></div>
-      <h1 className="mt-6 text-[32px] font-extrabold leading-[1.1] tracking-tight">Save your personalized plan</h1>
-      <p className="mx-auto mt-3 max-w-[340px] text-[15px] leading-relaxed text-[#68736D]">Keep your target, meals, and progress when you switch devices.</p>
+      <h1 className="mt-6 text-[32px] font-extrabold leading-[1.1] tracking-tight">Save the plan you just built</h1>
+      <p className="mx-auto mt-3 max-w-[340px] text-[15px] leading-relaxed text-[#68736D]">Keep your target, your first recipe, and your progress when you switch devices.</p>
       <label className="mt-6 block text-left">
         <span className="mb-1.5 block text-xs font-semibold text-[#68736D]">First name <span className="font-normal text-[#9AA39E]">(optional)</span></span>
         <input value={name} onChange={(event) => onName(event.target.value)} placeholder="What should we call you?" className="h-12 w-full rounded-xl border border-[#E1E6E3] bg-white px-3.5 text-base font-semibold text-[#1A1A1A] outline-none placeholder:font-normal placeholder:text-[#A7AFA9] focus:border-[#4CAF50] focus:ring-2 focus:ring-[#4CAF50]/15" aria-label="First name" />

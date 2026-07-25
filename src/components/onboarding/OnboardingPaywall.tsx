@@ -2,8 +2,6 @@ import React, { useState } from 'react';
 import {
   ArrowRightIcon,
   CheckIcon,
-  GiftIcon,
-  BellIcon,
   CreditCardIcon,
   SparklesIcon,
   LockIcon } from
@@ -82,25 +80,9 @@ export function OnboardingPaywall({
         )}
       </div>
 
-      {/* Trust timeline */}
-      <div className="mt-5 rounded-2xl border border-[#E1E6E3] bg-white p-4">
-        <TimelineRow
-          icon={GiftIcon}
-          title="Today — start free"
-          body="Full access to your personalized plan for 7 days."
-          accent />
-        
-        <TimelineRow
-          icon={BellIcon}
-          title="Day 5 — reminder"
-          body="We’ll remind you 2 days before your trial ends." />
-        
-        <TimelineRow
-          icon={CreditCardIcon}
-          title="Day 7 — trial ends"
-          body="Billing starts only if you keep going. Cancel anytime."
-          last />
-        
+      <div className="mt-5 flex items-center gap-3 rounded-2xl border border-[#E1E6E3] bg-white p-4 text-left">
+        <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-[#EDF8EF] text-[#2F7D34]"><CreditCardIcon size={19} /></span>
+        <div><p className="text-sm font-bold text-[#1A1A1A]">Simple, transparent membership</p><p className="mt-0.5 text-xs leading-relaxed text-[#68736D]">Choose the plan that works for you. Cancel anytime in Settings.</p></div>
       </div>
 
       {/* Plans */}
@@ -151,17 +133,17 @@ export function OnboardingPaywall({
           onClick={onContinue}
           className="flex h-14 w-full items-center justify-center rounded-2xl bg-[#1A1A1A] text-base font-bold text-white shadow-[0_4px_0_#080808] transition-all hover:bg-[#2A2A2A] active:translate-y-0.5 active:shadow-[0_2px_0_#080808]">
           
-          Start my 7-day free trial <ArrowRightIcon className="ml-2" size={19} />
+          Choose this plan <ArrowRightIcon className="ml-2" size={19} />
         </button>
         <button
           type="button"
           onClick={onSkip}
           className="mt-3 flex w-full items-center justify-center gap-1.5 py-1 text-sm font-semibold text-[#58655E] hover:text-[#1A1A1A]">
           
-          Maybe later
+          Continue with basic plan
         </button>
         <p className="mt-2 flex items-center justify-center gap-1 text-[11px] text-[#8A948F]">
-          <LockIcon size={11} /> Secure payment · Restore purchase
+          <LockIcon size={11} /> Secure payment · Restore purchase · No free trial
         </p>
       </div>
     </section>);

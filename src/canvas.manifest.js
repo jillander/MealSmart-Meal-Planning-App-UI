@@ -1,131 +1,132 @@
 export const manifest = {
   screens: {
-    scr_1fiazx: { name: "Welcome", route: "/", state: { "onboardingStep": 0 }, position: { "x": 120, "y": 22300 } },
-    scr_0jnj2a: { name: "Credibility", route: "/", state: { "onboardingStep": 1 }, position: { "x": 15520, "y": 22260 } },
-    scr_3pm3v6: { name: "Goal", route: "/", state: { "onboardingStep": 2 }, position: { "x": 1520, "y": 22300 } },
-    scr_os1b6n: { name: "Barriers", route: "/", state: { "onboardingStep": 3 }, position: { "x": 2920, "y": 22300 } },
-    scr_jv0h3w: { name: "Validation", route: "/", state: { "onboardingStep": 4 }, position: { "x": 4320, "y": 22300 } },
-    scr_2n1oo4: { name: "Personal details", route: "/", state: { "onboardingStep": 5 }, position: { "x": 5720, "y": 22300 } },
-    scr_9oaejt: { name: "Food preferences", route: "/", state: { "onboardingStep": 6 }, position: { "x": 7120, "y": 22300 } },
-    scr_jg51c5: { name: "Sustainable pace", route: "/", state: { "onboardingStep": 7 }, position: { "x": 8520, "y": 22300 } },
-    scr_tk4o2m: { name: "Progress celebration", route: "/", state: { "onboardingStep": 8 }, position: { "x": 16920, "y": 22260 } },
-    scr_talzpj: { name: "Your starting plan", route: "/", state: { "onboardingStep": 9 }, position: { "x": 9920, "y": 22300 } },
-    scr_payq3r: { name: "Membership", route: "/", state: { "onboardingStep": 10 }, position: { "x": 2960, "y": 12100 } },
-    scr_h9y00p: { name: "First win", route: "/", state: { "onboardingStep": 11 }, position: { "x": 11320, "y": 22300 } },
-    scr_7yyoor: { name: "Save your plan", route: "/", state: { "onboardingStep": 12 }, position: { "x": 12720, "y": 22300 } },
-    scr_ykmcxs: { name: "First recipe", route: "/", state: { "onboardingStep": 13 }, position: { "x": 160, "y": 24280 } },
-    scr_4vrv6d: { name: "Ready to start", route: "/", state: { "onboardingStep": 14 }, position: { "x": 14120, "y": 22300 } },
-    scr_mmwmly: { name: "Today / Nutrition", route: "/", state: { "currentScreen": "home", "activeTab": "nutrition" }, position: { "x": 160, "y": 2200 } },
-    scr_rne8f4: { name: "Today / Health", route: "/", state: { "currentScreen": "home", "activeTab": "health" }, position: { "x": 1560, "y": 2200 } },
-    scr_aighdn: { name: "Ingredient capture / Fridge", route: "/", state: { "currentScreen": "ingredient-capture", "activeCaptureTab": "fridge" }, position: { "x": 160, "y": 4180 } },
-    scr_8y5msf: { name: "Ingredient capture / Receipt", route: "/", state: { "currentScreen": "ingredient-capture", "activeCaptureTab": "receipt" }, position: { "x": 1560, "y": 4180 } },
-    scr_4ywdot: { name: "Review ingredients", route: "/", state: { "currentScreen": "ingredient-confirmation" }, position: { "x": 2960, "y": 4180 } },
-    scr_rryy0h: { name: "Finding recipes", route: "/", state: { "currentScreen": "recipe-loading" }, position: { "x": 160, "y": 6160 } },
-    scr_hhgi4q: { name: "Recipe suggestions", route: "/", state: { "currentScreen": "recipe-suggestions" }, position: { "x": 1560, "y": 6160 } },
-    scr_rzd98n: { name: "Recipe details", route: "/", state: { "currentScreen": "recipe-detail" }, position: { "x": 2960, "y": 6160 } },
-    scr_j5k5sq: { name: "Discover", route: "/", state: { "currentScreen": "recipe-discovery" }, position: { "x": 160, "y": 10120 } },
-    scr_sqvze9: { name: "Meal plan / Daily", route: "/", state: { "currentScreen": "meal-prep", "mealPlanView": "daily" }, position: { "x": 160, "y": 8140 } },
-    scr_eyd9pk: { name: "Meal plan / Weekly", route: "/", state: { "currentScreen": "meal-prep", "mealPlanView": "weekly" }, position: { "x": 1560, "y": 8140 } },
-    scr_mn6gio: { name: "Meal plan / Monthly", route: "/", state: { "currentScreen": "meal-prep", "mealPlanView": "monthly" }, position: { "x": 2960, "y": 8140 } },
-    scr_1gq2i0: { name: "Week plan", route: "/", state: { "currentScreen": "weekly-plan" }, position: { "x": 4360, "y": 8140 } },
-    scr_ogn8b1: { name: "Progress", route: "/", state: { "currentScreen": "progress", "progressPeriod": "weekly" }, position: { "x": 1560, "y": 10120 } },
-    scr_oeqppl: { name: "Settings", route: "/", state: { "currentScreen": "settings" }, position: { "x": 160, "y": 12100 } },
-    scr_w55n5t: { name: "Premium", route: "/", state: { "currentScreen": "subscription" }, position: { "x": 1560, "y": 12100 } },
-    scr_m0pefc: { name: "Yazio 1", route: "/", state: { "reference": "yazio", "refIndex": 0 }, position: { "x": 160, "y": 14080 } },
-    scr_278ure: { name: "Yazio 2", route: "/", state: { "reference": "yazio", "refIndex": 1 }, position: { "x": 1560, "y": 14080 } },
-    scr_nfv41x: { name: "Yazio 3", route: "/", state: { "reference": "yazio", "refIndex": 2 }, position: { "x": 2960, "y": 14080 } },
-    scr_2agrz7: { name: "Yazio 4", route: "/", state: { "reference": "yazio", "refIndex": 3 }, position: { "x": 4360, "y": 14080 } },
-    scr_u2ufir: { name: "Yazio 5", route: "/", state: { "reference": "yazio", "refIndex": 4 }, position: { "x": 5760, "y": 14080 } },
-    scr_ebildk: { name: "Yazio 6", route: "/", state: { "reference": "yazio", "refIndex": 5 }, position: { "x": 7160, "y": 14080 } },
-    scr_q6eevg: { name: "Yazio 7", route: "/", state: { "reference": "yazio", "refIndex": 6 }, position: { "x": 8560, "y": 14080 } },
-    scr_tx4a33: { name: "Yazio 8", route: "/", state: { "reference": "yazio", "refIndex": 7 }, position: { "x": 9960, "y": 14080 } },
-    scr_5j0d0m: { name: "Yazio 9", route: "/", state: { "reference": "yazio", "refIndex": 8 }, position: { "x": 11360, "y": 14080 } },
-    scr_i2hryw: { name: "Yazio 10", route: "/", state: { "reference": "yazio", "refIndex": 9 }, position: { "x": 12760, "y": 14080 } },
-    scr_ubilex: { name: "Yazio 11", route: "/", state: { "reference": "yazio", "refIndex": 10 }, position: { "x": 14160, "y": 14080 } },
-    scr_07b0f7: { name: "Yazio 12", route: "/", state: { "reference": "yazio", "refIndex": 11 }, position: { "x": 15560, "y": 14080 } },
-    scr_1avjtf: { name: "Yazio 13", route: "/", state: { "reference": "yazio", "refIndex": 12 }, position: { "x": 16960, "y": 14080 } },
-    scr_gqn1nj: { name: "Yazio 14", route: "/", state: { "reference": "yazio", "refIndex": 13 }, position: { "x": 18360, "y": 14080 } },
-    scr_45cmsb: { name: "Yazio 15", route: "/", state: { "reference": "yazio", "refIndex": 14 }, position: { "x": 19760, "y": 14080 } },
-    scr_yxks60: { name: "Yazio 16", route: "/", state: { "reference": "yazio", "refIndex": 15 }, position: { "x": 21160, "y": 14080 } },
-    scr_45r9ru: { name: "Osta 1 · Welcome", route: "/", state: { "reference": "osta", "refIndex": 0 }, position: { "x": 160, "y": 16060 } },
-    scr_gz425q: { name: "Osta 2 · Recipe sources", route: "/", state: { "reference": "osta", "refIndex": 1 }, position: { "x": 1560, "y": 16060 } },
-    scr_znweqs: { name: "Osta 3 · Social proof", route: "/", state: { "reference": "osta", "refIndex": 2 }, position: { "x": 2960, "y": 16060 } },
-    scr_thur7z: { name: "Osta 4 · Import support", route: "/", state: { "reference": "osta", "refIndex": 3 }, position: { "x": 4360, "y": 16060 } },
-    scr_dcbkz3: { name: "Osta 5 · Goals", route: "/", state: { "reference": "osta", "refIndex": 4 }, position: { "x": 5760, "y": 16060 } },
-    scr_w23ntj: { name: "Osta 6 · Age", route: "/", state: { "reference": "osta", "refIndex": 5 }, position: { "x": 7160, "y": 16060 } },
-    scr_z35tu4: { name: "Osta 7 · Username", route: "/", state: { "reference": "osta", "refIndex": 6 }, position: { "x": 8560, "y": 16060 } },
-    scr_w9ggmm: { name: "Osta 8 · Save progress", route: "/", state: { "reference": "osta", "refIndex": 7 }, position: { "x": 9960, "y": 16060 } },
-    scr_5n17jp: { name: "Osta 9 · Rating", route: "/", state: { "reference": "osta", "refIndex": 8 }, position: { "x": 160, "y": 18040 } },
-    scr_zot2gy: { name: "Osta 10 · Notifications", route: "/", state: { "reference": "osta", "refIndex": 9 }, position: { "x": 1560, "y": 18040 } },
-    scr_uffpzt: { name: "Osta 11 · Personalization", route: "/", state: { "reference": "osta", "refIndex": 10 }, position: { "x": 2960, "y": 18040 } },
-    scr_tjvjlj: { name: "Osta 12 · You're in good company", route: "/", state: { "reference": "osta", "refIndex": 11 }, position: { "x": 4360, "y": 18040 } },
-    scr_bcgu3u: { name: "Osta 13 · Friends feed", route: "/", state: { "reference": "osta", "refIndex": 12 }, position: { "x": 5760, "y": 18040 } },
-    scr_2dvimn: { name: "Osta 14 · Follow creators", route: "/", state: { "reference": "osta", "refIndex": 13 }, position: { "x": 7160, "y": 18040 } },
-    scr_fm8rrj: { name: "Osta 15 · Find friends", route: "/", state: { "reference": "osta", "refIndex": 14 }, position: { "x": 8560, "y": 18040 } },
-    scr_vws7wu: { name: "Osta 16 · First recipe saved", route: "/", state: { "reference": "osta", "refIndex": 15 }, position: { "x": 9960, "y": 18040 } },
-    scr_a2ecgm: { name: "Osta 17 · Home", route: "/", state: { "reference": "osta", "refIndex": 16 }, position: { "x": 160, "y": 20020 } },
-    scr_uogki8: { name: "Osta 18 · Share recipe", route: "/", state: { "reference": "osta", "refIndex": 17 }, position: { "x": 1560, "y": 20020 } }
+    scr_1fiazx: { name: "Welcome", route: "/", state: { "onboardingStep": 0 }, position: { "x": 160, "y": 220 } },
+    scr_0jnj2a: { name: "Credibility", route: "/", state: { "onboardingStep": 1 }, position: { "x": 1560, "y": 220 } },
+    scr_3pm3v6: { name: "Goal", route: "/", state: { "onboardingStep": 2 }, position: { "x": 2960, "y": 220 } },
+    scr_os1b6n: { name: "Barriers", route: "/", state: { "onboardingStep": 3 }, position: { "x": 4360, "y": 220 } },
+    scr_jv0h3w: { name: "Validation", route: "/", state: { "onboardingStep": 4 }, position: { "x": 5760, "y": 220 } },
+    scr_2n1oo4: { name: "Personal details", route: "/", state: { "onboardingStep": 5 }, position: { "x": 7160, "y": 220 } },
+    scr_9oaejt: { name: "Food preferences", route: "/", state: { "onboardingStep": 6 }, position: { "x": 8560, "y": 220 } },
+    scr_jg51c5: { name: "Sustainable pace", route: "/", state: { "onboardingStep": 7 }, position: { "x": 9960, "y": 220 } },
+    scr_tk4o2m: { name: "Progress celebration", route: "/", state: { "onboardingStep": 8 }, position: { "x": 11360, "y": 220 } },
+    scr_talzpj: { name: "Your starting plan", route: "/", state: { "onboardingStep": 9 }, position: { "x": 12760, "y": 220 } },
+    scr_h9y00p: { name: "First win", route: "/", state: { "onboardingStep": 10 }, position: { "x": 14160, "y": 220 } },
+    scr_ykmcxs: { name: "Recipe activation", route: "/", state: { "onboardingStep": 11 }, position: { "x": 160, "y": 2200 } },
+    scr_payq3r: { name: "Membership", route: "/", state: { "onboardingStep": 12 }, position: { "x": 160, "y": 14080 } },
+    scr_mmwmly: { name: "Today / Nutrition", route: "/", state: { "currentScreen": "home", "activeTab": "nutrition" }, position: { "x": 160, "y": 4180 } },
+    scr_rne8f4: { name: "Today / Health", route: "/", state: { "currentScreen": "home", "activeTab": "health" }, position: { "x": 1560, "y": 4180 } },
+    scr_aighdn: { name: "Ingredient capture / Fridge", route: "/", state: { "currentScreen": "ingredient-capture", "activeCaptureTab": "fridge" }, position: { "x": 160, "y": 6160 } },
+    scr_8y5msf: { name: "Ingredient capture / Receipt", route: "/", state: { "currentScreen": "ingredient-capture", "activeCaptureTab": "receipt" }, position: { "x": 1560, "y": 6160 } },
+    scr_4ywdot: { name: "Review ingredients", route: "/", state: { "currentScreen": "ingredient-confirmation" }, position: { "x": 2960, "y": 6160 } },
+    scr_rryy0h: { name: "Finding recipes", route: "/", state: { "currentScreen": "recipe-loading" }, position: { "x": 160, "y": 8140 } },
+    scr_hhgi4q: { name: "Recipe suggestions", route: "/", state: { "currentScreen": "recipe-suggestions" }, position: { "x": 1560, "y": 8140 } },
+    scr_rzd98n: { name: "Recipe details", route: "/", state: { "currentScreen": "recipe-detail" }, position: { "x": 2960, "y": 8140 } },
+    scr_j5k5sq: { name: "Discover", route: "/", state: { "currentScreen": "recipe-discovery" }, position: { "x": 160, "y": 12100 } },
+    scr_sqvze9: { name: "Meal plan / Daily", route: "/", state: { "currentScreen": "meal-prep", "mealPlanView": "daily" }, position: { "x": 160, "y": 10120 } },
+    scr_eyd9pk: { name: "Meal plan / Weekly", route: "/", state: { "currentScreen": "meal-prep", "mealPlanView": "weekly" }, position: { "x": 1560, "y": 10120 } },
+    scr_mn6gio: { name: "Meal plan / Monthly", route: "/", state: { "currentScreen": "meal-prep", "mealPlanView": "monthly" }, position: { "x": 2960, "y": 10120 } },
+    scr_1gq2i0: { name: "Week plan", route: "/", state: { "currentScreen": "weekly-plan" }, position: { "x": 4360, "y": 10120 } },
+    scr_ogn8b1: { name: "Progress", route: "/", state: { "currentScreen": "progress", "progressPeriod": "weekly" }, position: { "x": 1560, "y": 12100 } },
+    scr_oeqppl: { name: "Settings", route: "/", state: { "currentScreen": "settings" }, position: { "x": 1560, "y": 14080 } },
+    scr_w55n5t: { name: "Premium", route: "/", state: { "currentScreen": "subscription" }, position: { "x": 2960, "y": 14080 } },
+    scr_m0pefc: { name: "Yazio 1", route: "/", state: { "reference": "yazio", "refIndex": 0 }, position: { "x": 160, "y": 16060 } },
+    scr_278ure: { name: "Yazio 2", route: "/", state: { "reference": "yazio", "refIndex": 1 }, position: { "x": 1560, "y": 16060 } },
+    scr_nfv41x: { name: "Yazio 3", route: "/", state: { "reference": "yazio", "refIndex": 2 }, position: { "x": 2960, "y": 16060 } },
+    scr_2agrz7: { name: "Yazio 4", route: "/", state: { "reference": "yazio", "refIndex": 3 }, position: { "x": 4360, "y": 16060 } },
+    scr_u2ufir: { name: "Yazio 5", route: "/", state: { "reference": "yazio", "refIndex": 4 }, position: { "x": 5760, "y": 16060 } },
+    scr_ebildk: { name: "Yazio 6", route: "/", state: { "reference": "yazio", "refIndex": 5 }, position: { "x": 7160, "y": 16060 } },
+    scr_q6eevg: { name: "Yazio 7", route: "/", state: { "reference": "yazio", "refIndex": 6 }, position: { "x": 8560, "y": 16060 } },
+    scr_tx4a33: { name: "Yazio 8", route: "/", state: { "reference": "yazio", "refIndex": 7 }, position: { "x": 9960, "y": 16060 } },
+    scr_5j0d0m: { name: "Yazio 9", route: "/", state: { "reference": "yazio", "refIndex": 8 }, position: { "x": 11360, "y": 16060 } },
+    scr_i2hryw: { name: "Yazio 10", route: "/", state: { "reference": "yazio", "refIndex": 9 }, position: { "x": 12760, "y": 16060 } },
+    scr_ubilex: { name: "Yazio 11", route: "/", state: { "reference": "yazio", "refIndex": 10 }, position: { "x": 14160, "y": 16060 } },
+    scr_07b0f7: { name: "Yazio 12", route: "/", state: { "reference": "yazio", "refIndex": 11 }, position: { "x": 15560, "y": 16060 } },
+    scr_1avjtf: { name: "Yazio 13", route: "/", state: { "reference": "yazio", "refIndex": 12 }, position: { "x": 16960, "y": 16060 } },
+    scr_gqn1nj: { name: "Yazio 14", route: "/", state: { "reference": "yazio", "refIndex": 13 }, position: { "x": 18360, "y": 16060 } },
+    scr_45cmsb: { name: "Yazio 15", route: "/", state: { "reference": "yazio", "refIndex": 14 }, position: { "x": 19760, "y": 16060 } },
+    scr_yxks60: { name: "Yazio 16", route: "/", state: { "reference": "yazio", "refIndex": 15 }, position: { "x": 21160, "y": 16060 } },
+    scr_45r9ru: { name: "Osta 1 · Welcome", route: "/", state: { "reference": "osta", "refIndex": 0 }, position: { "x": 160, "y": 18040 } },
+    scr_gz425q: { name: "Osta 2 · Recipe sources", route: "/", state: { "reference": "osta", "refIndex": 1 }, position: { "x": 1560, "y": 18040 } },
+    scr_znweqs: { name: "Osta 3 · Social proof", route: "/", state: { "reference": "osta", "refIndex": 2 }, position: { "x": 2960, "y": 18040 } },
+    scr_thur7z: { name: "Osta 4 · Import support", route: "/", state: { "reference": "osta", "refIndex": 3 }, position: { "x": 4360, "y": 18040 } },
+    scr_dcbkz3: { name: "Osta 5 · Goals", route: "/", state: { "reference": "osta", "refIndex": 4 }, position: { "x": 5760, "y": 18040 } },
+    scr_w23ntj: { name: "Osta 6 · Age", route: "/", state: { "reference": "osta", "refIndex": 5 }, position: { "x": 7160, "y": 18040 } },
+    scr_z35tu4: { name: "Osta 7 · Username", route: "/", state: { "reference": "osta", "refIndex": 6 }, position: { "x": 8560, "y": 18040 } },
+    scr_w9ggmm: { name: "Osta 8 · Save progress", route: "/", state: { "reference": "osta", "refIndex": 7 }, position: { "x": 9960, "y": 18040 } },
+    scr_5n17jp: { name: "Osta 9 · Rating", route: "/", state: { "reference": "osta", "refIndex": 8 }, position: { "x": 160, "y": 20020 } },
+    scr_zot2gy: { name: "Osta 10 · Notifications", route: "/", state: { "reference": "osta", "refIndex": 9 }, position: { "x": 1560, "y": 20020 } },
+    scr_uffpzt: { name: "Osta 11 · Personalization", route: "/", state: { "reference": "osta", "refIndex": 10 }, position: { "x": 2960, "y": 20020 } },
+    scr_tjvjlj: { name: "Osta 12 · You're in good company", route: "/", state: { "reference": "osta", "refIndex": 11 }, position: { "x": 4360, "y": 20020 } },
+    scr_bcgu3u: { name: "Osta 13 · Friends feed", route: "/", state: { "reference": "osta", "refIndex": 12 }, position: { "x": 5760, "y": 20020 } },
+    scr_2dvimn: { name: "Osta 14 · Follow creators", route: "/", state: { "reference": "osta", "refIndex": 13 }, position: { "x": 7160, "y": 20020 } },
+    scr_fm8rrj: { name: "Osta 15 · Find friends", route: "/", state: { "reference": "osta", "refIndex": 14 }, position: { "x": 8560, "y": 20020 } },
+    scr_vws7wu: { name: "Osta 16 · First recipe saved", route: "/", state: { "reference": "osta", "refIndex": 15 }, position: { "x": 9960, "y": 20020 } },
+    scr_a2ecgm: { name: "Osta 17 · Home", route: "/", state: { "reference": "osta", "refIndex": 16 }, position: { "x": 160, "y": 22000 } },
+    scr_uogki8: { name: "Osta 18 · Share recipe", route: "/", state: { "reference": "osta", "refIndex": 17 }, position: { "x": 1560, "y": 22000 } }
   },
   sections: {
-    sec_d4bidd: { name: "MealSmart Onboarding", x: -80, y: 22040, width: 18360, height: 1220 },
-    sec_1lbq4r: { name: "Today / Daily Hub", x: 0, y: 1980, width: 2920, height: 1180 },
-    sec_0ur8jv: { name: "Ingredient Capture", x: 0, y: 3960, width: 4320, height: 1180 },
-    sec_32j0pq: { name: "Recipe Discovery", x: 0, y: 5940, width: 4320, height: 1180 },
-    sec_8arj0s: { name: "Meal Planning", x: 0, y: 7920, width: 5720, height: 1180 },
-    sec_jn7ju1: { name: "Explore & Progress", x: 0, y: 9900, width: 2920, height: 1180 },
-    sec_jl4ent: { name: "Account", x: 0, y: 11880, width: 4320, height: 1180 },
-    sec_76t2iz: { name: "Yazio Onboarding Reference", x: 0, y: 13860, width: 22520, height: 1180 },
-    sec_xhd6k0: { name: "Osta Onboarding", x: 0, y: 15840, width: 11320, height: 1180 },
-    sec_jf2u15: { name: "Osta Engagement & Social", x: 0, y: 17820, width: 11320, height: 1180 },
-    sec_oe4fzi: { name: "Osta Main App", x: 0, y: 19800, width: 2920, height: 1180 },
-    sec_j5obof: { name: "First Recipe Milestone", x: 0, y: 24060, width: 1520, height: 1180 }
+    sec_jxjl59: { name: "MealSmart Onboarding", x: 0, y: 0, width: 18320, height: 1180 },
+    sec_isqocy: { name: "First Recipe Milestone", x: 0, y: 1980, width: 1520, height: 1180 },
+    sec_yzsybl: { name: "Today / Daily Hub", x: 0, y: 3960, width: 2920, height: 1180 },
+    sec_yxau1k: { name: "Ingredient Capture", x: 0, y: 5940, width: 4320, height: 1180 },
+    sec_9k7w1n: { name: "Recipe Discovery", x: 0, y: 7920, width: 4320, height: 1180 },
+    sec_5fg4pb: { name: "Meal Planning", x: 0, y: 9900, width: 5720, height: 1180 },
+    sec_pcut5n: { name: "Explore & Progress", x: 0, y: 11880, width: 2920, height: 1180 },
+    sec_omtixb: { name: "Account", x: 0, y: 13860, width: 4320, height: 1180 },
+    sec_5gt2ag: { name: "Yazio Onboarding Reference", x: 0, y: 15840, width: 22520, height: 1180 },
+    sec_m9wvyz: { name: "Osta Onboarding", x: 0, y: 17820, width: 11320, height: 1180 },
+    sec_905xjb: { name: "Osta Engagement & Social", x: 0, y: 19800, width: 11320, height: 1180 },
+    sec_ndiz2u: { name: "Osta Main App", x: 0, y: 21780, width: 2920, height: 1180 }
   },
   layers: [
-  { kind: "section", id: "sec_d4bidd", children: [
+  { kind: "section", id: "sec_jxjl59", children: [
     { kind: "screen", id: "scr_1fiazx" },
+    { kind: "screen", id: "scr_0jnj2a" },
     { kind: "screen", id: "scr_3pm3v6" },
     { kind: "screen", id: "scr_os1b6n" },
     { kind: "screen", id: "scr_jv0h3w" },
     { kind: "screen", id: "scr_2n1oo4" },
     { kind: "screen", id: "scr_9oaejt" },
     { kind: "screen", id: "scr_jg51c5" },
+    { kind: "screen", id: "scr_tk4o2m" },
     { kind: "screen", id: "scr_talzpj" },
     { kind: "screen", id: "scr_h9y00p" },
     { kind: "screen", id: "scr_7yyoor" },
-    { kind: "screen", id: "scr_4vrv6d" },
-    { kind: "screen", id: "scr_0jnj2a" },
-    { kind: "screen", id: "scr_tk4o2m" }]
+    { kind: "screen", id: "scr_4vrv6d" }]
   },
-  { kind: "section", id: "sec_1lbq4r", children: [
+  { kind: "section", id: "sec_isqocy", children: [
+    { kind: "screen", id: "scr_ykmcxs" }]
+  },
+  { kind: "section", id: "sec_yzsybl", children: [
     { kind: "screen", id: "scr_mmwmly" },
     { kind: "screen", id: "scr_rne8f4" }]
   },
-  { kind: "section", id: "sec_0ur8jv", children: [
+  { kind: "section", id: "sec_yxau1k", children: [
     { kind: "screen", id: "scr_aighdn" },
     { kind: "screen", id: "scr_8y5msf" },
     { kind: "screen", id: "scr_4ywdot" }]
   },
-  { kind: "section", id: "sec_32j0pq", children: [
+  { kind: "section", id: "sec_9k7w1n", children: [
     { kind: "screen", id: "scr_rryy0h" },
     { kind: "screen", id: "scr_hhgi4q" },
     { kind: "screen", id: "scr_rzd98n" }]
   },
-  { kind: "section", id: "sec_8arj0s", children: [
+  { kind: "section", id: "sec_5fg4pb", children: [
     { kind: "screen", id: "scr_sqvze9" },
     { kind: "screen", id: "scr_eyd9pk" },
     { kind: "screen", id: "scr_mn6gio" },
     { kind: "screen", id: "scr_1gq2i0" }]
   },
-  { kind: "section", id: "sec_jn7ju1", children: [
+  { kind: "section", id: "sec_pcut5n", children: [
     { kind: "screen", id: "scr_j5k5sq" },
     { kind: "screen", id: "scr_ogn8b1" }]
   },
-  { kind: "section", id: "sec_jl4ent", children: [
+  { kind: "section", id: "sec_omtixb", children: [
+    { kind: "screen", id: "scr_payq3r" },
     { kind: "screen", id: "scr_oeqppl" },
-    { kind: "screen", id: "scr_w55n5t" },
-    { kind: "screen", id: "scr_payq3r" }]
+    { kind: "screen", id: "scr_w55n5t" }]
   },
-  { kind: "section", id: "sec_76t2iz", children: [
+  { kind: "section", id: "sec_5gt2ag", children: [
     { kind: "screen", id: "scr_m0pefc" },
     { kind: "screen", id: "scr_278ure" },
     { kind: "screen", id: "scr_nfv41x" },
@@ -143,7 +144,7 @@ export const manifest = {
     { kind: "screen", id: "scr_45cmsb" },
     { kind: "screen", id: "scr_yxks60" }]
   },
-  { kind: "section", id: "sec_xhd6k0", children: [
+  { kind: "section", id: "sec_m9wvyz", children: [
     { kind: "screen", id: "scr_45r9ru" },
     { kind: "screen", id: "scr_gz425q" },
     { kind: "screen", id: "scr_znweqs" },
@@ -153,7 +154,7 @@ export const manifest = {
     { kind: "screen", id: "scr_z35tu4" },
     { kind: "screen", id: "scr_w9ggmm" }]
   },
-  { kind: "section", id: "sec_jf2u15", children: [
+  { kind: "section", id: "sec_905xjb", children: [
     { kind: "screen", id: "scr_5n17jp" },
     { kind: "screen", id: "scr_zot2gy" },
     { kind: "screen", id: "scr_uffpzt" },
@@ -163,12 +164,9 @@ export const manifest = {
     { kind: "screen", id: "scr_fm8rrj" },
     { kind: "screen", id: "scr_vws7wu" }]
   },
-  { kind: "section", id: "sec_oe4fzi", children: [
+  { kind: "section", id: "sec_ndiz2u", children: [
     { kind: "screen", id: "scr_a2ecgm" },
     { kind: "screen", id: "scr_uogki8" }]
-  },
-  { kind: "section", id: "sec_j5obof", children: [
-    { kind: "screen", id: "scr_ykmcxs" }]
   }]
 
 };
