@@ -1,20 +1,21 @@
-
-import React, { useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import {
-  CheckCircle2Icon,
+  CameraIcon,
   ClockIcon,
   FlameIcon,
-  ImageIcon,
   PlusIcon,
   ScanLineIcon,
-  SwitchCameraIcon } from
+  SparklesIcon } from
 'lucide-react';
 import { useMealPlan } from '../../contexts/MealPlanContext';
 import { AddToMealPlanModal } from '../AddToMealPlanModal';
-import { IngredientAnalysisModal } from '../IngredientAnalysisModal';
 import { ToastNotification } from '../ToastNotification';
+import { PantryPicker, pantryItems } from './PantryPicker';
+import { SampleKitchenScan, sampleDetections } from './SampleKitchenScan';
 
 type StartPath = 'scan' | 'plan';
+type Phase = 'pick' | 'results';
+type PickMode = 'sample' | 'manual';
 
 interface FirstRecipeStepProps {
   path: StartPath;
@@ -23,9 +24,9 @@ interface FirstRecipeStepProps {
 
 const copyByPath: Record<StartPath, {eyebrow: string;title: string;body: string;}> = {
   scan: {
-    eyebrow: 'Scan your ingredients',
-    title: 'What’s in your kitchen?',
-    body: 'Capture what you have and we’ll suggest meals that fit your plan.'
+    eyebrow: 'See it in action',
+    title: 'From ingredients to dinner.',
+    body: 'Here’s a kitchen we already scanned. Tap the tags to see how your matches change.'
   },
   plan: {
     eyebrow: 'Plan today’s meals',
@@ -37,21 +38,44 @@ const copyByPath: Record<StartPath, {eyebrow: string;title: string;body: string;
 export function FirstRecipeStep({ path, onDone }: FirstRecipeStepProps) {
   const { generatedRecipes, addMeal } = useMealPlan();
   const copy = copyByPath[path];
-  const [scanComplete, setScanComplete] = useState(path === 'plan');
-  const [showAnalysis, setShowAnalysis] = useState(false);
-  const [activeRecipe, setActiveRecipe] = useState<(typeof recipes)[number] | null>(null);
+  const [phase, setPhase] = useState<Phase>(path === 'plan' ? 'results' : 'pick');
+  const [mode, setMode] = useState<PickMode>('sample');
+  const [selected, setSelected] = useState<string[]>(sampleDetections.map((detection) => detection.id));
+  const [activeRecipe, setActiveRecipe] = useState<{id: string;title: string;image: string;cookingTime: string;calories: number;} | null>(null);
   const [toastMessage, setToastMessage] = useState('');
 
-  const recipes = generatedRecipes.slice(0, 3).map((recipe) => ({
-    id: recipe.id,
-    title: recipe.name,
-    image: recipe.image,
-    cookingTime: recipe.prepTime,
-    calories: recipe.calories,
-    matchPercentage: recipe.matchPercentage
-  }));
+  const selectedLabels = useMemo(() => {
+    const source = mode === 'sample' ? sampleDetections : pantryItems;
+    return source.filter((item) => selected.includes(item.id)).map((item) => item.label);
+  }, [mode, selected]);
 
-  const handleMealAdded = (recipe: (typeof recipes)[number], date: Date, mealType: 'breakfast' | 'lunch' | 'dinner' | 'snack') => {
+  const recipes = useMemo(
+    () =>
+    generatedRecipes.slice(0, 3).map((recipe, index) => ({
+      id: recipe.id,
+      title: recipe.name,
+      image: recipe.image,
+      cookingTime: recipe.prepTime,
+      calories: recipe.calories,
+      match: Math.max(52, Math.min(98, 60 + selectedLabels.length * 8 - index * 4)),
+      uses: selectedLabels.slice(0, Math.max(1, selectedLabels.length - index))
+    })),
+    [generatedRecipes, selectedLabels]
+  );
+
+  const switchMode = (nextMode: PickMode) => {
+    setMode(nextMode);
+    setSelected(nextMode === 'sample' ? sampleDetections.map((detection) => detection.id) : ['chicken', 'spinach', 'rice']);
+  };
+
+  const toggleItem = (id: string) =>
+  setSelected((current) => current.includes(id) ? current.filter((item) => item !== id) : [...current, id]);
+
+  const handleMealAdded = (
+  recipe: {id: string;title: string;image: string;cookingTime: string;calories: number;},
+  date: Date,
+  mealType: 'breakfast' | 'lunch' | 'dinner' | 'snack') =>
+  {
     addMeal(recipe, date, mealType);
     setActiveRecipe(null);
     setToastMessage('Meal added to your plan');
@@ -60,64 +84,72 @@ export function FirstRecipeStep({ path, onDone }: FirstRecipeStepProps) {
 
   return (
     <section className="relative flex min-h-[calc(100vh-104px)] flex-col">
-      <style>{`
-        @keyframes cp-rise { 0% { transform: translateY(10px); opacity: 0 } 100% { transform: translateY(0); opacity: 1 } }
-      `}</style>
+      <style>{`@keyframes cp-rise { 0% { transform: translateY(10px); opacity: 0 } 100% { transform: translateY(0); opacity: 1 } } @media (prefers-reduced-motion: reduce) { .cp-rise-item { animation: none !important; } }`}</style>
 
       <div>
         <p className="text-sm font-bold uppercase tracking-[0.15em] text-[#4CAF50]">{copy.eyebrow}</p>
-        <h1 className="mt-2 max-w-[360px] text-[30px] font-extrabold leading-[1.1] tracking-tight">{copy.title}</h1>
-        <p className="mt-3 max-w-[360px] text-[15px] leading-relaxed text-[#68736D]">{copy.body}</p>
+        <h1 className="mt-2 max-w-[360px] text-[29px] font-extrabold leading-[1.1] tracking-tight">{copy.title}</h1>
+        <p className="mt-2.5 max-w-[360px] text-[15px] leading-relaxed text-[#68736D]">{copy.body}</p>
       </div>
 
-      {path === 'scan' && !scanComplete ?
-      <div className="mt-6 flex flex-1 flex-col">
-          <div className="relative mx-auto aspect-[3/4] w-full max-w-[300px] overflow-hidden rounded-[28px] bg-black">
-            <img
-            src="/83c9cf94-e7ec-4b5f-a426-703eeb37d6c6.jpg"
-            alt="Live camera view of fresh ingredients"
-            className="h-full w-full object-cover" />
+      {path === 'scan' && phase === 'pick' ?
+      <div className="mt-5 flex flex-1 flex-col">
+          {mode === 'sample' ?
+        <SampleKitchenScan selected={selected} onToggle={toggleItem} /> :
+
+        <PantryPicker selected={selected} onToggle={toggleItem} />
+        }
+
+          <button
+          type="button"
+          onClick={() => switchMode(mode === 'sample' ? 'manual' : 'sample')}
+          className="mt-3 self-center text-sm font-semibold text-[#58655E] underline underline-offset-4 hover:text-[#1A1A1A]">
           
-            <span className="absolute left-4 top-4 h-7 w-7 rounded-tl-xl border-l-4 border-t-4 border-white/90" />
-            <span className="absolute right-4 top-4 h-7 w-7 rounded-tr-xl border-r-4 border-t-4 border-white/90" />
-            <span className="absolute bottom-24 left-4 h-7 w-7 rounded-bl-xl border-b-4 border-l-4 border-white/90" />
-            <span className="absolute bottom-24 right-4 h-7 w-7 rounded-br-xl border-b-4 border-r-4 border-white/90" />
-            <div className="absolute left-1/2 top-4 -translate-x-1/2 rounded-full bg-black/45 px-3 py-1 text-xs font-semibold text-white backdrop-blur-sm">Point at your ingredients</div>
-            <div className="absolute inset-x-0 bottom-0 flex items-center justify-between bg-gradient-to-t from-black/70 to-transparent px-6 pb-5 pt-10">
-              <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-white/15 text-white backdrop-blur-sm"><ImageIcon size={18} /></span>
-              <button type="button" onClick={() => setShowAnalysis(true)} aria-label="Capture photo" className="flex h-[70px] w-[70px] items-center justify-center rounded-full border-4 border-white/90 bg-white/20 backdrop-blur-sm transition-transform active:scale-90"><span className="h-[52px] w-[52px] rounded-full bg-white" /></button>
-              <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-white/15 text-white backdrop-blur-sm"><SwitchCameraIcon size={18} /></span>
-            </div>
+            {mode === 'sample' ? 'Use my own ingredients instead' : 'Back to the sample kitchen'}
+          </button>
+
+          <div className="mt-4 flex items-start gap-2.5 rounded-2xl bg-[#F1F8F2] p-3 text-left">
+            <CameraIcon className="mt-0.5 shrink-0 text-[#4CAF50]" size={16} />
+            <p className="text-xs leading-relaxed text-[#496150]">In the app you’ll scan your own fridge or receipt — we’ll notify you the moment your recipes are ready.</p>
           </div>
-          <p className="mt-4 text-center text-sm text-[#68736D]">Tap the shutter to capture. We’ll identify your ingredients, then suggest recipes.</p>
+
+          <button
+          type="button"
+          disabled={selected.length === 0}
+          onClick={() => setPhase('results')}
+          className="mt-auto flex h-14 w-full items-center justify-center rounded-2xl bg-[#1A1A1A] text-base font-bold text-white shadow-[0_4px_0_#080808] transition-[transform,box-shadow,background-color] enabled:active:translate-y-0.5 enabled:active:shadow-[0_2px_0_#080808] disabled:bg-[#E7EBE9] disabled:text-[#9AA39E] disabled:shadow-none">
+          
+            <SparklesIcon className="mr-2" size={18} />
+            {selected.length ? `Match recipes (${selected.length})` : 'Select an ingredient'}
+          </button>
         </div> :
 
       <div className="mt-6 flex flex-1 flex-col">
-          {path === 'scan' && <div className="mb-3 flex items-center gap-2 rounded-xl bg-[#EDF8EF] px-3 py-2 text-xs font-semibold text-[#2F7D34]"><ScanLineIcon size={15} /> Recipes matched to your ingredients</div>}
+          {path === 'scan' &&
+        <div className="mb-3 flex items-center justify-between gap-2 rounded-xl bg-[#EDF8EF] px-3 py-2">
+              <span className="flex items-center gap-2 text-xs font-semibold text-[#2F7D34]"><ScanLineIcon size={15} /> Matched to {selectedLabels.length} ingredients</span>
+              <button type="button" onClick={() => setPhase('pick')} className="text-xs font-bold text-[#2F7D34] underline underline-offset-2">Edit</button>
+            </div>
+        }
           <div className="space-y-3">
             {recipes.map((recipe, index) =>
-          <div key={recipe.id} className="flex items-center gap-3 rounded-2xl border border-[#E1E6E3] bg-white p-2.5" style={{ animation: `cp-rise 360ms ease-out ${index * 80}ms both` }}>
-                <img src={recipe.image} alt={recipe.title} className="h-16 w-16 shrink-0 rounded-xl object-cover" />
+          <div key={recipe.id} className="cp-rise-item flex items-center gap-3 rounded-2xl border border-[#E1E6E3] bg-white p-2.5" style={{ animation: `cp-rise 360ms cubic-bezier(0.22, 1, 0.36, 1) ${index * 70}ms both` }}>
+                <div className="relative shrink-0">
+                  <img src={recipe.image} alt={recipe.title} className="h-16 w-16 rounded-xl object-cover" />
+                  {path === 'scan' && <span className="absolute -bottom-1.5 left-1/2 -translate-x-1/2 rounded-full bg-[#4CAF50] px-1.5 py-0.5 text-[9px] font-extrabold text-white shadow">{recipe.match}%</span>}
+                </div>
                 <div className="min-w-0 flex-1">
                   <p className="truncate text-sm font-bold text-[#1A1A1A]">{recipe.title}</p>
                   <div className="mt-1 flex items-center gap-3 text-xs text-[#68736D]"><span className="flex items-center gap-1"><ClockIcon size={13} /> {recipe.cookingTime}</span><span className="flex items-center gap-1"><FlameIcon size={13} /> {recipe.calories} cal</span></div>
+                  {path === 'scan' && recipe.uses.length > 0 && <p className="mt-1 truncate text-[11px] font-semibold text-[#2F7D34]">Uses {recipe.uses.join(', ')}</p>}
                 </div>
-                <button type="button" onClick={() => setActiveRecipe(recipe)} className="flex h-9 items-center gap-1 rounded-full bg-[#1A1A1A] px-3 text-xs font-bold text-white active:scale-95"><PlusIcon size={14} /> Add</button>
+                <button type="button" onClick={() => setActiveRecipe({ id: recipe.id, title: recipe.title, image: recipe.image, cookingTime: recipe.cookingTime, calories: recipe.calories })} className="flex h-9 items-center gap-1 rounded-full bg-[#1A1A1A] px-3 text-xs font-bold text-white active:scale-95"><PlusIcon size={14} /> Add</button>
               </div>
           )}
           </div>
           <p className="mt-auto pt-5 text-center text-xs leading-relaxed text-[#7A857F]">Add one meal to continue to your membership options.</p>
         </div>
       }
-
-      <IngredientAnalysisModal
-        isOpen={showAnalysis}
-        onClose={() => setShowAnalysis(false)}
-        onComplete={() => {
-          setShowAnalysis(false);
-          setScanComplete(true);
-        }} />
-      
 
       {activeRecipe && <AddToMealPlanModal recipe={activeRecipe} onClose={() => setActiveRecipe(null)} onAdd={(date, mealType) => handleMealAdded(activeRecipe, date, mealType)} />}
       {toastMessage && <ToastNotification message={toastMessage} />}

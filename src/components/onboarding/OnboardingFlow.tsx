@@ -26,6 +26,14 @@ import { OnboardingChoiceCard } from './OnboardingChoiceCard';
 import { OnboardingProgress } from './OnboardingProgress';
 import { OnboardingPaywall } from './OnboardingPaywall';
 import { FirstRecipeStep } from './FirstRecipeStep';
+import { ProjectionChart } from './ProjectionChart';
+import { ProductShowcaseStep } from './ProductShowcaseStep';
+import { StaggeredOptions } from './StaggeredOptions';
+import { PlanBuildingStep } from './PlanBuildingStep';
+import { PremiumWelcomeStep } from './PremiumWelcomeStep';
+import { ReminderStep } from './ReminderStep';
+import { computeTargets, type NutritionTargets } from '../../lib/targets';
+import { getProjectionDetails } from '../../lib/projection';
 
 type Goal = 'lose' | 'maintain' | 'muscle' | 'consistent' | 'healthy';
 type Activity = 'low' | 'light' | 'moderate' | 'high';
@@ -38,7 +46,7 @@ interface OnboardingFlowProps {
   initialStep?: number;
 }
 
-const TOTAL_STEPS = 12;
+const TOTAL_STEPS = 16;
 
 const goals: Array<{
   id: Goal;
@@ -115,18 +123,12 @@ export function OnboardingFlow({
   const [activity, setActivity] = useState<Activity>('moderate');
   const [pace, setPace] = useState<Pace>('steady');
   const [startPath, setStartPath] = useState<StartPath | null>(null);
-  const [profile, setProfile] = useState({ age: '31', height: '170', weight: '72', goalWeight: '66', calculation: 'female' });
+  const [email, setEmail] = useState('');
+  const [isSaving, setIsSaving] = useState<string | null>(null);
+  const [profile, setProfile] = useState({ age: '31', height: '170', weight: '72', goalWeight: '66', calculation: 'female', reminderTimes: ['Breakfast', 'Lunch', 'Dinner'] });
 
   const wantsWeightTarget = goal === 'lose' || goal === 'maintain' || goal === 'muscle';
-
-  const dailyTarget = useMemo(() => {
-    if (goal === 'muscle') return 2220;
-    if (goal === 'lose') return pace === 'gentle' ? 1840 : pace === 'focused' ? 1580 : 1710;
-    if (goal === 'maintain') return 2050;
-    return 1900;
-  }, [goal, pace]);
-
-  const proteinTarget = goal === 'muscle' ? 132 : goal === 'lose' ? 112 : 98;
+  const targets = useMemo(() => computeTargets(goal, pace), [goal, pace]);
   const goalLabel = goals.find((item) => item.id === goal)?.label ?? 'health goal';
 
   const barrierPrimary = selectedBarriers[0];
@@ -141,24 +143,42 @@ export function OnboardingFlow({
   'plan';
 
   const commitmentLine = wantsWeightTarget && profile.goalWeight ?
-  `Built to reach ${profile.goalWeight} kg, with a protein target of ${proteinTarget}g/day.` :
-  `Built for ${goalLabel.toLowerCase()}, with a protein target of ${proteinTarget}g/day.`;
+  `Built to reach ${profile.goalWeight} kg, with a protein target of ${targets.proteinGoal}g/day.` :
+  `Built for ${goalLabel.toLowerCase()}, with a protein target of ${targets.proteinGoal}g/day.`;
   const commitmentDetail = selectedPreferences.includes('quick') ?
   'We’ll prioritize meals you can make in under 30 minutes.' :
   selectedCuisines.length ?
   `Expect more ${selectedCuisines.slice(0, 2).join(' & ')} ideas in your plan.` :
   barrierCopy.promise;
+  const hasProjectedGoal = goal === 'lose' || goal === 'muscle';
+  const projection = hasProjectedGoal ? getProjectionDetails(profile.weight, profile.goalWeight, pace) : null;
+  const visibleSteps = Array.from({ length: TOTAL_STEPS + 1 }, (_, index) => index);
+  const progressIndex = Math.max(0, visibleSteps.indexOf(step));
 
-  const next = () => setStep((current) => Math.min(TOTAL_STEPS, current + 1));
-  const back = () => setStep((current) => Math.max(0, current - 1));
+  const next = () => setStep((current) => {
+    const currentIndex = visibleSteps.indexOf(current);
+    return visibleSteps[Math.min(visibleSteps.length - 1, currentIndex + 1)] ?? TOTAL_STEPS;
+  });
+  const back = () => setStep((current) => {
+    const currentIndex = visibleSteps.indexOf(current);
+    return visibleSteps[Math.max(0, currentIndex - 1)] ?? 0;
+  });
 
   const toggleSelection = (id: string, values: string[], setValues: (items: string[]) => void) => {
     setValues(values.includes(id) ? values.filter((item) => item !== id) : [...values, id]);
   };
 
+  const handleSavePlan = (provider: 'apple' | 'google' | 'email') => {
+    setIsSaving(provider);
+    window.setTimeout(() => {
+      setIsSaving(null);
+      next();
+    }, 700);
+  };
+
   // Guide the user toward the first action that best fits their stated barrier.
   useEffect(() => {
-    if (step === 10 && !startPath) setStartPath(suggestedPath);
+    if (step === 11 && !startPath) setStartPath(suggestedPath);
   }, [step, startPath, suggestedPath]);
 
   const renderStep = () => {
@@ -166,11 +186,9 @@ export function OnboardingFlow({
       case 0:
         return <WelcomeStep onStart={next} onSignIn={onSignIn} />;
       case 1:
-        return <CredibilityStep onContinue={next} />;
-      case 2:
         return (
           <QuestionLayout title="What would you like help with?" subtitle="Your answer shapes the plan we build together.">
-            <div className="space-y-2.5">
+            <StaggeredOptions>
               {goals.map((item) =>
               <OnboardingChoiceCard
                 key={item.id}
@@ -181,14 +199,14 @@ export function OnboardingFlow({
                 onClick={() => setGoal(item.id)} />
 
               )}
-            </div>
+            </StaggeredOptions>
             <ContinueButton disabled={!goal} onClick={next} />
           </QuestionLayout>);
 
-      case 3:
+      case 2:
         return (
           <QuestionLayout title="What makes eating well hard right now?" subtitle="Pick anything that sounds familiar. We’ll shape your plan around it.">
-            <div className="space-y-2.5">
+            <StaggeredOptions>
               {barriers.map((item) =>
               <OnboardingChoiceCard
                 key={item.id}
@@ -199,12 +217,14 @@ export function OnboardingFlow({
                 onClick={() => toggleSelection(item.id, selectedBarriers, setSelectedBarriers)} />
 
               )}
-            </div>
+            </StaggeredOptions>
             <ContinueButton label={selectedBarriers.length ? 'Continue' : 'Skip for now'} onClick={next} />
           </QuestionLayout>);
 
-      case 4:
+      case 3:
         return <ValidationStep goalLabel={goalLabel} empathy={barrierCopy.empathy} promise={barrierCopy.promise} onContinue={next} />;
+      case 4:
+        return <ProductShowcaseStep onContinue={next} />;
       case 5:
         return (
           <QuestionLayout
@@ -328,29 +348,40 @@ export function OnboardingFlow({
       case 8:
         return <ProgressCelebrationStep onContinue={next} />;
       case 9:
+        return <PlanBuildingStep goalLabel={goalLabel} pace={pace} preferences={selectedPreferences} cuisines={selectedCuisines} onContinue={next} />;
+      case 10:
         return (
           <PlanRevealStep
-            dailyTarget={dailyTarget}
-            proteinTarget={proteinTarget}
+            targets={targets}
+            weightKg={profile.weight}
+            goalWeight={profile.goalWeight}
+            pace={pace}
+            goal={goal}
             commitmentLine={commitmentLine}
             commitmentDetail={commitmentDetail}
             onContinue={next} />);
 
 
-      case 10:
+      case 11:
+        return <SavePlanStep dailyTarget={targets.calorieGoal} goalWeight={profile.goalWeight} projectedDate={projection?.projectedDate ?? null} email={email} onEmail={setEmail} isSaving={isSaving} onProvider={handleSavePlan} onSkip={next} />;
+      case 12:
         return (
           <QuestionLayout title="How would you like to start today?" subtitle="We’ve highlighted the best first step for you — you can change it.">
             <div className="space-y-3">
-              <OnboardingChoiceCard label="Scan ingredients I have" description="Capture what’s in your kitchen, then get recipe matches" icon={ScanLineIcon} selected={startPath === 'scan'} onClick={() => setStartPath('scan')} />
+              <OnboardingChoiceCard label="Use ingredients I have" description="Tap what’s in your kitchen for instant recipe matches" icon={ScanLineIcon} selected={startPath === 'scan'} onClick={() => setStartPath('scan')} />
               <OnboardingChoiceCard label="Plan today’s meals" description="Browse balanced meal ideas and add one to today’s plan" icon={CalendarDaysIcon} selected={startPath === 'plan'} onClick={() => setStartPath('plan')} />
             </div>
             <ContinueButton disabled={!startPath} label="Show me my options" onClick={next} />
           </QuestionLayout>);
 
-      case 11:
+      case 13:
         return <FirstRecipeStep path={startPath ?? 'scan'} onDone={next} />;
-      case 12:
-        return <OnboardingPaywall goalLabel={goalLabel} onContinue={onComplete} onSkip={onComplete} />;
+      case 14:
+        return <OnboardingPaywall goalLabel={goalLabel} calorieGoal={targets.calorieGoal} proteinGoal={targets.proteinGoal} goalWeight={hasProjectedGoal ? profile.goalWeight : null} projectedDate={projection?.projectedDate ?? null} onSubscribe={() => setStep(15)} onSkip={() => setStep(16)} />;
+      case 15:
+        return <PremiumWelcomeStep goalLabel={goalLabel} proteinGoal={targets.proteinGoal} onStart={() => setStep(16)} />;
+      case 16:
+        return <ReminderStep times={profile.reminderTimes} onTimesChange={(reminderTimes) => setProfile({ ...profile, reminderTimes })} onComplete={onComplete} />;
       default:
         return null;
     }
@@ -360,7 +391,7 @@ export function OnboardingFlow({
 
   return (
     <main className="min-h-screen w-full bg-[#FAFBFA] text-[#1A1A1A]">
-      {hasProgress && <OnboardingProgress current={step} total={TOTAL_STEPS - 1} onBack={back} />}
+      {hasProgress && <OnboardingProgress current={progressIndex} total={visibleSteps.length - 2} onBack={back} />}
       <div className={`${hasProgress ? 'px-5 pb-8 pt-7' : ''} mx-auto flex min-h-screen w-full max-w-[430px] flex-col`}>
         {renderStep()}
       </div>
@@ -456,10 +487,14 @@ function CredibilityStep({ onContinue }: {onContinue: () => void;}) {
 
 function QuestionLayout({ title, subtitle, children }: {title: string;subtitle: string;children: React.ReactNode;}) {
   return (
-    <section className="flex min-h-[calc(100vh-104px)] flex-col">
+    <section key={title} className="flex min-h-[calc(100vh-104px)] flex-col">
+      <style>{`
+        @keyframes cp-question-in { 0% { opacity: 0; transform: translateY(12px) } 100% { opacity: 1; transform: translateY(0) } }
+        @media (prefers-reduced-motion: reduce) { .cp-question { animation: none !important; } }
+      `}</style>
       <div>
-        <h1 className="max-w-[360px] text-[31px] font-extrabold leading-[1.12] tracking-tight text-[#1A1A1A]">{title}</h1>
-        <p className="mt-3 max-w-[360px] text-[15px] leading-relaxed text-[#68736D]">{subtitle}</p>
+        <h1 className="cp-question max-w-[360px] text-[31px] font-extrabold leading-[1.12] tracking-tight text-[#1A1A1A]" style={{ animation: 'cp-question-in 480ms cubic-bezier(0.22, 1, 0.36, 1) both' }}>{title}</h1>
+        <p className="cp-question mt-3 max-w-[360px] text-[15px] leading-relaxed text-[#68736D]" style={{ animation: 'cp-question-in 480ms cubic-bezier(0.22, 1, 0.36, 1) 140ms both' }}>{subtitle}</p>
       </div>
       <div className="mt-7 flex-1">{children}</div>
     </section>);
@@ -498,7 +533,7 @@ function ValidationStep({ goalLabel, empathy, promise, onContinue }: {goalLabel:
       <div className="rounded-3xl bg-white p-4 text-left shadow-sm ring-1 ring-[#E9EFEB]">
         <div className="flex items-center gap-3"><div className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#1A1A1A] text-white"><BrainCircuitIcon size={20} /></div><div><p className="text-sm font-bold">Built around your goal to {goalLabel.toLowerCase()}</p><p className="text-xs text-[#68736D]">Not a one-size-fits-all diet.</p></div></div>
       </div>
-      <ContinueButton label="Make my plan" onClick={onContinue} />
+      <ContinueButton label="Show me how Cal Pal helps" onClick={onContinue} />
     </section>);
 
 }
@@ -534,21 +569,19 @@ function ProgressCelebrationStep({ onContinue }: {onContinue: () => void;}) {
 
 }
 
-function PlanRevealStep({ dailyTarget, proteinTarget, commitmentLine, commitmentDetail, onContinue }: {dailyTarget: number;proteinTarget: number;commitmentLine: string;commitmentDetail: string;onContinue: () => void;}) {
+function PlanRevealStep({ targets, weightKg, goalWeight, pace, goal, commitmentLine, commitmentDetail, onContinue }: {targets: NutritionTargets;weightKg: string;goalWeight: string;pace: Pace;goal: Goal | null;commitmentLine: string;commitmentDetail: string;onContinue: () => void;}) {
   return (
     <section className="flex min-h-[calc(100vh-104px)] flex-col text-center">
-      <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-3xl bg-[#1A1A1A] text-white"><FlameIcon size={29} /></div>
-      <p className="mt-5 text-sm font-bold uppercase tracking-[0.14em] text-[#4CAF50]">Your starting plan is ready</p>
-      <h1 className="mt-2 text-[32px] font-extrabold leading-[1.1] tracking-tight">A realistic target for your real life.</h1>
-      <div className="mt-6 rounded-[28px] bg-[#1A1A1A] p-6 text-white shadow-lg">
+      <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-[#1A1A1A] text-white"><FlameIcon size={26} /></div>
+      <p className="mt-4 text-sm font-bold uppercase tracking-[0.14em] text-[#4CAF50]">Your starting plan is ready</p>
+      <h1 className="mt-2 text-[30px] font-extrabold leading-[1.1] tracking-tight">A realistic target for your real life.</h1>
+      <div className="mt-5 rounded-[26px] bg-[#1A1A1A] p-5 text-white shadow-lg">
         <p className="text-xs font-bold uppercase tracking-[0.16em] text-white/60">Daily energy target</p>
-        <div className="mt-2 flex items-baseline justify-center"><span className="text-5xl font-extrabold tracking-tight">{dailyTarget.toLocaleString()}</span><span className="ml-2 text-sm font-semibold text-white/65">calories</span></div>
-        <div className="mt-6 grid grid-cols-3 border-t border-white/15 pt-5 text-left"><Stat label="Protein" value={`${proteinTarget}g`} /><Stat label="Carbs" value="210g" /><Stat label="Fats" value="62g" /></div>
+        <div className="mt-2 flex items-baseline justify-center"><span className="text-5xl font-extrabold tracking-tight">{targets.calorieGoal.toLocaleString()}</span><span className="ml-2 text-sm font-semibold text-white/65">calories</span></div>
+        <div className="mt-5 grid grid-cols-3 border-t border-white/15 pt-4 text-left"><Stat label="Protein" value={`${targets.proteinGoal}g`} /><Stat label="Carbs" value={`${targets.carbsGoal}g`} /><Stat label="Fats" value={`${targets.fatGoal}g`} /></div>
       </div>
-      <div className="mt-4 rounded-2xl bg-[#EDF8EF] p-4 text-left"><p className="text-sm font-bold text-[#286B2D]">{commitmentLine}</p><p className="mt-1 text-xs leading-relaxed text-[#496150]">{commitmentDetail}</p></div>
-      <div className="mt-3 flex items-center justify-center gap-2 rounded-2xl bg-white px-4 py-2.5 text-xs font-semibold text-[#59645E] ring-1 ring-[#E9EFEB]">
-        <SparklesIcon size={14} className="text-[#4CAF50]" /> You’re joining the first 10,000 eating smarter with Cal Pal.
-      </div>
+      <div className="mt-4"><ProjectionChart weightKg={weightKg} goalWeight={goalWeight} pace={pace} goal={goal} /></div>
+      <div className="mt-3 rounded-2xl bg-[#EDF8EF] p-3.5 text-left"><p className="text-sm font-bold text-[#286B2D]">{commitmentLine}</p><p className="mt-1 text-xs leading-relaxed text-[#496150]">{commitmentDetail}</p></div>
       <p className="mt-3 text-xs leading-relaxed text-[#7A857F]">This is a flexible starting estimate, not medical advice. You can adjust it anytime.</p>
       <ContinueButton label="This looks good" onClick={onContinue} />
     </section>);
@@ -559,23 +592,29 @@ function Stat({ label, value }: {label: string;value: string;}) {
   return <div className="border-r border-white/15 px-3 first:pl-0 last:border-r-0 last:pr-0"><p className="text-xs text-white/60">{label}</p><p className="mt-1 text-base font-bold">{value}</p></div>;
 }
 
-function SavePlanStep({ name, onName, isSaving, onProvider, onGuest }: {name: string;onName: (value: string) => void;isSaving: string | null;onProvider: (provider: string) => void;onGuest: () => void;}) {
+function SavePlanStep({ dailyTarget, goalWeight, projectedDate, email, onEmail, isSaving, onProvider, onSkip }: {dailyTarget: number;goalWeight: string;projectedDate: string | null;email: string;onEmail: (value: string) => void;isSaving: string | null;onProvider: (provider: 'apple' | 'google' | 'email') => void;onSkip: () => void;}) {
+  const emailIsValid = /\S+@\S+\.\S+/.test(email);
+  const savedPlanDescription = projectedDate ?
+  `Keep your ${dailyTarget.toLocaleString()} cal plan and your path to ${goalWeight} kg by ${projectedDate}.` :
+  `Keep your ${dailyTarget.toLocaleString()} cal plan and your personalized meal targets.`;
+
   return (
     <section className="flex min-h-[calc(100vh-104px)] flex-col text-center">
       <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-3xl bg-[#E6F6E8] text-[#4CAF50]"><ShieldCheckIcon size={31} /></div>
-      <h1 className="mt-6 text-[32px] font-extrabold leading-[1.1] tracking-tight">Save the plan you just built</h1>
-      <p className="mx-auto mt-3 max-w-[340px] text-[15px] leading-relaxed text-[#68736D]">Keep your target, your first recipe, and your progress when you switch devices.</p>
-      <label className="mt-6 block text-left">
-        <span className="mb-1.5 block text-xs font-semibold text-[#68736D]">First name <span className="font-normal text-[#9AA39E]">(optional)</span></span>
-        <input value={name} onChange={(event) => onName(event.target.value)} placeholder="What should we call you?" className="h-12 w-full rounded-xl border border-[#E1E6E3] bg-white px-3.5 text-base font-semibold text-[#1A1A1A] outline-none placeholder:font-normal placeholder:text-[#A7AFA9] focus:border-[#4CAF50] focus:ring-2 focus:ring-[#4CAF50]/15" aria-label="First name" />
+      <h1 className="mx-auto mt-6 max-w-[350px] text-[31px] font-extrabold leading-[1.1] tracking-tight">Save your plan so it’s here tomorrow</h1>
+      <p className="mx-auto mt-3 max-w-[345px] text-[15px] leading-relaxed text-[#68736D]">{savedPlanDescription}</p>
+      <label className="mt-7 block text-left">
+        <span className="mb-1.5 block text-xs font-semibold text-[#68736D]">Email address</span>
+        <input type="email" value={email} onChange={(event) => onEmail(event.target.value)} placeholder="you@example.com" autoComplete="email" className="h-14 w-full rounded-xl border border-[#E1E6E3] bg-white px-3.5 text-base font-semibold text-[#1A1A1A] outline-none placeholder:font-normal placeholder:text-[#A7AFA9] focus:border-[#4CAF50] focus:ring-2 focus:ring-[#4CAF50]/15" aria-label="Email address" />
       </label>
-      <div className="mt-4 space-y-3">
+      <div className="mt-3 space-y-3">
+        <ProviderButton provider="email" label="Save with email" isLoading={isSaving === 'email'} disabled={!emailIsValid || isSaving !== null} onClick={() => onProvider('email')} />
+        <div className="flex items-center gap-3 py-1 text-xs font-semibold uppercase tracking-wide text-[#9AA39E]"><span className="h-px flex-1 bg-[#E8ECE9]" />or<span className="h-px flex-1 bg-[#E8ECE9]" /></div>
         <ProviderButton provider="apple" label="Continue with Apple" isLoading={isSaving === 'apple'} disabled={isSaving !== null} onClick={() => onProvider('apple')} />
         <ProviderButton provider="google" label="Continue with Google" isLoading={isSaving === 'google'} disabled={isSaving !== null} onClick={() => onProvider('google')} />
-        <ProviderButton provider="email" label="Continue with email" isLoading={isSaving === 'email'} disabled={isSaving !== null} onClick={() => onProvider('email')} />
       </div>
-      <button type="button" onClick={onGuest} disabled={isSaving !== null} className="mt-5 text-sm font-semibold text-[#58655E] underline underline-offset-4 hover:text-[#1A1A1A] disabled:opacity-50">Continue as guest</button>
-      <p className="mt-auto pt-8 text-xs leading-relaxed text-[#8A948F]">By continuing, you agree to Cal Pal’s Terms of Service and Privacy Policy.</p>
+      <button type="button" onClick={onSkip} disabled={isSaving !== null} className="mt-5 text-sm font-semibold text-[#58655E] hover:text-[#1A1A1A] disabled:opacity-50">Maybe later</button>
+      <p className="mt-auto pt-8 text-xs leading-relaxed text-[#8A948F]">We’ll only use this to keep your plan available when you return.</p>
     </section>);
 
 }

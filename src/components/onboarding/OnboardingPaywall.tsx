@@ -10,7 +10,11 @@ import { CalPalMark } from './CalPalMark';
 
 interface OnboardingPaywallProps {
   goalLabel: string;
-  onContinue: () => void;
+  calorieGoal: number;
+  proteinGoal: number;
+  goalWeight: string | null;
+  projectedDate: string | null;
+  onSubscribe: () => void;
   onSkip: () => void;
 }
 
@@ -38,51 +42,52 @@ const plans: PlanOption[] = [
 { id: 'monthly', label: '1 month', price: '$12.98', perMonth: '$12.98 / mo' }];
 
 
-const perks = [
-'Personalized meal plans built around your goal',
-'Turn the ingredients you have into recipes',
-'Full nutrition tracking and macro targets'];
-
-
 export function OnboardingPaywall({
   goalLabel,
-  onContinue,
+  calorieGoal,
+  proteinGoal,
+  goalWeight,
+  projectedDate,
+  onSubscribe,
   onSkip
 }: OnboardingPaywallProps) {
   const [selected, setSelected] = useState<PlanId>('annual');
+  const perks = [
+  `Hit ${proteinGoal}g protein and ${calorieGoal.toLocaleString()} cal every day`,
+  ...(goalWeight && projectedDate ? [`Reach ${goalWeight} kg by ${projectedDate}`] : []),
+  'Turn the ingredients you have into recipes'];
+
 
   return (
-    <section className="flex min-h-[calc(100vh-104px)] flex-col">
+    <section className="mx-auto flex min-h-[calc(100vh-104px)] w-full max-w-[390px] flex-col">
       <div className="text-center">
-        <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-[#1A1A1A] text-white">
-          <SparklesIcon size={26} />
+        <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-2xl bg-[#1A1A1A] text-white shadow-sm">
+          <SparklesIcon size={23} />
         </div>
-        <div className="mt-4 flex items-center justify-center gap-1.5">
+        <div className="mt-3 flex items-center justify-center gap-1.5">
           <CalPalMark size="sm" />
-          <span className="rounded-full bg-[#EDF8EF] px-2 py-0.5 text-xs font-extrabold uppercase tracking-wide text-[#2F7D34]">
+          <span className="rounded-full bg-[#EDF8EF] px-2 py-0.5 text-[10px] font-extrabold uppercase tracking-[0.08em] text-[#2F7D34]">
             Plus
           </span>
         </div>
-        <h1 className="mx-auto mt-3 max-w-[340px] text-[27px] font-extrabold leading-[1.14] tracking-tight text-[#1A1A1A]">
-          Reach your goal to {goalLabel.toLowerCase()} — and actually stick with it.
+        <h1 className="mx-auto mt-3 max-w-[320px] text-[25px] font-extrabold leading-[1.16] tracking-tight text-[#1A1A1A]">
+          Keep building toward {goalLabel.toLowerCase()}.
         </h1>
       </div>
 
-      {/* Perks */}
-      <div className="mt-5 space-y-2.5">
-        {perks.map((perk) =>
-        <div key={perk} className="flex items-center gap-3">
-            <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-[#4CAF50] text-white">
-              <CheckIcon size={13} strokeWidth={3} />
-            </span>
-            <span className="text-sm leading-snug text-[#3C463F]">{perk}</span>
-          </div>
-        )}
-      </div>
-
-      <div className="mt-5 flex items-center gap-3 rounded-2xl border border-[#E1E6E3] bg-white p-4 text-left">
-        <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-[#EDF8EF] text-[#2F7D34]"><CreditCardIcon size={19} /></span>
-        <div><p className="text-sm font-bold text-[#1A1A1A]">Simple, transparent membership</p><p className="mt-0.5 text-xs leading-relaxed text-[#68736D]">Choose the plan that works for you. Cancel anytime in Settings.</p></div>
+      <div className="mt-5 rounded-2xl border border-[#E1E6E3] bg-white p-3.5 text-left shadow-sm">
+        <div className="flex items-center gap-3">
+          <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-[#EDF8EF] text-[#2F7D34]"><CreditCardIcon size={17} /></span>
+          <div><p className="text-sm font-bold text-[#1A1A1A]">Everything that supports your plan</p><p className="mt-0.5 text-xs leading-relaxed text-[#68736D]">Pick the membership that fits your routine. Cancel anytime.</p></div>
+        </div>
+        <div className="mt-3 space-y-2">
+          {perks.map((perk) =>
+          <div key={perk} className="flex items-center gap-2.5">
+              <span className="flex h-4 w-4 shrink-0 items-center justify-center rounded-full bg-[#4CAF50] text-white"><CheckIcon size={10} strokeWidth={3} /></span>
+              <span className="text-xs leading-snug text-[#3C463F]">{perk}</span>
+            </div>
+          )}
+        </div>
       </div>
 
       {/* Plans */}
@@ -94,30 +99,21 @@ export function OnboardingPaywall({
               type="button"
               key={plan.id}
               onClick={() => setSelected(plan.id)}
-              className={`relative flex w-full items-center justify-between rounded-2xl border-2 px-4 py-3.5 text-left transition-all ${isSelected ? 'border-[#4CAF50] bg-[#EDF8EF]' : 'border-[#E1E6E3] bg-white hover:border-[#B7DDBB]'}`}>
+              className={`relative flex w-full items-center justify-between gap-3 rounded-2xl border-2 px-4 py-3 text-left transition-all ${isSelected ? 'border-[#4CAF50] bg-[#EDF8EF]' : 'border-[#E1E6E3] bg-white hover:border-[#B7DDBB]'}`}>
               
               {plan.badge &&
               <span className="absolute -top-2.5 right-4 rounded-full bg-[#4CAF50] px-2 py-0.5 text-[10px] font-extrabold uppercase tracking-wide text-white">
                   {plan.badge}
                 </span>
               }
-              <div className="flex items-center gap-3">
-                <span
-                  className={`flex h-5 w-5 items-center justify-center rounded-full border-2 ${isSelected ? 'border-[#4CAF50] bg-[#4CAF50] text-white' : 'border-[#C7CFCA] text-transparent'}`}>
-                  
-                  <CheckIcon size={12} strokeWidth={3} />
-                </span>
-                <div>
+              <div className="flex min-w-0 items-center gap-3">
+                <span className={`flex h-5 w-5 shrink-0 items-center justify-center rounded-full border-2 ${isSelected ? 'border-[#4CAF50] bg-[#4CAF50] text-white' : 'border-[#C7CFCA] text-transparent'}`}><CheckIcon size={12} strokeWidth={3} /></span>
+                <div className="min-w-0">
                   <p className="text-sm font-bold text-[#1A1A1A]">{plan.label}</p>
-                  <p className="text-xs text-[#68736D]">
-                    {plan.strikethrough &&
-                    <span className="mr-1 line-through">{plan.strikethrough}</span>
-                    }
-                    {plan.price}
-                  </p>
+                  <p className="text-xs text-[#68736D]">{plan.strikethrough && <><span className="mr-1 line-through">{plan.strikethrough}</span><span className="mr-1 text-[10px]">Launch pricing</span></>}{plan.price}</p>
                 </div>
               </div>
-              <span className="text-sm font-bold text-[#1A1A1A]">{plan.perMonth}</span>
+              <span className="shrink-0 whitespace-nowrap text-sm font-bold text-[#1A1A1A]">{plan.perMonth}</span>
             </button>);
 
         })}
@@ -130,10 +126,10 @@ export function OnboardingPaywall({
       <div className="mt-4">
         <button
           type="button"
-          onClick={onContinue}
+          onClick={onSubscribe}
           className="flex h-14 w-full items-center justify-center rounded-2xl bg-[#1A1A1A] text-base font-bold text-white shadow-[0_4px_0_#080808] transition-all hover:bg-[#2A2A2A] active:translate-y-0.5 active:shadow-[0_2px_0_#080808]">
           
-          Choose this plan <ArrowRightIcon className="ml-2" size={19} />
+          Start my Plus journey <ArrowRightIcon className="ml-2" size={19} />
         </button>
         <button
           type="button"
@@ -142,8 +138,8 @@ export function OnboardingPaywall({
           
           Continue with basic plan
         </button>
-        <p className="mt-2 flex items-center justify-center gap-1 text-[11px] text-[#8A948F]">
-          <LockIcon size={11} /> Secure payment · Restore purchase · No free trial
+        <p className="mt-2 flex flex-wrap items-center justify-center gap-x-1.5 gap-y-0.5 text-center text-[10px] leading-relaxed text-[#8A948F]">
+          <LockIcon size={11} /> Secure payment <span>· Restore purchase</span> <span>· No free trial</span>
         </p>
       </div>
     </section>);

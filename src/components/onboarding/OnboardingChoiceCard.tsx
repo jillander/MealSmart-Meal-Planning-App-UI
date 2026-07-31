@@ -1,5 +1,6 @@
 import React from "react";
 import { CheckIcon, BoxIcon } from "lucide-react";
+import { haptic } from "../../lib/haptics";
 interface OnboardingChoiceCardProps {
   label: string;
   description?: string;
@@ -16,7 +17,11 @@ export function OnboardingChoiceCard({
   icon: Icon,
   multiSelect = false
 }: OnboardingChoiceCardProps) {
-  return <button type="button" onClick={onClick} aria-pressed={selected} className={`flex w-full items-center rounded-2xl border p-4 text-left transition-all duration-200 active:scale-[0.99] ${selected ? 'border-[#4CAF50] bg-[#EDF8EF] shadow-[0_2px_8px_rgba(76,175,80,0.12)]' : 'border-[#E1E6E3] bg-white hover:border-[#B7DDBB]'}`}>
+  const handleClick = () => {
+    haptic("selection");
+    onClick();
+  };
+  return <button type="button" onClick={handleClick} aria-pressed={selected} className={`flex w-full items-center rounded-2xl border p-4 text-left transition-all duration-200 active:scale-[0.99] ${selected ? 'border-[#4CAF50] bg-[#EDF8EF] shadow-[0_2px_8px_rgba(76,175,80,0.12)]' : 'border-[#E1E6E3] bg-white hover:border-[#B7DDBB]'}`}>
       {Icon && <div className={`mr-3 flex h-10 w-10 shrink-0 items-center justify-center rounded-xl ${selected ? 'bg-[#4CAF50] text-white' : 'bg-[#F4F7F5] text-[#4A5C50]'}`}>
           <Icon size={19} strokeWidth={2.1} />
         </div>}

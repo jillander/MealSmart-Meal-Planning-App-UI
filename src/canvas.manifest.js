@@ -1,18 +1,22 @@
 export const manifest = {
   screens: {
     scr_1fiazx: { name: "Welcome", route: "/", state: { "onboardingStep": 0 }, position: { "x": 160, "y": 220 } },
-    scr_0jnj2a: { name: "Credibility", route: "/", state: { "onboardingStep": 1 }, position: { "x": 1560, "y": 220 } },
-    scr_3pm3v6: { name: "Goal", route: "/", state: { "onboardingStep": 2 }, position: { "x": 2960, "y": 220 } },
-    scr_os1b6n: { name: "Barriers", route: "/", state: { "onboardingStep": 3 }, position: { "x": 4360, "y": 220 } },
-    scr_jv0h3w: { name: "Validation", route: "/", state: { "onboardingStep": 4 }, position: { "x": 5760, "y": 220 } },
+    scr_0jnj2a: { name: "Goal", route: "/", state: { "onboardingStep": 1 }, position: { "x": 1560, "y": 220 } },
+    scr_3pm3v6: { name: "Scan & Discover", route: "/", state: { "onboardingStep": 4 }, position: { "x": 2960, "y": 220 } },
+    scr_os1b6n: { name: "Barriers", route: "/", state: { "onboardingStep": 2 }, position: { "x": 4360, "y": 220 } },
+    scr_jv0h3w: { name: "Validation", route: "/", state: { "onboardingStep": 3 }, position: { "x": 5760, "y": 220 } },
     scr_2n1oo4: { name: "Personal details", route: "/", state: { "onboardingStep": 5 }, position: { "x": 7160, "y": 220 } },
     scr_9oaejt: { name: "Food preferences", route: "/", state: { "onboardingStep": 6 }, position: { "x": 8560, "y": 220 } },
     scr_jg51c5: { name: "Sustainable pace", route: "/", state: { "onboardingStep": 7 }, position: { "x": 9960, "y": 220 } },
     scr_tk4o2m: { name: "Progress celebration", route: "/", state: { "onboardingStep": 8 }, position: { "x": 11360, "y": 220 } },
-    scr_talzpj: { name: "Your starting plan", route: "/", state: { "onboardingStep": 9 }, position: { "x": 12760, "y": 220 } },
-    scr_h9y00p: { name: "First win", route: "/", state: { "onboardingStep": 10 }, position: { "x": 14160, "y": 220 } },
-    scr_ykmcxs: { name: "Recipe activation", route: "/", state: { "onboardingStep": 11 }, position: { "x": 160, "y": 2200 } },
-    scr_payq3r: { name: "Membership", route: "/", state: { "onboardingStep": 12 }, position: { "x": 160, "y": 14080 } },
+    scr_ui4nqw: { name: "Building your plan", route: "/", state: { "onboardingStep": 9 }, position: { "x": 16960, "y": 220 } },
+    scr_talzpj: { name: "Your starting plan", route: "/", state: { "onboardingStep": 10 }, position: { "x": 12760, "y": 220 } },
+    scr_bhz42l: { name: "Save your plan", route: "/", state: { "onboardingStep": 11 }, position: { "x": 15560, "y": 220 } },
+    scr_h9y00p: { name: "First win", route: "/", state: { "onboardingStep": 12 }, position: { "x": 14160, "y": 220 } },
+    scr_ykmcxs: { name: "Recipe activation", route: "/", state: { "onboardingStep": 13 }, position: { "x": 160, "y": 2200 } },
+    scr_payq3r: { name: "Membership", route: "/", state: { "onboardingStep": 14 }, position: { "x": 160, "y": 14080 } },
+    scr_h680pc: { name: "Plus activated", route: "/", state: { "onboardingStep": 15 }, position: { "x": 4360, "y": 14080 } },
+    scr_kw56q7: { name: "Stay on track", route: "/", state: { "onboardingStep": 16 }, position: { "x": 2960, "y": 12100 } },
     scr_mmwmly: { name: "Today / Nutrition", route: "/", state: { "currentScreen": "home", "activeTab": "nutrition" }, position: { "x": 160, "y": 4180 } },
     scr_rne8f4: { name: "Today / Health", route: "/", state: { "currentScreen": "home", "activeTab": "health" }, position: { "x": 1560, "y": 4180 } },
     scr_aighdn: { name: "Ingredient capture / Fridge", route: "/", state: { "currentScreen": "ingredient-capture", "activeCaptureTab": "fridge" }, position: { "x": 160, "y": 6160 } },
@@ -71,8 +75,8 @@ export const manifest = {
     sec_yxau1k: { name: "Ingredient Capture", x: 0, y: 5940, width: 4320, height: 1180 },
     sec_9k7w1n: { name: "Recipe Discovery", x: 0, y: 7920, width: 4320, height: 1180 },
     sec_5fg4pb: { name: "Meal Planning", x: 0, y: 9900, width: 5720, height: 1180 },
-    sec_pcut5n: { name: "Explore & Progress", x: 0, y: 11880, width: 2920, height: 1180 },
-    sec_omtixb: { name: "Account", x: 0, y: 13860, width: 4320, height: 1180 },
+    sec_pcut5n: { name: "Explore & Progress", x: 0, y: 11880, width: 4320, height: 1180 },
+    sec_omtixb: { name: "Account", x: 0, y: 13860, width: 5720, height: 1180 },
     sec_5gt2ag: { name: "Yazio Onboarding Reference", x: 0, y: 15840, width: 22520, height: 1180 },
     sec_m9wvyz: { name: "Osta Onboarding", x: 0, y: 17820, width: 11320, height: 1180 },
     sec_905xjb: { name: "Osta Engagement & Social", x: 0, y: 19800, width: 11320, height: 1180 },
@@ -82,17 +86,17 @@ export const manifest = {
   { kind: "section", id: "sec_jxjl59", children: [
     { kind: "screen", id: "scr_1fiazx" },
     { kind: "screen", id: "scr_0jnj2a" },
-    { kind: "screen", id: "scr_3pm3v6" },
     { kind: "screen", id: "scr_os1b6n" },
     { kind: "screen", id: "scr_jv0h3w" },
+    { kind: "screen", id: "scr_3pm3v6" },
     { kind: "screen", id: "scr_2n1oo4" },
     { kind: "screen", id: "scr_9oaejt" },
     { kind: "screen", id: "scr_jg51c5" },
     { kind: "screen", id: "scr_tk4o2m" },
     { kind: "screen", id: "scr_talzpj" },
     { kind: "screen", id: "scr_h9y00p" },
-    { kind: "screen", id: "scr_7yyoor" },
-    { kind: "screen", id: "scr_4vrv6d" }]
+    { kind: "screen", id: "scr_bhz42l" },
+    { kind: "screen", id: "scr_ui4nqw" }]
   },
   { kind: "section", id: "sec_isqocy", children: [
     { kind: "screen", id: "scr_ykmcxs" }]
@@ -119,12 +123,14 @@ export const manifest = {
   },
   { kind: "section", id: "sec_pcut5n", children: [
     { kind: "screen", id: "scr_j5k5sq" },
-    { kind: "screen", id: "scr_ogn8b1" }]
+    { kind: "screen", id: "scr_ogn8b1" },
+    { kind: "screen", id: "scr_kw56q7" }]
   },
   { kind: "section", id: "sec_omtixb", children: [
     { kind: "screen", id: "scr_payq3r" },
     { kind: "screen", id: "scr_oeqppl" },
-    { kind: "screen", id: "scr_w55n5t" }]
+    { kind: "screen", id: "scr_w55n5t" },
+    { kind: "screen", id: "scr_h680pc" }]
   },
   { kind: "section", id: "sec_5gt2ag", children: [
     { kind: "screen", id: "scr_m0pefc" },
