@@ -15,6 +15,9 @@ import { RecipeRecommendationHub } from './components/RecipeRecommendationHub';
 import { CategoryBrowseScreen } from './components/CategoryBrowseScreen';
 import { SubscriptionScreen } from './components/SubscriptionScreen';
 import { RecipeLoadingScreen } from './components/RecipeLoadingScreen';
+import { RecipeErrorScreen } from './components/RecipeErrorScreen';
+import { ShoppingListScreen } from './components/ShoppingListScreen';
+import { NotificationsScreen } from './components/NotificationsScreen';
 import { LogoConceptsScreen } from './components/LogoConceptsScreen';
 import { OnboardingFlow } from './components/onboarding/OnboardingFlow';
 import { ReferenceScreen } from './components/reference/ReferenceScreen';
@@ -41,6 +44,18 @@ export function App() {
     id: string;
     label: string;
   } | null>(null);
+  // Recipe matching can come back empty. `generationAttempt` remounts the
+  // loading screen so a retry runs a genuinely fresh pass.
+  const [generationAttempt, setGenerationAttempt] = useState(1);
+  const [generationShouldFail, setGenerationShouldFail] = useState(
+    () => Boolean(screenInit.recipeGenerationFails)
+  );
+  const retryRecipeGeneration = () => {
+    // A retry always attempts a real match rather than replaying the failure.
+    setGenerationShouldFail(false);
+    setGenerationAttempt((attempt) => attempt + 1);
+    setCurrentScreen('recipe-loading');
+  };
   const navigateTo = (screen: string) => {
     // Handle category browse navigation with data
     if (screen.startsWith('category-browse:')) {
@@ -158,7 +173,24 @@ export function App() {
 
           }
           {currentScreen === 'recipe-loading' &&
-          <RecipeLoadingScreen navigateTo={navigateTo} />
+          <RecipeLoadingScreen
+            key={generationAttempt}
+            navigateTo={navigateTo}
+            shouldFail={generationShouldFail} />
+
+          }
+          {currentScreen === 'recipe-error' &&
+          <RecipeErrorScreen
+            navigateTo={navigateTo}
+            onRetry={retryRecipeGeneration}
+            attempt={generationAttempt} />
+
+          }
+          {currentScreen === 'shopping-list' &&
+          <ShoppingListScreen navigateTo={navigateTo} />
+          }
+          {currentScreen === 'notifications' &&
+          <NotificationsScreen navigateTo={navigateTo} />
           }
           {currentScreen === 'recipe-suggestions' &&
           <RecipeSuggestionScreen navigateTo={navigateTo} />

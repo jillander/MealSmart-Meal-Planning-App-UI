@@ -313,7 +313,12 @@ export const MealPrepScreen: React.FC<MealPrepScreenProps> = ({
                                           View Recipe
                                         </button>
                                         {!meal.completed &&
-                              <button className="px-4 py-1.5 bg-[#F3F4F6] text-[#374151] rounded-lg text-sm font-medium hover:bg-[#E5E7EB] transition-colors">
+                              <button
+                                onClick={() =>
+                                navigateTo('shopping-list')
+                                }
+                                className="px-4 py-1.5 bg-[#F3F4F6] text-[#374151] rounded-lg text-sm font-medium hover:bg-[#E5E7EB] transition-colors">
+                                
                                             Grocery List
                                           </button>
                               }

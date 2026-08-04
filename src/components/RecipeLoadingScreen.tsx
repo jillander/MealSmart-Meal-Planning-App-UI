@@ -1,8 +1,11 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { SparklesIcon, XIcon } from 'lucide-react';
+import { useRecipeGeneration } from '../hooks/useRecipeGeneration';
 
 interface RecipeLoadingScreenProps {
   navigateTo: (screen: string) => void;
+  /** When true, this run ends on the "no recipes found" error screen. */
+  shouldFail?: boolean;
 }
 
 const statusTexts = [
@@ -14,35 +17,15 @@ const statusTexts = [
 
 const DURATION = 5200;
 
-export const RecipeLoadingScreen: React.FC<RecipeLoadingScreenProps> = ({ navigateTo }) => {
-  const [progress, setProgress] = useState(0);
-  const [statusStep, setStatusStep] = useState(0);
+export const RecipeLoadingScreen: React.FC<RecipeLoadingScreenProps> = ({ navigateTo, shouldFail = false }) => {
+  const { progress } = useRecipeGeneration({
+    shouldFail,
+    durationMs: DURATION,
+    onSuccess: () => navigateTo('recipe-suggestions'),
+    onError: () => navigateTo('recipe-error')
+  });
 
-  useEffect(() => {
-    const start = performance.now();
-    let frame = 0;
-
-    const tick = (now: number) => {
-      const elapsed = Math.min(1, (now - start) / DURATION);
-      const eased = 1 - Math.pow(1 - elapsed, 2.2);
-      setProgress(eased);
-      if (elapsed < 1) frame = requestAnimationFrame(tick);
-    };
-    frame = requestAnimationFrame(tick);
-
-    const textInterval = window.setInterval(() => {
-      setStatusStep((prev) => prev < statusTexts.length - 1 ? prev + 1 : prev);
-    }, DURATION / statusTexts.length);
-
-    const navTimeout = window.setTimeout(() => navigateTo('recipe-suggestions'), DURATION + 350);
-
-    return () => {
-      cancelAnimationFrame(frame);
-      window.clearInterval(textInterval);
-      window.clearTimeout(navTimeout);
-    };
-  }, [navigateTo]);
-
+  const statusStep = Math.min(statusTexts.length - 1, Math.floor(progress * statusTexts.length));
   const veilHeight = Math.max(0, (1 - progress) * 100);
 
   return (

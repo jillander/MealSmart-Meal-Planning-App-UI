@@ -45,7 +45,8 @@ export const RecipeSuggestionScreen: React.FC<RecipeSuggestionScreenProps> = ({
     removeSavedRecipe,
     isRecipeSaved,
     addMeal,
-    addGeneratedRecipe
+    addGeneratedRecipe,
+    addToShoppingList
   } = useMealPlan();
   const [showFilters, setShowFilters] = useState(false);
   const [activeFilters, setActiveFilters] = useState<string[]>([]);
@@ -452,7 +453,18 @@ export const RecipeSuggestionScreen: React.FC<RecipeSuggestionScreenProps> = ({
                           </div>
                   )}
                       </div>
-                      <button className="text-sm font-semibold text-amber-600 hover:text-amber-700 flex items-center transition-colors group">
+                      <button
+                  onClick={() => {
+                    addToShoppingList(
+                      recipe.missingIngredients.map((ing) => ({
+                        name: ing,
+                        recipeName: recipe.name
+                      }))
+                    );
+                    navigateTo('shopping-list');
+                  }}
+                  className="text-sm font-semibold text-amber-600 hover:text-amber-700 flex items-center transition-colors group">
+                  
                         <PlusCircleIcon
                     size={14}
                     className="mr-1.5 group-hover:scale-110 transition-transform" />

@@ -23,8 +23,11 @@ export const manifest = {
     scr_8y5msf: { name: "Ingredient capture / Receipt", route: "/", state: { "currentScreen": "ingredient-capture", "activeCaptureTab": "receipt" }, position: { "x": 1560, "y": 6160 } },
     scr_4ywdot: { name: "Review ingredients", route: "/", state: { "currentScreen": "ingredient-confirmation" }, position: { "x": 2960, "y": 6160 } },
     scr_rryy0h: { name: "Finding recipes", route: "/", state: { "currentScreen": "recipe-loading" }, position: { "x": 160, "y": 8140 } },
+    scr_q3t1cs: { name: "No recipes found", route: "/", state: { "currentScreen": "recipe-error" }, position: { "x": 4360, "y": 8140 } },
     scr_hhgi4q: { name: "Recipe suggestions", route: "/", state: { "currentScreen": "recipe-suggestions" }, position: { "x": 1560, "y": 8140 } },
     scr_rzd98n: { name: "Recipe details", route: "/", state: { "currentScreen": "recipe-detail" }, position: { "x": 2960, "y": 8140 } },
+    scr_gv1ndc: { name: "Shopping list", route: "/", state: { "currentScreen": "shopping-list" }, position: { "x": 160, "y": 23980 } },
+    scr_x3hx5o: { name: "Notifications", route: "/", state: { "currentScreen": "notifications" }, position: { "x": 5760, "y": 14080 } },
     scr_j5k5sq: { name: "Discover", route: "/", state: { "currentScreen": "recipe-discovery" }, position: { "x": 160, "y": 12100 } },
     scr_sqvze9: { name: "Meal plan / Daily", route: "/", state: { "currentScreen": "meal-prep", "mealPlanView": "daily" }, position: { "x": 160, "y": 10120 } },
     scr_eyd9pk: { name: "Meal plan / Weekly", route: "/", state: { "currentScreen": "meal-prep", "mealPlanView": "weekly" }, position: { "x": 1560, "y": 10120 } },
@@ -73,14 +76,15 @@ export const manifest = {
     sec_isqocy: { name: "First Recipe Milestone", x: 0, y: 1980, width: 1520, height: 1180 },
     sec_yzsybl: { name: "Today / Daily Hub", x: 0, y: 3960, width: 2920, height: 1180 },
     sec_yxau1k: { name: "Ingredient Capture", x: 0, y: 5940, width: 4320, height: 1180 },
-    sec_9k7w1n: { name: "Recipe Discovery", x: 0, y: 7920, width: 4320, height: 1180 },
+    sec_9k7w1n: { name: "Recipe Discovery", x: 0, y: 7920, width: 5720, height: 1180 },
     sec_5fg4pb: { name: "Meal Planning", x: 0, y: 9900, width: 5720, height: 1180 },
     sec_pcut5n: { name: "Explore & Progress", x: 0, y: 11880, width: 4320, height: 1180 },
-    sec_omtixb: { name: "Account", x: 0, y: 13860, width: 5720, height: 1180 },
+    sec_omtixb: { name: "Account", x: 0, y: 13860, width: 7120, height: 1180 },
     sec_5gt2ag: { name: "Yazio Onboarding Reference", x: 0, y: 15840, width: 22520, height: 1180 },
     sec_m9wvyz: { name: "Osta Onboarding", x: 0, y: 17820, width: 11320, height: 1180 },
     sec_905xjb: { name: "Osta Engagement & Social", x: 0, y: 19800, width: 11320, height: 1180 },
-    sec_ndiz2u: { name: "Osta Main App", x: 0, y: 21780, width: 2920, height: 1180 }
+    sec_ndiz2u: { name: "Osta Main App", x: 0, y: 21780, width: 2920, height: 1180 },
+    sec_ya8aub: { name: "Shopping List", x: 0, y: 23760, width: 1520, height: 1180 }
   },
   layers: [
   { kind: "section", id: "sec_jxjl59", children: [
@@ -113,7 +117,8 @@ export const manifest = {
   { kind: "section", id: "sec_9k7w1n", children: [
     { kind: "screen", id: "scr_rryy0h" },
     { kind: "screen", id: "scr_hhgi4q" },
-    { kind: "screen", id: "scr_rzd98n" }]
+    { kind: "screen", id: "scr_rzd98n" },
+    { kind: "screen", id: "scr_q3t1cs" }]
   },
   { kind: "section", id: "sec_5fg4pb", children: [
     { kind: "screen", id: "scr_sqvze9" },
@@ -130,7 +135,8 @@ export const manifest = {
     { kind: "screen", id: "scr_payq3r" },
     { kind: "screen", id: "scr_oeqppl" },
     { kind: "screen", id: "scr_w55n5t" },
-    { kind: "screen", id: "scr_h680pc" }]
+    { kind: "screen", id: "scr_h680pc" },
+    { kind: "screen", id: "scr_x3hx5o" }]
   },
   { kind: "section", id: "sec_5gt2ag", children: [
     { kind: "screen", id: "scr_m0pefc" },
@@ -173,6 +179,9 @@ export const manifest = {
   { kind: "section", id: "sec_ndiz2u", children: [
     { kind: "screen", id: "scr_a2ecgm" },
     { kind: "screen", id: "scr_uogki8" }]
+  },
+  { kind: "section", id: "sec_ya8aub", children: [
+    { kind: "screen", id: "scr_gv1ndc" }]
   }]
 
 };

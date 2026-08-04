@@ -7,6 +7,7 @@ import {
   SettingsIcon,
   CameraIcon,
   ImportIcon,
+  ShoppingBasketIcon,
   XIcon } from
 'lucide-react';
 interface NavigationBarProps {
@@ -88,7 +89,7 @@ export const NavigationBar: React.FC<NavigationBarProps> = ({
                   }
                   setShowPlusOptions(false);
                 }}
-                className="w-full px-4 py-4 flex items-center text-left hover:bg-gray-50">
+                className="w-full px-4 py-4 flex items-center text-left hover:bg-gray-50 border-b border-gray-100">
                 
                   <div className="w-10 h-10 rounded-full bg-[#2196F3] bg-opacity-10 flex items-center justify-center mr-3">
                     <ImportIcon size={18} className="text-[#2196F3]" />
@@ -99,6 +100,25 @@ export const NavigationBar: React.FC<NavigationBarProps> = ({
                     </p>
                     <p className="text-xs text-[#757575]">
                       Add recipes from websites
+                    </p>
+                  </div>
+                </button>
+                <button
+                onClick={() => {
+                  navigateTo('shopping-list');
+                  setShowPlusOptions(false);
+                }}
+                className="w-full px-4 py-4 flex items-center text-left hover:bg-gray-50">
+                
+                  <div className="w-10 h-10 rounded-full bg-[#F59E0B] bg-opacity-10 flex items-center justify-center mr-3">
+                    <ShoppingBasketIcon size={18} className="text-[#F59E0B]" />
+                  </div>
+                  <div>
+                    <p className="text-sm font-medium text-[#1A1A1A]">
+                      Shopping list
+                    </p>
+                    <p className="text-xs text-[#757575]">
+                      Ingredients you still need
                     </p>
                   </div>
                 </button>

@@ -1,4 +1,6 @@
 import React, { useState, createContext, useContext } from 'react';
+import type { ShoppingListDraftItem, ShoppingListItem } from '../types/shopping';
+import { guessAisle, normalizeItemName } from '../utils/groceries';
 interface Meal {
   id: string;
   type: 'breakfast' | 'lunch' | 'dinner' | 'snack';
@@ -68,6 +70,13 @@ interface MealPlanContextType {
   isRecipeSaved: (recipeId: string) => boolean;
   addGeneratedRecipe: (recipe: GeneratedRecipe) => void;
   getGeneratedRecipes: () => GeneratedRecipe[];
+  shoppingList: ShoppingListItem[];
+  /** Adds items, skipping anything already on the list. Returns how many were new. */
+  addToShoppingList: (items: ShoppingListDraftItem[]) => number;
+  toggleShoppingItem: (itemId: string) => void;
+  removeShoppingItem: (itemId: string) => void;
+  clearCheckedShoppingItems: () => void;
+  setAllShoppingItemsChecked: (checked: boolean) => void;
 }
 const MealPlanContext = createContext<MealPlanContextType | undefined>(
   undefined
@@ -86,6 +95,32 @@ export const MealPlanProvider: React.FC<MealPlanProviderProps> = ({
   children
 }) => {
   const today = new Date().toISOString().split('T')[0];
+  const [shoppingList, setShoppingList] = useState<ShoppingListItem[]>([
+  {
+    id: 'shop-seed-1',
+    name: 'Garlic',
+    quantity: '1 bulb',
+    aisle: 'Produce',
+    recipeName: 'One-Pan Chicken and Rice',
+    checked: false
+  },
+  {
+    id: 'shop-seed-2',
+    name: 'Thyme',
+    quantity: '1 small bunch',
+    aisle: 'Produce',
+    recipeName: 'One-Pan Chicken and Rice',
+    checked: false
+  },
+  {
+    id: 'shop-seed-3',
+    name: 'Jasmine Rice',
+    quantity: '300 g',
+    aisle: 'Pantry',
+    recipeName: 'One-Pan Chicken and Rice',
+    checked: true
+  }]
+  );
   const [generatedRecipes, setGeneratedRecipes] = useState<GeneratedRecipe[]>([
   {
     id: 'gen-1',
@@ -305,6 +340,55 @@ export const MealPlanProvider: React.FC<MealPlanProviderProps> = ({
   const isRecipeSaved = (recipeId: string) => {
     return savedRecipes.some((r) => r.id === recipeId);
   };
+  const addToShoppingList = (items: ShoppingListDraftItem[]) => {
+    let addedCount = 0;
+    setShoppingList((prev) => {
+      const existing = new Set(prev.map((item) => normalizeItemName(item.name)));
+      const additions: ShoppingListItem[] = [];
+      items.forEach((item) => {
+        const key = normalizeItemName(item.name);
+        if (!key || existing.has(key)) return;
+        existing.add(key);
+        additions.push({
+          id: `shop-${Date.now()}-${additions.length}-${key.replace(/\W+/g, '')}`,
+          name: item.name.trim(),
+          quantity: item.quantity,
+          aisle: item.aisle ?? guessAisle(item.name),
+          recipeName: item.recipeName,
+          checked: false
+        });
+      });
+      addedCount = additions.length;
+      return additions.length ? [...prev, ...additions] : prev;
+    });
+    return addedCount;
+  };
+  const toggleShoppingItem = (itemId: string) => {
+    setShoppingList((prev) =>
+    prev.map((item) =>
+    item.id === itemId ?
+    {
+      ...item,
+      checked: !item.checked
+    } :
+    item
+    )
+    );
+  };
+  const removeShoppingItem = (itemId: string) => {
+    setShoppingList((prev) => prev.filter((item) => item.id !== itemId));
+  };
+  const clearCheckedShoppingItems = () => {
+    setShoppingList((prev) => prev.filter((item) => !item.checked));
+  };
+  const setAllShoppingItemsChecked = (checked: boolean) => {
+    setShoppingList((prev) =>
+    prev.map((item) => ({
+      ...item,
+      checked
+    }))
+    );
+  };
   return (
     <MealPlanContext.Provider
       value={{
@@ -319,7 +403,13 @@ export const MealPlanProvider: React.FC<MealPlanProviderProps> = ({
         removeSavedRecipe,
         isRecipeSaved,
         addGeneratedRecipe,
-        getGeneratedRecipes
+        getGeneratedRecipes,
+        shoppingList,
+        addToShoppingList,
+        toggleShoppingItem,
+        removeShoppingItem,
+        clearCheckedShoppingItems,
+        setAllShoppingItemsChecked
       }}>
       
       {children}

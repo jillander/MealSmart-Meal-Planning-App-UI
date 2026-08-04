@@ -192,7 +192,11 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
             AI
           </span>
         </button>
-        <button className="w-10 h-10 flex items-center justify-center rounded-xl bg-[#F8F9FA] text-[#1A1A1A] hover:bg-[#F0F1F3] active:scale-95 transition-all duration-200">
+        <button
+          onClick={() => navigateTo('notifications')}
+          aria-label="Notification settings"
+          className="w-10 h-10 flex items-center justify-center rounded-xl bg-[#F8F9FA] text-[#1A1A1A] hover:bg-[#F0F1F3] active:scale-95 transition-all duration-200">
+          
           <BellIcon size={18} strokeWidth={2} />
         </button>
       </header>

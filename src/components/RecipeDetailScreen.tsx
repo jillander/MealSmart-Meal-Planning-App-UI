@@ -28,11 +28,12 @@ interface IngredientItem {
 }
 // The recipe is written for this many servings.
 const BASE_SERVINGS = 4;
+const RECIPE_NAME = 'Sticky Gochujang Chicken';
 export const RecipeDetailScreen: React.FC<RecipeDetailScreenProps> = ({
   navigateTo,
   onMarkAsPrepared
 }) => {
-  const { addMeal } = useMealPlan();
+  const { addMeal, addToShoppingList } = useMealPlan();
   const [activeTab, setActiveTab] = useState<
     'ingredients' | 'method' | 'nutrition'>(
     'ingredients');
@@ -82,6 +83,19 @@ export const RecipeDetailScreen: React.FC<RecipeDetailScreenProps> = ({
     if (whole === 0 && fracStr) return fracStr;
     if (fracStr) return `${whole}${fracStr}`;
     return `${whole}`;
+  };
+  // Sends every unchecked ingredient to the shopping list, then opens it.
+  const handleAddAllToShoppingList = () => {
+    const items = ingredientGroups.
+    flatMap((group) => group.items).
+    filter((item) => !checkedIngredients.includes(item.id)).
+    map((item) => ({
+      name: item.label,
+      quantity: formatQty(item.qty) || undefined,
+      recipeName: RECIPE_NAME
+    }));
+    addToShoppingList(items);
+    navigateTo('shopping-list');
   };
   // Build the display name for an ingredient at the current serving size.
   const ingredientName = (item: IngredientItem) => {
@@ -325,7 +339,7 @@ export const RecipeDetailScreen: React.FC<RecipeDetailScreenProps> = ({
             fontFamily: 'var(--font-heading)'
           }}>
           
-          Sticky Gochujang Chicken
+          {RECIPE_NAME}
         </h1>
         <div className="flex items-center mb-4">
           <div className="w-8 h-8 rounded-full bg-gradient-to-br from-orange-400 to-pink-500 flex items-center justify-center mr-2">
@@ -450,7 +464,11 @@ export const RecipeDetailScreen: React.FC<RecipeDetailScreenProps> = ({
                     Start checking off your ingredients
                   </p>
                 </div>
-                <button className="w-12 h-12 bg-[#1A1A1A] rounded-full flex items-center justify-center hover:bg-gray-800 transition-colors">
+                <button
+                onClick={handleAddAllToShoppingList}
+                aria-label="Add these ingredients to your shopping list"
+                className="w-12 h-12 bg-[#1A1A1A] rounded-full flex items-center justify-center hover:bg-gray-800 transition-colors">
+                
                   <ArrowLeftIcon size={20} className="text-white rotate-180" />
                 </button>
               </div>

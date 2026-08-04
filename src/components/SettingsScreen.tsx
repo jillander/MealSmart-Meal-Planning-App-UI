@@ -418,7 +418,9 @@ export const SettingsScreen: React.FC<SettingsScreenProps> = ({
             <SettingRow
               icon={BellIcon}
               iconColor="bg-yellow-50 text-yellow-600"
-              label="Notifications" />
+              label="Notifications"
+              value="Manage"
+              onClick={() => navigateTo('notifications')} />
             
             <SettingRow
               icon={HelpCircleIcon}
