@@ -25,6 +25,7 @@ import { HealthDashboard } from './HealthDashboard';
 import { MealPrepSetup } from './MealPrepSetup';
 import { RecipeImportGuide } from './RecipeImportGuide';
 import { RecentUploadCard } from './RecentUploadCard';
+import { SwipeToDelete } from './SwipeToDelete';
 import { useMealPlan } from '../contexts/MealPlanContext';
 interface HomeScreenProps {
   navigateTo: (screen: string) => void;
@@ -37,7 +38,7 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [isFirstTimeUser, setIsFirstTimeUser] = useState(false);
   const [showImportGuide, setShowImportGuide] = useState(false);
-  const { getMealsForDate, updateMeal, savedRecipes } = useMealPlan();
+  const { getMealsForDate, updateMeal, removeMeal, savedRecipes } = useMealPlan();
   const meals = getMealsForDate(selectedDate);
   const [toast, setToast] = useState<{
     message: string;
@@ -473,27 +474,35 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
                       </div>
                       <div className="space-y-3">
                         {mealItems.map((meal) =>
-                      <MealRow
+                      <SwipeToDelete
                         key={meal.id}
-                        meal={meal}
-                        onChecklistClick={() => {
-                          updateMeal(meal.id, {
-                            completed: !meal.completed
-                          });
-                          showToast(
-                            !meal.completed ?
-                            'Meal logged successfully' :
-                            'Meal unmarked'
-                          );
-                        }}
-                        onCreateRecipe={() => {
-                          navigateTo('recipe-detail');
-                          showToast('Creating new recipe...');
-                        }}
-                        onImportRecipe={() => {
-                          setShowImportGuide(true);
-                        }} />
-
+                        label={`Delete ${meal.name}`}
+                        onDelete={() => {
+                          removeMeal(meal.id);
+                          showToast(`${meal.name} removed`);
+                        }}>
+                        
+                            <MealRow
+                          meal={meal}
+                          onChecklistClick={() => {
+                            updateMeal(meal.id, {
+                              completed: !meal.completed
+                            });
+                            showToast(
+                              !meal.completed ?
+                              'Meal logged successfully' :
+                              'Meal unmarked'
+                            );
+                          }}
+                          onCreateRecipe={() => {
+                            navigateTo('recipe-detail');
+                            showToast('Creating new recipe...');
+                          }}
+                          onImportRecipe={() => {
+                            setShowImportGuide(true);
+                          }} />
+                        
+                          </SwipeToDelete>
                       )}
 
                         {/* Add-to-section trigger */}
