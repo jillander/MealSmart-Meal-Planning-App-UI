@@ -102,6 +102,9 @@ export const MealPlanProvider: React.FC<MealPlanProviderProps> = ({
     quantity: '1 bulb',
     aisle: 'Produce',
     recipeName: 'One-Pan Chicken and Rice',
+    recipeImage:
+    'https://images.unsplash.com/photo-1512621776951-a57141f2eefd?ixlib=rb-1.2.1&auto=format&fit=crop&w=400&q=80',
+    plannedFor: 'Tonight',
     checked: false
   },
   {
@@ -110,6 +113,9 @@ export const MealPlanProvider: React.FC<MealPlanProviderProps> = ({
     quantity: '1 small bunch',
     aisle: 'Produce',
     recipeName: 'One-Pan Chicken and Rice',
+    recipeImage:
+    'https://images.unsplash.com/photo-1512621776951-a57141f2eefd?ixlib=rb-1.2.1&auto=format&fit=crop&w=400&q=80',
+    plannedFor: 'Tonight',
     checked: false
   },
   {
@@ -118,7 +124,43 @@ export const MealPlanProvider: React.FC<MealPlanProviderProps> = ({
     quantity: '300 g',
     aisle: 'Pantry',
     recipeName: 'One-Pan Chicken and Rice',
+    recipeImage:
+    'https://images.unsplash.com/photo-1512621776951-a57141f2eefd?ixlib=rb-1.2.1&auto=format&fit=crop&w=400&q=80',
+    plannedFor: 'Tonight',
     checked: true
+  },
+  {
+    id: 'shop-seed-4',
+    name: 'Soy Sauce',
+    quantity: '1 bottle',
+    aisle: 'Pantry',
+    recipeName: 'Stir-Fried Rice Bowl',
+    recipeImage:
+    'https://images.unsplash.com/photo-1567337710282-00832b415979?ixlib=rb-1.2.1&auto=format&fit=crop&w=400&q=80',
+    plannedFor: 'Thu',
+    checked: false
+  },
+  {
+    id: 'shop-seed-5',
+    name: 'Ginger',
+    quantity: '1 thumb',
+    aisle: 'Produce',
+    recipeName: 'Stir-Fried Rice Bowl',
+    recipeImage:
+    'https://images.unsplash.com/photo-1567337710282-00832b415979?ixlib=rb-1.2.1&auto=format&fit=crop&w=400&q=80',
+    plannedFor: 'Thu',
+    checked: false
+  },
+  {
+    id: 'shop-seed-6',
+    name: 'Feta Cheese',
+    quantity: '200 g',
+    aisle: 'Dairy',
+    recipeName: 'Mediterranean Vegetable Bowl',
+    recipeImage:
+    'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?ixlib=rb-1.2.1&auto=format&fit=crop&w=400&q=80',
+    plannedFor: 'Fri',
+    checked: false
   }]
   );
   const [generatedRecipes, setGeneratedRecipes] = useState<GeneratedRecipe[]>([
@@ -355,6 +397,8 @@ export const MealPlanProvider: React.FC<MealPlanProviderProps> = ({
           quantity: item.quantity,
           aisle: item.aisle ?? guessAisle(item.name),
           recipeName: item.recipeName,
+          recipeImage: item.recipeImage,
+          plannedFor: item.plannedFor,
           checked: false
         });
       });

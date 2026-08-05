@@ -458,7 +458,8 @@ export const RecipeSuggestionScreen: React.FC<RecipeSuggestionScreenProps> = ({
                     addToShoppingList(
                       recipe.missingIngredients.map((ing) => ({
                         name: ing,
-                        recipeName: recipe.name
+                        recipeName: recipe.name,
+                        recipeImage: recipe.image
                       }))
                     );
                     navigateTo('shopping-list');

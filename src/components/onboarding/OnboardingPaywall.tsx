@@ -7,6 +7,8 @@ import {
   LockIcon } from
 'lucide-react';
 import { CalPalMark } from './CalPalMark';
+import { subscriptionPlans } from '../../data/subscriptionPlans';
+import type { PlanId } from '../../data/subscriptionPlans';
 
 interface OnboardingPaywallProps {
   goalLabel: string;
@@ -18,29 +20,7 @@ interface OnboardingPaywallProps {
   onSkip: () => void;
 }
 
-type PlanId = 'annual' | 'quarterly' | 'monthly';
-
-interface PlanOption {
-  id: PlanId;
-  label: string;
-  price: string;
-  perMonth: string;
-  strikethrough?: string;
-  badge?: string;
-}
-
-const plans: PlanOption[] = [
-{
-  id: 'annual',
-  label: '12 months',
-  price: '$49.98',
-  perMonth: '$4.16 / mo',
-  strikethrough: '$99.92',
-  badge: 'Best value'
-},
-{ id: 'quarterly', label: '3 months', price: '$24.98', perMonth: '$8.33 / mo' },
-{ id: 'monthly', label: '1 month', price: '$12.98', perMonth: '$12.98 / mo' }];
-
+const plans = subscriptionPlans;
 
 export function OnboardingPaywall({
   goalLabel,

@@ -144,7 +144,10 @@ export function App() {
           <WeeklyPlanScreen navigateTo={navigateTo} />
           }
           {currentScreen === 'subscription' &&
-          <SubscriptionScreen navigateTo={navigateTo} />
+          <SubscriptionScreen
+            navigateTo={navigateTo}
+            startActive={Boolean(screenInit.subscriptionActive)} />
+
           }
           {showMealCompletion &&
           <MealCompletionScreen
@@ -187,7 +190,10 @@ export function App() {
 
           }
           {currentScreen === 'shopping-list' &&
-          <ShoppingListScreen navigateTo={navigateTo} />
+          <ShoppingListScreen
+            navigateTo={navigateTo}
+            startEmpty={Boolean(screenInit.shoppingListEmpty)} />
+
           }
           {currentScreen === 'notifications' &&
           <NotificationsScreen navigateTo={navigateTo} />

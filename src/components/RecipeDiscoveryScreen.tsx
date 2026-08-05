@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useMemo, useState, useRef } from 'react';
 import {
   PlayIcon,
   PauseIcon,
@@ -15,26 +15,21 @@ import {
   PackageIcon,
   DumbbellIcon,
   UtensilsIcon,
-  SnowflakeIcon } from
+  SnowflakeIcon,
+  SlidersHorizontalIcon,
+  FlameIcon,
+  XIcon } from
 'lucide-react';
 import { useInView } from 'react-intersection-observer';
-interface Recipe {
-  id: string;
-  title: string;
-  video: string;
-  thumbnail: string;
-  duration: string;
-  difficulty: string;
-  likes: number;
-  saved: boolean;
-  liked: boolean;
-  creator: {
-    name: string;
-    avatar: string;
-    verified: boolean;
-  };
-  description: string;
-}
+import { discoverRecipes } from '../data/discoverRecipes';
+import { applyDiscoverFilters, formatDuration } from '../utils/discoverFilters';
+import { countActiveFilters, emptyFilters } from '../types/discover';
+import type { DiscoverFilters, DiscoverRecipe } from '../types/discover';
+import { DiscoverFilterSheet } from './discover/DiscoverFilterSheet';
+import { ActiveFilterBar } from './discover/ActiveFilterBar';
+
+type Recipe = DiscoverRecipe;
+
 interface RecipeDiscoveryScreenProps {
   navigateTo: (screen: string) => void;
 }
@@ -47,62 +42,40 @@ interface CollectionShortcut {
 export const RecipeDiscoveryScreen: React.FC<RecipeDiscoveryScreenProps> = ({
   navigateTo
 }) => {
-  const [recipes, setRecipes] = useState<Recipe[]>([
-  {
-    id: '1',
-    title: '15-Minute Healthy Breakfast Bowl',
-    video: 'https://example.com/video1.mp4',
-    thumbnail:
-    'https://images.unsplash.com/photo-1511690743698-d9d85f2fbf38?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80',
-    duration: '15 min',
-    difficulty: 'Easy',
-    likes: 1234,
-    saved: false,
-    liked: false,
-    creator: {
-      name: 'HealthyEats',
-      avatar:
-      'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?ixlib=rb-1.2.1&auto=format&fit=crop&w=200&q=80',
-      verified: true
-    },
-    description:
-    'Start your day right with this nutritious and delicious breakfast bowl! Packed with protein and healthy fats.'
-  },
-  {
-    id: '2',
-    title: 'One-Pan Chicken Stir Fry',
-    video: 'https://example.com/video2.mp4',
-    thumbnail:
-    'https://images.unsplash.com/photo-1512058564366-18510be2db19?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80',
-    duration: '20 min',
-    difficulty: 'Medium',
-    likes: 2567,
-    saved: false,
-    liked: false,
-    creator: {
-      name: 'QuickMeals',
-      avatar:
-      'https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&auto=format&fit=crop&w=200&q=80',
-      verified: true
-    },
-    description:
-    "A quick and easy weeknight dinner that's packed with vegetables and protein. Perfect for meal prep!"
-  }]
-  );
+  const [recipes, setRecipes] = useState<Recipe[]>(discoverRecipes);
   const [showSchedule, setShowSchedule] = useState(false);
   const [selectedRecipe, setSelectedRecipe] = useState<Recipe | null>(null);
-  const [activeCategory, setActiveCategory] = useState('For You');
   const [selectedCollection, setSelectedCollection] = useState<string | null>(
     null
   );
-  const categories = [
-  'For You',
-  'Trending',
-  'Quick & Easy',
-  'Healthy',
-  'Vegetarian',
-  'Desserts'];
+  const [query, setQuery] = useState('');
+  const [filters, setFilters] = useState<DiscoverFilters>(emptyFilters);
+  const [draftFilters, setDraftFilters] = useState<DiscoverFilters>(emptyFilters);
+  const [showFilters, setShowFilters] = useState(false);
 
+  // Collections are a shortcut on top of the same filter model.
+  const collectionMatched = useMemo(
+    () =>
+    selectedCollection ?
+    recipes.filter((recipe) => recipe.collections.includes(selectedCollection)) :
+    recipes,
+    [recipes, selectedCollection]
+  );
+  const visibleRecipes = useMemo(
+    () => applyDiscoverFilters(collectionMatched, filters, query),
+    [collectionMatched, filters, query]
+  );
+  const draftCount = useMemo(
+    () => applyDiscoverFilters(collectionMatched, draftFilters, query).length,
+    [collectionMatched, draftFilters, query]
+  );
+  const activeCount = countActiveFilters(filters);
+  const clearEverything = () => {
+    setFilters(emptyFilters);
+    setDraftFilters(emptyFilters);
+    setSelectedCollection(null);
+    setQuery('');
+  };
   const collections: CollectionShortcut[] = [
   {
     id: 'macros',
@@ -246,14 +219,22 @@ export const RecipeDiscoveryScreen: React.FC<RecipeDiscoveryScreenProps> = ({
             <h2 className="text-white font-medium text-lg mb-2">
               {recipe.title}
             </h2>
-            <div className="flex items-center space-x-4">
+            <div className="flex flex-wrap items-center gap-x-4 gap-y-1">
               <div className="flex items-center text-white">
                 <ClockIcon size={16} className="mr-1" />
-                <span className="text-sm">{recipe.duration}</span>
+                <span className="text-sm">{formatDuration(recipe.timeMinutes)}</span>
               </div>
               <div className="flex items-center text-white">
                 <ChefHatIcon size={16} className="mr-1" />
                 <span className="text-sm">{recipe.difficulty}</span>
+              </div>
+              <div className="flex items-center text-white">
+                <FlameIcon size={16} className="mr-1" />
+                <span className="text-sm">{recipe.calories} kcal</span>
+              </div>
+              <div className="flex items-center text-white">
+                <DumbbellIcon size={16} className="mr-1" />
+                <span className="text-sm">{recipe.protein}g protein</span>
               </div>
             </div>
           </div>
@@ -314,9 +295,22 @@ export const RecipeDiscoveryScreen: React.FC<RecipeDiscoveryScreenProps> = ({
           </div>
           <input
             type="text"
-            className="block w-full pl-10 pr-3 py-3 border border-gray-200 rounded-xl leading-5 bg-gray-50 placeholder-gray-500 focus:outline-none focus:bg-white focus:ring-2 focus:ring-[#4CAF50] focus:border-transparent transition-all"
+            value={query}
+            onChange={(event) => setQuery(event.target.value)}
+            aria-label="Search recipes"
+            className="block w-full pl-10 pr-10 py-3 border border-gray-200 rounded-xl leading-5 bg-gray-50 placeholder-gray-500 focus:outline-none focus:bg-white focus:ring-2 focus:ring-[#4CAF50] focus:border-transparent transition-all"
             placeholder="Search recipes, ingredients..." />
           
+          {query &&
+          <button
+            type="button"
+            onClick={() => setQuery('')}
+            aria-label="Clear search"
+            className="absolute inset-y-0 right-0 flex items-center pr-3 text-gray-400 hover:text-[#1A1A1A]">
+            
+              <XIcon size={18} />
+            </button>
+          }
         </div>
 
         {/* Collections Grid */}
@@ -327,6 +321,9 @@ export const RecipeDiscoveryScreen: React.FC<RecipeDiscoveryScreenProps> = ({
           <div className="grid grid-cols-2 gap-3">
             {collections.map((collection) => {
               const isSelected = selectedCollection === collection.id;
+              const count = recipes.filter((recipe) =>
+              recipe.collections.includes(collection.id)
+              ).length;
               return (
                 <button
                   key={collection.id}
@@ -348,6 +345,9 @@ export const RecipeDiscoveryScreen: React.FC<RecipeDiscoveryScreenProps> = ({
                     
                     {collection.label}
                   </span>
+                  <span className="mt-1 text-xs text-[#94A3B8]">
+                    {count} {count === 1 ? 'recipe' : 'recipes'}
+                  </span>
                 </button>);
 
             })}
@@ -357,27 +357,79 @@ export const RecipeDiscoveryScreen: React.FC<RecipeDiscoveryScreenProps> = ({
 
       {/* Sticky Filters */}
       <div className="bg-white sticky top-0 z-10 border-b border-gray-100 shadow-sm">
-        <div className="px-6 py-3">
-          <div className="flex overflow-x-auto space-x-2 scrollbar-hide">
-            {categories.map((category) =>
-            <button
-              key={category}
-              onClick={() => setActiveCategory(category)}
-              className={`px-4 py-2 rounded-full text-sm font-medium whitespace-nowrap transition-all ${activeCategory === category ? 'bg-[#4CAF50] text-white shadow-md' : 'bg-gray-100 text-[#757575] hover:bg-gray-200'}`}>
-              
-                {category}
-              </button>
-            )}
-          </div>
+        <div className="flex items-center gap-3 px-6 py-3">
+          <button
+            type="button"
+            onClick={() => {
+              setDraftFilters(filters);
+              setShowFilters(true);
+            }}
+            className={`flex shrink-0 items-center gap-2 rounded-full px-4 py-2 text-sm font-semibold transition-all active:scale-95 ${
+            activeCount > 0 ?
+            'bg-[#1A1A1A] text-white' :
+            'bg-gray-100 text-[#1A1A1A] hover:bg-gray-200'}`
+            }>
+            
+            <SlidersHorizontalIcon size={16} />
+            Filters
+            {activeCount > 0 &&
+            <span className="flex h-5 min-w-5 items-center justify-center rounded-full bg-[#4CAF50] px-1.5 text-[11px] font-extrabold text-white">
+                {activeCount}
+              </span>
+            }
+          </button>
+          <p className="truncate text-sm text-[#757575]">
+            {visibleRecipes.length} {visibleRecipes.length === 1 ? 'recipe' : 'recipes'}
+            {selectedCollection ? ' in this collection' : ''}
+          </p>
         </div>
+        <ActiveFilterBar
+          filters={filters}
+          onChange={(next) => {
+            setFilters(next);
+            setDraftFilters(next);
+          }}
+          onClearAll={() => {
+            setFilters(emptyFilters);
+            setDraftFilters(emptyFilters);
+          }} />
+        
       </div>
 
       {/* Recipe Feed */}
       <div className="flex-1 px-6 py-4 overflow-y-auto">
-        {recipes.map((recipe) =>
-        <RecipeCard key={recipe.id} recipe={recipe} />
-        )}
+        {visibleRecipes.length === 0 ?
+        <div className="flex flex-col items-center pt-14 text-center">
+            <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-gray-100 text-3xl">🍳</div>
+            <h2 className="mt-5 text-xl font-bold text-[#1A1A1A]">No recipes match</h2>
+            <p className="mt-2 max-w-[290px] text-sm leading-relaxed text-[#757575]">
+              Try loosening a filter — dietary needs and time limits narrow things down fastest.
+            </p>
+            <button
+            type="button"
+            onClick={clearEverything}
+            className="mt-6 rounded-full bg-[#1A1A1A] px-6 py-3 text-sm font-bold text-white transition-colors hover:bg-[#2A2A2A]">
+            
+              Clear all filters
+            </button>
+          </div> :
+
+        visibleRecipes.map((recipe) => <RecipeCard key={recipe.id} recipe={recipe} />)
+        }
       </div>
+
+      <DiscoverFilterSheet
+        open={showFilters}
+        filters={filters}
+        previewCount={draftCount}
+        onPreview={setDraftFilters}
+        onApply={(next) => {
+          setFilters(next);
+          setDraftFilters(next);
+          setShowFilters(false);
+        }}
+        onClose={() => setShowFilters(false)} />
+      
 
       {/* Quick Schedule Modal */}
       {showSchedule && selectedRecipe &&

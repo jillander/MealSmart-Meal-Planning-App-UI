@@ -29,6 +29,8 @@ interface IngredientItem {
 // The recipe is written for this many servings.
 const BASE_SERVINGS = 4;
 const RECIPE_NAME = 'Sticky Gochujang Chicken';
+const RECIPE_IMAGE =
+'https://images.unsplash.com/photo-1565299585323-38d6b0865b47?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80';
 export const RecipeDetailScreen: React.FC<RecipeDetailScreenProps> = ({
   navigateTo,
   onMarkAsPrepared
@@ -92,7 +94,8 @@ export const RecipeDetailScreen: React.FC<RecipeDetailScreenProps> = ({
     map((item) => ({
       name: item.label,
       quantity: formatQty(item.qty) || undefined,
-      recipeName: RECIPE_NAME
+      recipeName: RECIPE_NAME,
+      recipeImage: RECIPE_IMAGE
     }));
     addToShoppingList(items);
     navigateTo('shopping-list');
