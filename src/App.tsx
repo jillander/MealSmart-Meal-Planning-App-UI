@@ -19,6 +19,8 @@ import { RecipeErrorScreen } from './components/RecipeErrorScreen';
 import { ShoppingListScreen } from './components/ShoppingListScreen';
 import { NotificationsScreen } from './components/NotificationsScreen';
 import { LogoConceptsScreen } from './components/LogoConceptsScreen';
+import { AppStoreAssetsScreen } from './components/marketing/AppStoreAssetsScreen';
+import { ProfileScreen } from './components/ProfileScreen';
 import { OnboardingFlow } from './components/onboarding/OnboardingFlow';
 import { ReferenceScreen } from './components/reference/ReferenceScreen';
 import { MealPlanProvider } from './contexts/MealPlanContext';
@@ -106,6 +108,12 @@ export function App() {
         <div className="max-w-[430px] mx-auto relative min-h-screen pb-[72px]">
           {currentScreen === 'logo-concepts' &&
           <LogoConceptsScreen navigateTo={navigateTo} />
+          }
+          {currentScreen === 'app-store' &&
+          <AppStoreAssetsScreen navigateTo={navigateTo} />
+          }
+          {currentScreen === 'profile' &&
+          <ProfileScreen navigateTo={navigateTo} />
           }
           {currentScreen === 'home' &&
           <HomeScreen

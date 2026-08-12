@@ -36,8 +36,10 @@ export const manifest = {
     scr_1gq2i0: { name: "Week plan", route: "/", state: { "currentScreen": "weekly-plan" }, position: { "x": 4360, "y": 10120 } },
     scr_ogn8b1: { name: "Progress", route: "/", state: { "currentScreen": "progress", "progressPeriod": "weekly" }, position: { "x": 1560, "y": 12100 } },
     scr_oeqppl: { name: "Settings", route: "/", state: { "currentScreen": "settings" }, position: { "x": 1560, "y": 14080 } },
+    scr_hhelkf: { name: "Your profile", route: "/", state: { "currentScreen": "profile" }, position: { "x": 8560, "y": 14080 } },
     scr_w55n5t: { name: "Subscription / Basic", route: "/", state: { "currentScreen": "subscription" }, position: { "x": 2960, "y": 14080 } },
     scr_too168: { name: "Subscription / Active", route: "/", state: { "currentScreen": "subscription", "subscriptionActive": true }, position: { "x": 7160, "y": 14080 } },
+    scr_aao1tn: { name: "Brand & store assets", route: "/", state: { "currentScreen": "app-store" }, position: { "x": 160, "y": 25960 } },
     scr_m0pefc: { name: "Yazio 1", route: "/", state: { "reference": "yazio", "refIndex": 0 }, position: { "x": 160, "y": 16060 } },
     scr_278ure: { name: "Yazio 2", route: "/", state: { "reference": "yazio", "refIndex": 1 }, position: { "x": 1560, "y": 16060 } },
     scr_nfv41x: { name: "Yazio 3", route: "/", state: { "reference": "yazio", "refIndex": 2 }, position: { "x": 2960, "y": 16060 } },
@@ -81,12 +83,13 @@ export const manifest = {
     sec_9k7w1n: { name: "Recipe Discovery", x: 0, y: 7920, width: 5720, height: 1180 },
     sec_5fg4pb: { name: "Meal Planning", x: 0, y: 9900, width: 5720, height: 1180 },
     sec_pcut5n: { name: "Explore & Progress", x: 0, y: 11880, width: 4320, height: 1180 },
-    sec_omtixb: { name: "Account", x: 0, y: 13860, width: 8520, height: 1180 },
+    sec_omtixb: { name: "Account", x: 0, y: 13860, width: 9920, height: 1180 },
     sec_5gt2ag: { name: "Yazio Onboarding Reference", x: 0, y: 15840, width: 22520, height: 1180 },
     sec_m9wvyz: { name: "Osta Onboarding", x: 0, y: 17820, width: 11320, height: 1180 },
     sec_905xjb: { name: "Osta Engagement & Social", x: 0, y: 19800, width: 11320, height: 1180 },
     sec_ndiz2u: { name: "Osta Main App", x: 0, y: 21780, width: 2920, height: 1180 },
-    sec_ya8aub: { name: "Shopping List", x: 0, y: 23760, width: 2920, height: 1180 }
+    sec_ya8aub: { name: "Shopping List", x: 0, y: 23760, width: 2920, height: 1180 },
+    sec_f8s4ng: { name: "Brand & Store Assets", x: 0, y: 25740, width: 1520, height: 1180 }
   },
   layers: [
   { kind: "section", id: "sec_jxjl59", children: [
@@ -139,7 +142,8 @@ export const manifest = {
     { kind: "screen", id: "scr_w55n5t" },
     { kind: "screen", id: "scr_h680pc" },
     { kind: "screen", id: "scr_x3hx5o" },
-    { kind: "screen", id: "scr_too168" }]
+    { kind: "screen", id: "scr_too168" },
+    { kind: "screen", id: "scr_hhelkf" }]
   },
   { kind: "section", id: "sec_5gt2ag", children: [
     { kind: "screen", id: "scr_m0pefc" },
@@ -186,6 +190,9 @@ export const manifest = {
   { kind: "section", id: "sec_ya8aub", children: [
     { kind: "screen", id: "scr_gv1ndc" },
     { kind: "screen", id: "scr_3asd6x" }]
+  },
+  { kind: "section", id: "sec_f8s4ng", children: [
+    { kind: "screen", id: "scr_aao1tn" }]
   }]
 
 };

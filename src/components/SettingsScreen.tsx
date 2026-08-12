@@ -5,6 +5,7 @@ import {
   CreditCardIcon,
   BellIcon,
   HelpCircleIcon,
+  SmartphoneIcon,
   LogOutIcon,
   ChevronRightIcon,
   PencilIcon,
@@ -19,6 +20,7 @@ import {
   FlameIcon } from
 'lucide-react';
 import { AuthModal } from './AuthModal';
+import { getInitials, useUserProfile } from '../hooks/useUserProfile';
 interface SettingsScreenProps {
   navigateTo: (screen: string) => void;
 }
@@ -91,13 +93,7 @@ export const SettingsScreen: React.FC<SettingsScreenProps> = ({
       [provider]: !prev[provider]
     }));
   };
-  const [user] = useState({
-    name: 'John Doe',
-    email: 'john@example.com',
-    plan: 'Premium',
-    avatar:
-    'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80'
-  });
+  const { profile: user } = useUserProfile();
   const [appleHealthConnected, setAppleHealthConnected] = useState(true);
   const [dietPreferences, setDietPreferences] = useState<string[]>([
   'High Protein',
@@ -221,23 +217,33 @@ export const SettingsScreen: React.FC<SettingsScreenProps> = ({
       <div className="space-y-6 px-5">
         {/* Profile Section */}
         {isLoggedIn ?
-        <div className="bg-white rounded-2xl p-4 flex items-center shadow-sm cursor-pointer hover:bg-gray-50 transition-colors">
-            <img
-            src={user.avatar}
-            alt={user.name}
-            className="w-14 h-14 rounded-full object-cover border-2 border-white shadow-sm" />
+        <button
+          type="button"
+          onClick={() => navigateTo('profile')}
+          className="bg-white rounded-2xl p-4 flex w-full items-center text-left shadow-sm hover:bg-gray-50 transition-colors">
           
-            <div className="ml-4 flex-1">
+            {user.avatar ?
+          <img
+            src={user.avatar}
+            alt=""
+            className="w-14 h-14 rounded-full object-cover border-2 border-white shadow-sm" /> :
+
+
+          <span className="flex h-14 w-14 items-center justify-center rounded-full bg-[#EDF8EF] text-base font-extrabold text-[#2F7D34]">
+                {getInitials(user.name)}
+              </span>
+          }
+            <div className="ml-4 min-w-0 flex-1">
               <div className="flex items-center">
                 <h2 className="font-bold text-[#1A1A1A]">{user.name}</h2>
                 <span className="ml-2 px-2 py-0.5 bg-amber-100 text-amber-700 rounded-full text-[10px] font-bold uppercase tracking-wide">
                   {user.plan}
                 </span>
               </div>
-              <p className="text-sm text-gray-500">{user.email}</p>
+              <p className="truncate text-sm text-gray-500">{user.email}</p>
             </div>
-            <ChevronRightIcon size={20} className="text-gray-400" />
-          </div> :
+            <ChevronRightIcon size={20} className="shrink-0 text-gray-400" />
+          </button> :
 
         <div
           className="bg-white rounded-2xl p-5 flex flex-col items-center text-center shadow-sm cursor-pointer hover:bg-gray-50 transition-colors border border-gray-100"
@@ -425,7 +431,14 @@ export const SettingsScreen: React.FC<SettingsScreenProps> = ({
             <SettingRow
               icon={HelpCircleIcon}
               iconColor="bg-cyan-50 text-cyan-600"
-              label="Help & Support"
+              label="Help & Support" />
+            
+            <SettingRow
+              icon={SmartphoneIcon}
+              iconColor="bg-emerald-50 text-emerald-600"
+              label="Brand & store assets"
+              value="View"
+              onClick={() => navigateTo('app-store')}
               isLast={true} />
             
           </div>
