@@ -507,49 +507,82 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
 
                         {/* Add-to-section trigger */}
                         {addMealFor === mealType ?
-                      <div className="grid grid-cols-2 gap-3 animate-fade-in">
+                      <div className="animate-fade-in rounded-[20px] bg-[#F7FAF8] p-3 ring-1 ring-[#E8EEEA]">
+                            <div className="mb-2.5 flex items-center justify-between pl-1">
+                              <span className="text-[11px] font-extrabold uppercase tracking-[0.1em] text-[#94A3B8]">
+                                Add to {mealType}
+                              </span>
+                              <button
+                            onClick={() => setAddMealFor(null)}
+                            aria-label={`Cancel adding to ${mealType}`}
+                            className="flex h-7 w-7 items-center justify-center rounded-full text-[#A7AFA9] transition-colors hover:bg-white hover:text-[#1A1A1A]">
+                            
+                                <XIcon size={15} strokeWidth={2.5} />
+                              </button>
+                            </div>
+
+                            {/* Primary: log what was already eaten */}
                             <button
                           onClick={() => {
                             setAddMealFor(null);
-                            navigateTo('ingredient-capture');
+                            navigateTo(`snap-meal:${mealType}`);
                           }}
-                          className="flex flex-col items-start p-4 bg-white rounded-2xl border border-[#E5E7EB] hover:border-[#4CAF50] hover:shadow-sm transition-all duration-200 text-left active:scale-[0.98]">
+                          className="group flex w-full items-center gap-3.5 rounded-2xl bg-[#1A1A1A] px-4 py-3.5 text-left transition-colors hover:bg-[#262626] active:scale-[0.99]">
                           
-                              <div className="w-9 h-9 rounded-xl bg-[#4CAF50]/10 flex items-center justify-center mb-2">
-                                <ScanLineIcon
-                              size={18}
-                              className="text-[#4CAF50]"
-                              strokeWidth={2} />
-                            
-                              </div>
-                              <span className="text-sm font-semibold text-[#1A1A1A] tracking-tight">
-                                Scan ingredients
+                              <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-[#4CAF50] text-white">
+                                <CameraIcon size={20} strokeWidth={2.2} />
                               </span>
-                              <span className="text-xs text-[#94A3B8] mt-0.5">
-                                Snap what you have
+                              <span className="min-w-0 flex-1">
+                                <span className="block text-[15px] font-bold leading-tight tracking-tight text-white">
+                                  Snap a meal
+                                </span>
+                                <span className="mt-1 block text-xs leading-snug text-white/60">
+                                  Photo in, calories and macros out
+                                </span>
                               </span>
-                            </button>
-                            <button
-                          onClick={() => {
-                            setAddMealFor(null);
-                            navigateTo('recipe-discovery');
-                          }}
-                          className="flex flex-col items-start p-4 bg-white rounded-2xl border border-[#E5E7EB] hover:border-[#2196F3] hover:shadow-sm transition-all duration-200 text-left active:scale-[0.98]">
+                              <ChevronRightIcon
+                            size={18}
+                            className="shrink-0 text-white/45 transition-transform group-hover:translate-x-0.5" />
                           
-                              <div className="w-9 h-9 rounded-xl bg-[#2196F3]/10 flex items-center justify-center mb-2">
-                                <SearchIcon
-                              size={18}
-                              className="text-[#2196F3]"
-                              strokeWidth={2} />
-                            
-                              </div>
-                              <span className="text-sm font-semibold text-[#1A1A1A] tracking-tight">
-                                Find a recipe
-                              </span>
-                              <span className="text-xs text-[#94A3B8] mt-0.5">
-                                Browse meal ideas
-                              </span>
                             </button>
+
+                            {/* Secondary: plan something to cook */}
+                            <div className="mt-2 grid grid-cols-2 gap-2">
+                              <button
+                            onClick={() => {
+                              setAddMealFor(null);
+                              navigateTo('ingredient-capture');
+                            }}
+                            className="flex h-full flex-col items-start rounded-2xl border border-[#E8EEEA] bg-white p-3.5 text-left transition-all duration-200 hover:border-[#CBD5D0] hover:shadow-sm active:scale-[0.98]">
+                            
+                                <span className="mb-2.5 flex h-9 w-9 items-center justify-center rounded-xl bg-[#F1F5F3] text-[#1A1A1A]">
+                                  <ScanLineIcon size={17} strokeWidth={2.2} />
+                                </span>
+                                <span className="text-[13px] font-bold leading-tight tracking-tight text-[#1A1A1A]">
+                                  Scan ingredients
+                                </span>
+                                <span className="mt-1 text-[11px] leading-snug text-[#94A3B8]">
+                                  Cook what you have
+                                </span>
+                              </button>
+                              <button
+                            onClick={() => {
+                              setAddMealFor(null);
+                              navigateTo('recipe-discovery');
+                            }}
+                            className="flex h-full flex-col items-start rounded-2xl border border-[#E8EEEA] bg-white p-3.5 text-left transition-all duration-200 hover:border-[#CBD5D0] hover:shadow-sm active:scale-[0.98]">
+                            
+                                <span className="mb-2.5 flex h-9 w-9 items-center justify-center rounded-xl bg-[#F1F5F3] text-[#1A1A1A]">
+                                  <SearchIcon size={17} strokeWidth={2.2} />
+                                </span>
+                                <span className="text-[13px] font-bold leading-tight tracking-tight text-[#1A1A1A]">
+                                  Find a recipe
+                                </span>
+                                <span className="mt-1 text-[11px] leading-snug text-[#94A3B8]">
+                                  Browse meal ideas
+                                </span>
+                              </button>
+                            </div>
                           </div> :
 
                       <button

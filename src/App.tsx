@@ -21,6 +21,9 @@ import { NotificationsScreen } from './components/NotificationsScreen';
 import { LogoConceptsScreen } from './components/LogoConceptsScreen';
 import { AppStoreAssetsScreen } from './components/marketing/AppStoreAssetsScreen';
 import { ProfileScreen } from './components/ProfileScreen';
+import { SnapMealScreen } from './components/foodlog/SnapMealScreen';
+import { ToastNotification } from './components/ToastNotification';
+import type { MealSlot } from './types/foodLog';
 import { OnboardingFlow } from './components/onboarding/OnboardingFlow';
 import { ReferenceScreen } from './components/reference/ReferenceScreen';
 import { MealPlanProvider } from './contexts/MealPlanContext';
@@ -41,6 +44,10 @@ export function App() {
 
   });
   const [showMealCompletion, setShowMealCompletion] = useState(false);
+  const [snapMealSlot, setSnapMealSlot] = useState<MealSlot | null>(
+    () => screenInit.snapMealSlot as MealSlot | undefined ?? null
+  );
+  const [logToast, setLogToast] = useState('');
   const [showImportGuide, setShowImportGuide] = useState(false);
   const [categoryData, setCategoryData] = useState<{
     id: string;
@@ -59,6 +66,13 @@ export function App() {
     setCurrentScreen('recipe-loading');
   };
   const navigateTo = (screen: string) => {
+    // "snap-meal:<mealType>" preselects the slot the user tapped.
+    if (screen.startsWith('snap-meal')) {
+      const [, slot] = screen.split(':');
+      setSnapMealSlot(slot as MealSlot | undefined ?? null);
+      setCurrentScreen('snap-meal');
+      return;
+    }
     // Handle category browse navigation with data
     if (screen.startsWith('category-browse:')) {
       const parts = screen.split(':');
@@ -115,6 +129,17 @@ export function App() {
           {currentScreen === 'profile' &&
           <ProfileScreen navigateTo={navigateTo} />
           }
+          {currentScreen === 'snap-meal' &&
+          <SnapMealScreen
+            navigateTo={navigateTo}
+            initialMealSlot={snapMealSlot ?? undefined}
+            onLogged={(summary) => {
+              setLogToast(summary);
+              window.setTimeout(() => setLogToast(''), 2600);
+            }} />
+
+          }
+          {logToast && <ToastNotification message={logToast} />}
           {currentScreen === 'home' &&
           <HomeScreen
             navigateTo={navigateTo}
@@ -220,12 +245,14 @@ export function App() {
 
           }
 
-          {/* Show navigation bar on all screens */}
+          {/* The camera and its review step are full-screen tasks */}
+          {currentScreen !== 'snap-meal' &&
           <NavigationBar
             currentScreen={currentScreen}
             navigateTo={navigateTo}
             onShowImportGuide={() => setShowImportGuide(true)} />
-          
+
+          }
           </div>
         }
       </div>

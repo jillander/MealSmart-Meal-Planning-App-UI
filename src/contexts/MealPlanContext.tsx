@@ -11,6 +11,12 @@ interface Meal {
   image: string;
   completed: boolean;
   date: string;
+  /** Macros, present on meals logged from a photo. */
+  protein?: number;
+  carbs?: number;
+  fat?: number;
+  /** True when the meal was logged from a photo rather than planned. */
+  loggedFromPhoto?: boolean;
   progress: {
     hasIngredients: boolean;
     hasRecipe: boolean;
@@ -58,6 +64,19 @@ interface MealPlanContextType {
     image: string;
     cookingTime: string;
     calories: number;
+  },
+  date: Date,
+  mealType: 'breakfast' | 'lunch' | 'dinner' | 'snack')
+  => void;
+  /** Logs a meal the user already ate, captured from a photo. */
+  logPhotoMeal: (
+  entry: {
+    name: string;
+    image: string;
+    calories: number;
+    protein: number;
+    carbs: number;
+    fat: number;
   },
   date: Date,
   mealType: 'breakfast' | 'lunch' | 'dinner' | 'snack')
@@ -351,6 +370,45 @@ export const MealPlanProvider: React.FC<MealPlanProviderProps> = ({
     };
     setMeals((prevMeals) => [...prevMeals, newMeal]);
   };
+  const logPhotoMeal = (
+  entry: {
+    name: string;
+    image: string;
+    calories: number;
+    protein: number;
+    carbs: number;
+    fat: number;
+  },
+  date: Date,
+  mealType: 'breakfast' | 'lunch' | 'dinner' | 'snack') =>
+  {
+    // A photo-logged meal is already eaten, so it lands complete.
+    const newMeal: Meal = {
+      id: `logged-${Date.now()}-${Math.random()}`,
+      type: mealType,
+      name: entry.name,
+      calories: entry.calories,
+      protein: entry.protein,
+      carbs: entry.carbs,
+      fat: entry.fat,
+      cookingTime: 'Logged',
+      time: new Date().toLocaleTimeString([], {
+        hour: 'numeric',
+        minute: '2-digit'
+      }),
+      image: entry.image,
+      completed: true,
+      loggedFromPhoto: true,
+      date: date.toISOString().split('T')[0],
+      progress: {
+        hasIngredients: true,
+        hasRecipe: false,
+        viewedRecipe: false,
+        completed: true
+      }
+    };
+    setMeals((prevMeals) => [...prevMeals, newMeal]);
+  };
   const updateMeal = (mealId: string, updates: Partial<Meal>) => {
     setMeals((prevMeals) =>
     prevMeals.map((meal) =>
@@ -440,6 +498,7 @@ export const MealPlanProvider: React.FC<MealPlanProviderProps> = ({
         savedRecipes,
         generatedRecipes,
         addMeal,
+        logPhotoMeal,
         updateMeal,
         getMealsForDate,
         removeMeal,

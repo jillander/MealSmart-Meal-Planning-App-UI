@@ -19,6 +19,7 @@ export const manifest = {
     scr_kw56q7: { name: "Stay on track", route: "/", state: { "onboardingStep": 16 }, position: { "x": 2960, "y": 12100 } },
     scr_mmwmly: { name: "Today / Nutrition", route: "/", state: { "currentScreen": "home", "activeTab": "nutrition" }, position: { "x": 160, "y": 4180 } },
     scr_rne8f4: { name: "Today / Health", route: "/", state: { "currentScreen": "home", "activeTab": "health" }, position: { "x": 1560, "y": 4180 } },
+    scr_cqv7t2: { name: "Snap a meal", route: "/", state: { "currentScreen": "snap-meal" }, position: { "x": 4360, "y": 6160 } },
     scr_aighdn: { name: "Ingredient capture / Fridge", route: "/", state: { "currentScreen": "ingredient-capture", "activeCaptureTab": "fridge" }, position: { "x": 160, "y": 6160 } },
     scr_8y5msf: { name: "Ingredient capture / Receipt", route: "/", state: { "currentScreen": "ingredient-capture", "activeCaptureTab": "receipt" }, position: { "x": 1560, "y": 6160 } },
     scr_4ywdot: { name: "Review ingredients", route: "/", state: { "currentScreen": "ingredient-confirmation" }, position: { "x": 2960, "y": 6160 } },
@@ -79,7 +80,7 @@ export const manifest = {
     sec_jxjl59: { name: "MealSmart Onboarding", x: 0, y: 0, width: 18320, height: 1180 },
     sec_isqocy: { name: "First Recipe Milestone", x: 0, y: 1980, width: 1520, height: 1180 },
     sec_yzsybl: { name: "Today / Daily Hub", x: 0, y: 3960, width: 2920, height: 1180 },
-    sec_yxau1k: { name: "Ingredient Capture", x: 0, y: 5940, width: 4320, height: 1180 },
+    sec_yxau1k: { name: "Ingredient Capture", x: 0, y: 5940, width: 5720, height: 1180 },
     sec_9k7w1n: { name: "Recipe Discovery", x: 0, y: 7920, width: 5720, height: 1180 },
     sec_5fg4pb: { name: "Meal Planning", x: 0, y: 9900, width: 5720, height: 1180 },
     sec_pcut5n: { name: "Explore & Progress", x: 0, y: 11880, width: 4320, height: 1180 },
@@ -117,7 +118,8 @@ export const manifest = {
   { kind: "section", id: "sec_yxau1k", children: [
     { kind: "screen", id: "scr_aighdn" },
     { kind: "screen", id: "scr_8y5msf" },
-    { kind: "screen", id: "scr_4ywdot" }]
+    { kind: "screen", id: "scr_4ywdot" },
+    { kind: "screen", id: "scr_cqv7t2" }]
   },
   { kind: "section", id: "sec_9k7w1n", children: [
     { kind: "screen", id: "scr_rryy0h" },

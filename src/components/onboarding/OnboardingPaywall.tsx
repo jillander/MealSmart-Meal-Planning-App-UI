@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import {
   ArrowRightIcon,
   CheckIcon,
+  ChevronDownIcon,
   CreditCardIcon,
   SparklesIcon,
   LockIcon } from
@@ -22,6 +23,23 @@ interface OnboardingPaywallProps {
 
 const plans = subscriptionPlans;
 
+/** Basic is a real, usable tier — not a locked shell. */
+const basicIncluded = [
+'The plan and daily targets you just built',
+'3 fridge scans and recipe matches a month',
+'Manual meal logging and a 7-day history',
+'A starter set of recipes'];
+
+
+const plusOnly = [
+'Unlimited scanning and recipe matching',
+'Photo calorie logging for meals you have eaten',
+'Targets that adapt as your weight changes',
+'Weekly meal planning and automatic shopping lists',
+'The full recipe library and filters',
+'Full progress history and your projected goal date'];
+
+
 export function OnboardingPaywall({
   goalLabel,
   calorieGoal,
@@ -32,6 +50,7 @@ export function OnboardingPaywall({
   onSkip
 }: OnboardingPaywallProps) {
   const [selected, setSelected] = useState<PlanId>('annual');
+  const [showBasicDetail, setShowBasicDetail] = useState(false);
   const perks = [
   `Hit ${proteinGoal}g protein and ${calorieGoal.toLocaleString()} cal every day`,
   ...(goalWeight && projectedDate ? [`Reach ${goalWeight} kg by ${projectedDate}`] : []),
@@ -118,6 +137,44 @@ export function OnboardingPaywall({
           
           Continue with basic plan
         </button>
+        <button
+          type="button"
+          onClick={() => setShowBasicDetail((open) => !open)}
+          aria-expanded={showBasicDetail}
+          className="mt-1.5 flex w-full items-center justify-center gap-1 text-xs font-semibold text-[#8A948F] hover:text-[#1A1A1A]">
+          
+          What&rsquo;s in the basic plan?
+          <ChevronDownIcon
+            size={13}
+            className={`transition-transform ${showBasicDetail ? 'rotate-180' : ''}`} />
+          
+        </button>
+        {showBasicDetail &&
+        <div className="mt-3 rounded-2xl border border-[#E1E6E3] bg-white p-4">
+            <p className="text-xs font-extrabold uppercase tracking-wide text-[#2F7D34]">
+              Basic keeps
+            </p>
+            <ul className="mt-2 space-y-1.5">
+              {basicIncluded.map((item) =>
+            <li key={item} className="flex gap-2 text-[13px] leading-snug text-[#3C463F]">
+                  <CheckIcon size={14} className="mt-0.5 shrink-0 text-[#4CAF50]" />
+                  {item}
+                </li>
+            )}
+            </ul>
+            <p className="mt-4 text-xs font-extrabold uppercase tracking-wide text-[#94A3B8]">
+              Plus unlocks
+            </p>
+            <ul className="mt-2 space-y-1.5">
+              {plusOnly.map((item) =>
+            <li key={item} className="flex gap-2 text-[13px] leading-snug text-[#68736D]">
+                  <LockIcon size={13} className="mt-0.5 shrink-0 text-[#A7AFA9]" />
+                  {item}
+                </li>
+            )}
+            </ul>
+          </div>
+        }
         <p className="mt-2 flex flex-wrap items-center justify-center gap-x-1.5 gap-y-0.5 text-center text-[10px] leading-relaxed text-[#8A948F]">
           <LockIcon size={11} /> Secure payment <span>· Restore purchase</span> <span>· No free trial</span>
         </p>

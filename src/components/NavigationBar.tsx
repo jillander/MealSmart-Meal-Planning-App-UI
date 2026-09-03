@@ -105,6 +105,25 @@ export const NavigationBar: React.FC<NavigationBarProps> = ({
                 </button>
                 <button
                 onClick={() => {
+                  navigateTo('snap-meal');
+                  setShowPlusOptions(false);
+                }}
+                className="w-full px-4 py-4 flex items-center text-left hover:bg-gray-50">
+                
+                  <div className="w-10 h-10 rounded-full bg-[#1A1A1A] flex items-center justify-center mr-3">
+                    <CameraIcon size={18} className="text-white" />
+                  </div>
+                  <div>
+                    <p className="text-sm font-medium text-[#1A1A1A]">
+                      Snap a meal
+                    </p>
+                    <p className="text-xs text-[#757575]">
+                      Log calories from a photo
+                    </p>
+                  </div>
+                </button>
+                <button
+                onClick={() => {
                   navigateTo('shopping-list');
                   setShowPlusOptions(false);
                 }}
