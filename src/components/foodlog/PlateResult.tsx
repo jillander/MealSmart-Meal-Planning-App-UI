@@ -10,6 +10,7 @@ import {
 'lucide-react';
 import type { DetectedFood, MealSlot, PlateAnalysis } from '../../types/foodLog';
 import { totalMacros } from '../../types/foodLog';
+import { AddFoodSheet } from './AddFoodSheet';
 import { haptic } from '../../lib/haptics';
 
 interface PlateResultProps {
@@ -45,6 +46,8 @@ export function PlateResult({
 }: PlateResultProps) {
   const [items, setItems] = useState<DetectedFood[]>(analysis.items);
   const [name, setName] = useState(analysis.dishName);
+  const [showAddFood, setShowAddFood] = useState(false);
+  const [draft, setDraft] = useState<Record<string, string>>({});
   const totals = totalMacros(items);
   const macroGrams = totals.protein + totals.carbs + totals.fat;
 
@@ -53,10 +56,35 @@ export function PlateResult({
     setItems((current) =>
     current.map((item) =>
     item.id === id ?
-    { ...item, quantity: Math.max(0.5, Math.round((item.quantity + delta) * 2) / 2) } :
+    { ...item, quantity: clampQuantity(item.quantity + delta) } :
     item
     )
     );
+  };
+
+  /**
+   * Typed amounts are held as raw text while editing so a half-finished
+   * value like "1." isn't snapped away mid-keystroke, then committed on blur.
+   */
+  const commitQuantity = (id: string) => {
+    const raw = draft[id];
+    setDraft((current) => {
+      const next = { ...current };
+      delete next[id];
+      return next;
+    });
+    if (raw === undefined) return;
+    const parsed = Number(raw);
+    if (!Number.isFinite(parsed) || raw.trim() === '') return;
+    setItems((current) =>
+    current.map((item) =>
+    item.id === id ? { ...item, quantity: clampQuantity(parsed) } : item
+    )
+    );
+  };
+
+  const addItem = (item: DetectedFood) => {
+    setItems((current) => [...current, item]);
   };
 
   const remove = (id: string) => {
@@ -88,7 +116,7 @@ export function PlateResult({
           <RotateCcwIcon size={14} /> Retake
         </button>
         <span className="absolute bottom-4 left-5 rounded-full bg-white/95 px-3 py-1.5 text-[11px] font-extrabold uppercase tracking-wide text-[#2F7D34]">
-          {items.length} {items.length === 1 ? 'food' : 'foods'} found
+          {items.length} {items.length === 1 ? 'item' : 'items'}
         </span>
       </div>
 
@@ -196,9 +224,22 @@ export function PlateResult({
                   
                     <MinusIcon size={14} />
                   </button>
-                  <span className="w-9 text-center text-[13px] font-bold text-[#1A1A1A]">
-                    {item.quantity}
-                  </span>
+                  <input
+                  value={draft[item.id] ?? String(item.quantity)}
+                  onChange={(event) =>
+                  setDraft((current) => ({
+                    ...current,
+                    [item.id]: event.target.value.replace(/[^\d.]/g, '')
+                  }))
+                  }
+                  onBlur={() => commitQuantity(item.id)}
+                  onKeyDown={(event) => {
+                    if (event.key === 'Enter') event.currentTarget.blur();
+                  }}
+                  inputMode="decimal"
+                  aria-label={`Portions of ${item.name}`}
+                  className="w-11 rounded-lg border border-transparent bg-[#F4F6F5] py-1 text-center text-[13px] font-bold text-[#1A1A1A] outline-none transition-colors focus:border-[#1A1A1A] focus:bg-white" />
+                
                   <button
                   type="button"
                   onClick={() => setQuantity(item.id, 0.5)}
@@ -224,6 +265,14 @@ export function PlateResult({
               </button>
             </div>
           }
+
+          <button
+            type="button"
+            onClick={() => setShowAddFood(true)}
+            className="flex w-full items-center justify-center gap-2 rounded-2xl border-2 border-dashed border-[#CFD6D2] py-4 text-sm font-bold text-[#1A1A1A] transition-colors hover:border-[#1A1A1A] hover:bg-white">
+            
+            <PlusIcon size={16} strokeWidth={2.5} /> Add something we missed
+          </button>
         </div>
 
         {/* Meal slot */}
@@ -265,6 +314,15 @@ export function PlateResult({
           </button>
         </div>
       </div>
+
+      {showAddFood &&
+      <AddFoodSheet onClose={() => setShowAddFood(false)} onAdd={addItem} />
+      }
     </section>);
 
+}
+
+/** Portions stay positive and land on clean half steps. */
+function clampQuantity(value: number): number {
+  return Math.min(20, Math.max(0.5, Math.round(value * 2) / 2));
 }

@@ -7,6 +7,7 @@ import {
   ScanLineIcon } from
 'lucide-react';
 import { PlateAnalyzing } from './PlateAnalyzing';
+import { PlateFailure } from './PlateFailure';
 import { PlateResult } from './PlateResult';
 import { getPlateAnalysis } from '../../data/plateAnalyses';
 import type { DetectedFood, MealSlot, PlateAnalysis } from '../../types/foodLog';
@@ -19,9 +20,11 @@ interface SnapMealScreenProps {
   /** Preselected slot when opened from a meal section. */
   initialMealSlot?: MealSlot;
   onLogged: (summary: string) => void;
+  /** Preview hook: makes the next read come back empty. */
+  startFailed?: boolean;
 }
 
-type Stage = 'capture' | 'analyzing' | 'result';
+type Stage = 'capture' | 'analyzing' | 'result' | 'failed';
 
 const tips = [
 'Fit the whole plate in frame',
@@ -33,12 +36,14 @@ const tips = [
 export const SnapMealScreen: React.FC<SnapMealScreenProps> = ({
   navigateTo,
   initialMealSlot,
-  onLogged
+  onLogged,
+  startFailed = false
 }) => {
   const { logPhotoMeal } = useMealPlan();
-  const [stage, setStage] = useState<Stage>('capture');
+  const [stage, setStage] = useState<Stage>(startFailed ? 'failed' : 'capture');
   const [attempt, setAttempt] = useState(0);
-  const [analysis, setAnalysis] = useState<PlateAnalysis | null>(null);
+  const [failures, setFailures] = useState(startFailed ? 1 : 0);
+  const [analysis, setAnalysis] = useState<PlateAnalysis>(() => getPlateAnalysis(0));
   const [mealSlot, setMealSlot] = useState<MealSlot>(initialMealSlot ?? suggestSlot());
   const fileInput = useRef<HTMLInputElement>(null);
   const objectUrl = useRef<string>('');
@@ -51,6 +56,13 @@ export const SnapMealScreen: React.FC<SnapMealScreenProps> = ({
     setStage('analyzing');
   };
 
+  /** Records a read that came back empty so the failure copy can escalate. */
+  const handleFailedRead = () => {
+    setFailures((count) => count + 1);
+    haptic('light');
+    setStage('failed');
+  };
+
   const handleFile = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (!file) return;
@@ -60,7 +72,6 @@ export const SnapMealScreen: React.FC<SnapMealScreenProps> = ({
   };
 
   const handleConfirm = (name: string, items: DetectedFood[]) => {
-    if (!analysis) return;
     const totals = totalMacros(items);
     haptic('selection');
     logPhotoMeal(
@@ -79,11 +90,40 @@ export const SnapMealScreen: React.FC<SnapMealScreenProps> = ({
     navigateTo('home');
   };
 
-  if (stage === 'analyzing' && analysis) {
-    return <PlateAnalyzing image={analysis.image} onDone={() => setStage('result')} />;
+  if (stage === 'analyzing') {
+    return (
+      <PlateAnalyzing
+        image={analysis.image}
+        onDone={() =>
+        // Nothing recognised on the plate means there is nothing to log.
+        analysis.items.length === 0 ? handleFailedRead() : setStage('result')
+        } />);
+
+
   }
 
-  if (stage === 'result' && analysis) {
+  if (stage === 'failed') {
+    return (
+      <>
+        <PlateFailure
+          image={analysis.image}
+          failures={failures}
+          onRetake={() => setStage('capture')}
+          onPickFromLibrary={() => fileInput.current?.click()}
+          onCancel={() => navigateTo('home')} />
+        
+        <input
+          ref={fileInput}
+          type="file"
+          accept="image/*"
+          onChange={handleFile}
+          className="hidden" />
+        
+      </>);
+
+  }
+
+  if (stage === 'result') {
     return (
       <PlateResult
         analysis={analysis}

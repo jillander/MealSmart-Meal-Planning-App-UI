@@ -133,6 +133,7 @@ export function App() {
           <SnapMealScreen
             navigateTo={navigateTo}
             initialMealSlot={snapMealSlot ?? undefined}
+            startFailed={Boolean(screenInit.snapMealFailed)}
             onLogged={(summary) => {
               setLogToast(summary);
               window.setTimeout(() => setLogToast(''), 2600);
