@@ -448,30 +448,20 @@ function WelcomeStep({ onStart, onSignIn }: {onStart: () => void;onSignIn: () =>
       <button type="button" onClick={onStart} className="mt-8 flex h-14 w-full items-center justify-center rounded-2xl bg-[#1A1A1A] text-base font-bold text-white shadow-[0_5px_0_#080808] transition-transform active:translate-y-0.5 active:shadow-[0_3px_0_#080808]">
         Build my plan <ArrowRightIcon className="ml-2" size={19} />
       </button>
-      <div className="mt-4 grid grid-cols-2 gap-3">
-        <button
-          type="button"
-          onClick={() => setAuthMode('signup')}
-          className="flex items-center justify-center rounded-2xl border-2 border-[#1A1A1A] bg-white py-3.5 text-[15px] font-bold text-[#1A1A1A] transition-colors hover:bg-[#F3F6F3]">
-          
-          Sign up
-        </button>
+      <p className="mt-5 text-center text-sm text-[#68736D]">
+        Already have an account?{' '}
         <button
           type="button"
           onClick={() => setAuthMode('signin')}
-          className="flex items-center justify-center rounded-2xl border-2 border-[#DCE4DE] bg-white py-3.5 text-[15px] font-bold text-[#1A1A1A] transition-colors hover:bg-[#F3F6F3]">
+          className="font-semibold text-[#1A1A1A] underline underline-offset-4">
           
-          Sign in
+          Log in
         </button>
-      </div>
-      <p className="mt-4 text-center text-xs leading-relaxed text-[#8A948F]">
-        Signing up skips the questions — you can build your plan any time.
       </p>
 
       <AuthModal
         isOpen={authMode !== null}
-        mode={authMode ?? 'signin'}
-        onModeChange={setAuthMode}
+        mode="signin"
         onClose={() => setAuthMode(null)}
         onSuccess={() => {
           setAuthMode(null);
