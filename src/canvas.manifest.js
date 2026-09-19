@@ -5,20 +5,28 @@ export const manifest = {
     scr_os1b6n: { name: "Barriers", route: "/", state: { "onboardingStep": 2 }, position: { "x": 4360, "y": 220 } },
     scr_jv0h3w: { name: "Validation", route: "/", state: { "onboardingStep": 3 }, position: { "x": 5760, "y": 220 } },
     scr_3pm3v6: { name: "Scan & Discover", route: "/", state: { "onboardingStep": 4 }, position: { "x": 2960, "y": 220 } },
-    scr_2n1oo4: { name: "Personal details", route: "/", state: { "onboardingStep": 5 }, position: { "x": 7160, "y": 220 } },
-    scr_9oaejt: { name: "Food preferences", route: "/", state: { "onboardingStep": 6 }, position: { "x": 8560, "y": 220 } },
-    scr_jg51c5: { name: "Sustainable pace", route: "/", state: { "onboardingStep": 7 }, position: { "x": 9960, "y": 220 } },
-    scr_tk4o2m: { name: "Progress celebration", route: "/", state: { "onboardingStep": 8 }, position: { "x": 11360, "y": 220 } },
-    scr_ui4nqw: { name: "Building your plan", route: "/", state: { "onboardingStep": 9 }, position: { "x": 16960, "y": 220 } },
-    scr_talzpj: { name: "Your starting plan", route: "/", state: { "onboardingStep": 10 }, position: { "x": 12760, "y": 220 } },
-    scr_bhz42l: { name: "Save your plan", route: "/", state: { "onboardingStep": 11 }, position: { "x": 15560, "y": 220 } },
-    scr_h9y00p: { name: "First win", route: "/", state: { "onboardingStep": 12 }, position: { "x": 14160, "y": 220 } },
-    scr_ykmcxs: { name: "Recipe activation", route: "/", state: { "onboardingStep": 13 }, position: { "x": 160, "y": 2200 } },
-    scr_payq3r: { name: "Membership", route: "/", state: { "onboardingStep": 14 }, position: { "x": 160, "y": 14080 } },
-    scr_h680pc: { name: "Plus activated", route: "/", state: { "onboardingStep": 15 }, position: { "x": 4360, "y": 14080 } },
-    scr_kw56q7: { name: "Stay on track", route: "/", state: { "onboardingStep": 16 }, position: { "x": 2960, "y": 12100 } },
+    scr_2n1oo4: { name: "Details · Which applies", route: "/", state: { "onboardingStep": 5, "detailsCard": "profile" }, position: { "x": 7160, "y": 220 } },
+    scr_mn47az: { name: "Details · Age", route: "/", state: { "onboardingStep": 5, "detailsCard": "age" }, position: { "x": 18360, "y": 220 } },
+    scr_rpfldb: { name: "Details · Height", route: "/", state: { "onboardingStep": 5, "detailsCard": "height" }, position: { "x": 19760, "y": 220 } },
+    scr_699koe: { name: "Details · Weight", route: "/", state: { "onboardingStep": 5, "detailsCard": "weight" }, position: { "x": 21160, "y": 220 } },
+    scr_08bs2m: { name: "Details · Goal weight", route: "/", state: { "onboardingStep": 5, "detailsCard": "goal" }, position: { "x": 22560, "y": 220 } },
+    scr_wc4urx: { name: "Details · Activity", route: "/", state: { "onboardingStep": 5, "detailsCard": "activity" }, position: { "x": 23960, "y": 220 } },
+    scr_jg51c5: { name: "Sustainable pace", route: "/", state: { "onboardingStep": 6 }, position: { "x": 9960, "y": 220 } },
+    scr_bbhg8k: { name: "Realistic target", route: "/", state: { "onboardingStep": 7 }, position: { "x": 25360, "y": 220 } },
+    scr_9oaejt: { name: "Food preferences", route: "/", state: { "onboardingStep": 8 }, position: { "x": 8560, "y": 220 } },
+    scr_tk4o2m: { name: "Thank you", route: "/", state: { "onboardingStep": 9 }, position: { "x": 11360, "y": 220 } },
+    scr_ui4nqw: { name: "Building your plan", route: "/", state: { "onboardingStep": 10 }, position: { "x": 16960, "y": 220 } },
+    scr_talzpj: { name: "Your starting plan", route: "/", state: { "onboardingStep": 11 }, position: { "x": 12760, "y": 220 } },
+    scr_bhz42l: { name: "Save your plan", route: "/", state: { "onboardingStep": 12 }, position: { "x": 15560, "y": 220 } },
+    scr_h9y00p: { name: "First win", route: "/", state: { "onboardingStep": 13 }, position: { "x": 14160, "y": 220 } },
+    scr_ykmcxs: { name: "Recipe activation", route: "/", state: { "onboardingStep": 14 }, position: { "x": 160, "y": 2200 } },
+    scr_payq3r: { name: "Membership", route: "/", state: { "onboardingStep": 15 }, position: { "x": 160, "y": 14080 } },
+    scr_h680pc: { name: "Plus activated", route: "/", state: { "onboardingStep": 16 }, position: { "x": 4360, "y": 14080 } },
+    scr_kw56q7: { name: "Stay on track", route: "/", state: { "onboardingStep": 17 }, position: { "x": 2960, "y": 12100 } },
     scr_mmwmly: { name: "Today / Nutrition", route: "/", state: { "currentScreen": "home", "activeTab": "nutrition" }, position: { "x": 160, "y": 4180 } },
     scr_rne8f4: { name: "Today / Health", route: "/", state: { "currentScreen": "home", "activeTab": "health" }, position: { "x": 1560, "y": 4180 } },
+    scr_n2ag9o: { name: "Launch offer (Day 1)", route: "/", state: { "currentScreen": "home", "launchOffer": true }, position: { "x": 160, "y": 27940 } },
+    scr_k14epz: { name: "Trial ended", route: "/", state: { "currentScreen": "home", "trialEnded": true }, position: { "x": 9960, "y": 14080 } },
     scr_cqv7t2: { name: "Snap a meal", route: "/", state: { "currentScreen": "snap-meal" }, position: { "x": 4360, "y": 6160 } },
     scr_20m18c: { name: "Snap a meal / Unreadable", route: "/", state: { "currentScreen": "snap-meal", "snapMealFailed": true }, position: { "x": 5760, "y": 6160 } },
     scr_aighdn: { name: "Ingredient capture / Fridge", route: "/", state: { "currentScreen": "ingredient-capture", "activeCaptureTab": "fridge" }, position: { "x": 160, "y": 6160 } },
@@ -78,20 +86,21 @@ export const manifest = {
     scr_uogki8: { name: "Osta 18 · Share recipe", route: "/", state: { "reference": "osta", "refIndex": 17 }, position: { "x": 1560, "y": 22000 } }
   },
   sections: {
-    sec_jxjl59: { name: "MealSmart Onboarding", x: 0, y: 0, width: 18320, height: 1180 },
+    sec_jxjl59: { name: "MealSmart Onboarding", x: 0, y: 0, width: 26720, height: 1180 },
     sec_isqocy: { name: "First Recipe Milestone", x: 0, y: 1980, width: 1520, height: 1180 },
     sec_yzsybl: { name: "Today / Daily Hub", x: 0, y: 3960, width: 2920, height: 1180 },
     sec_yxau1k: { name: "Ingredient Capture", x: 0, y: 5940, width: 7120, height: 1180 },
     sec_9k7w1n: { name: "Recipe Discovery", x: 0, y: 7920, width: 5720, height: 1180 },
     sec_5fg4pb: { name: "Meal Planning", x: 0, y: 9900, width: 5720, height: 1180 },
     sec_pcut5n: { name: "Explore & Progress", x: 0, y: 11880, width: 4320, height: 1180 },
-    sec_omtixb: { name: "Account", x: 0, y: 13860, width: 9920, height: 1180 },
+    sec_omtixb: { name: "Account", x: 0, y: 13860, width: 11320, height: 1180 },
     sec_5gt2ag: { name: "Yazio Onboarding Reference", x: 0, y: 15840, width: 22520, height: 1180 },
     sec_m9wvyz: { name: "Osta Onboarding", x: 0, y: 17820, width: 11320, height: 1180 },
     sec_905xjb: { name: "Osta Engagement & Social", x: 0, y: 19800, width: 11320, height: 1180 },
     sec_ndiz2u: { name: "Osta Main App", x: 0, y: 21780, width: 2920, height: 1180 },
     sec_ya8aub: { name: "Shopping List", x: 0, y: 23760, width: 2920, height: 1180 },
-    sec_f8s4ng: { name: "Brand & Store Assets", x: 0, y: 25740, width: 1520, height: 1180 }
+    sec_f8s4ng: { name: "Brand & Store Assets", x: 0, y: 25740, width: 1520, height: 1180 },
+    sec_2rxcho: { name: "Day 1 Engagement", x: 0, y: 27720, width: 1520, height: 1180 }
   },
   layers: [
   { kind: "section", id: "sec_jxjl59", children: [
@@ -107,7 +116,13 @@ export const manifest = {
     { kind: "screen", id: "scr_talzpj" },
     { kind: "screen", id: "scr_h9y00p" },
     { kind: "screen", id: "scr_bhz42l" },
-    { kind: "screen", id: "scr_ui4nqw" }]
+    { kind: "screen", id: "scr_ui4nqw" },
+    { kind: "screen", id: "scr_mn47az" },
+    { kind: "screen", id: "scr_rpfldb" },
+    { kind: "screen", id: "scr_699koe" },
+    { kind: "screen", id: "scr_08bs2m" },
+    { kind: "screen", id: "scr_wc4urx" },
+    { kind: "screen", id: "scr_bbhg8k" }]
   },
   { kind: "section", id: "sec_isqocy", children: [
     { kind: "screen", id: "scr_ykmcxs" }]
@@ -147,7 +162,8 @@ export const manifest = {
     { kind: "screen", id: "scr_h680pc" },
     { kind: "screen", id: "scr_x3hx5o" },
     { kind: "screen", id: "scr_too168" },
-    { kind: "screen", id: "scr_hhelkf" }]
+    { kind: "screen", id: "scr_hhelkf" },
+    { kind: "screen", id: "scr_k14epz" }]
   },
   { kind: "section", id: "sec_5gt2ag", children: [
     { kind: "screen", id: "scr_m0pefc" },
@@ -197,6 +213,9 @@ export const manifest = {
   },
   { kind: "section", id: "sec_f8s4ng", children: [
     { kind: "screen", id: "scr_aao1tn" }]
+  },
+  { kind: "section", id: "sec_2rxcho", children: [
+    { kind: "screen", id: "scr_n2ag9o" }]
   }]
 
 };

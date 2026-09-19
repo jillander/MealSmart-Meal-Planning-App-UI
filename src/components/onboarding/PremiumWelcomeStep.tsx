@@ -11,7 +11,7 @@ export function PremiumWelcomeStep({ goalLabel, proteinGoal, onStart }: PremiumW
   return (
     <section className="flex min-h-screen flex-col overflow-hidden bg-[#FAFBFA] px-5 pb-8 pt-8 text-center">
       <div className="mx-auto flex items-center gap-1.5 rounded-full bg-[#EDF8EF] px-3 py-1.5 text-xs font-extrabold uppercase tracking-[0.12em] text-[#2F7D34]">
-        <CheckCircle2Icon size={14} /> Cal Pal Plus activated
+        <CheckCircle2Icon size={14} /> Free trial started
       </div>
       <div className="relative mx-auto mt-5 w-full max-w-[350px] overflow-hidden rounded-[28px] border border-[#E1E6E3] bg-white p-2 shadow-[0_12px_30px_rgba(26,26,26,0.10)]">
         <img src="/54599839-0fe6-4ef4-b304-2f47ff5f3baf.jpg" alt="A Cal Pal meal plan with meals for the day" className="h-[245px] w-full rounded-[20px] object-cover object-top" />

@@ -22,6 +22,9 @@ import { LogoConceptsScreen } from './components/LogoConceptsScreen';
 import { AppStoreAssetsScreen } from './components/marketing/AppStoreAssetsScreen';
 import { ProfileScreen } from './components/ProfileScreen';
 import { SnapMealScreen } from './components/foodlog/SnapMealScreen';
+import { TrialEndedScreen } from './components/subscription/TrialEndedScreen';
+import { LaunchOfferScreen } from './components/subscription/LaunchOfferScreen';
+import { useSubscription } from './hooks/useSubscription';
 import { ToastNotification } from './components/ToastNotification';
 import type { MealSlot } from './types/foodLog';
 import { OnboardingFlow } from './components/onboarding/OnboardingFlow';
@@ -48,6 +51,15 @@ export function App() {
     () => screenInit.snapMealSlot as MealSlot | undefined ?? null
   );
   const [logToast, setLogToast] = useState('');
+  // A lapsed trial blocks the app until the user continues or ends their plan.
+  const { subscription, subscribe, declineAfterTrial } = useSubscription(
+    screenInit.trialEnded ? 'trialExpired' : 'none'
+  );
+  // Day 1 of the trial: the one-time discount. Shown once, then gone for good.
+  const [showLaunchOffer, setShowLaunchOffer] = useState(
+    () => Boolean(screenInit.launchOffer)
+  );
+
   const [showImportGuide, setShowImportGuide] = useState(false);
   const [categoryData, setCategoryData] = useState<{
     id: string;
@@ -105,6 +117,7 @@ export function App() {
         {!hasCompletedOnboarding ?
         <OnboardingFlow
           initialStep={screenInit.onboardingStep}
+          initialDetailCard={screenInit.detailsCard}
           onSignIn={() => {
             window.localStorage.setItem('cal-pal-onboarding-complete', 'true');
             setHasCompletedOnboarding(true);
@@ -243,6 +256,38 @@ export function App() {
             navigateTo={navigateTo}
             categoryId={categoryData.id}
             categoryLabel={categoryData.label} />
+
+          }
+
+          {showLaunchOffer &&
+          <LaunchOfferScreen
+            onClaim={() => {
+              subscribe('annual');
+              setShowLaunchOffer(false);
+              setLogToast('Launch discount applied');
+              window.setTimeout(() => setLogToast(''), 2600);
+            }}
+            onDismiss={() => setShowLaunchOffer(false)}
+            onRestore={() => {
+              setLogToast('Checking for previous purchases');
+              window.setTimeout(() => setLogToast(''), 2600);
+            }} />
+
+          }
+
+          {subscription.status === 'expired' &&
+          <TrialEndedScreen
+            planId={subscription.planId}
+            onContinue={(planId) => {
+              subscribe(planId);
+              setLogToast('Cal Pal Plus is active');
+              window.setTimeout(() => setLogToast(''), 2600);
+            }}
+            onDecline={() => {
+              declineAfterTrial();
+              setLogToast('Your subscription has ended');
+              window.setTimeout(() => setLogToast(''), 2600);
+            }} />
 
           }
 

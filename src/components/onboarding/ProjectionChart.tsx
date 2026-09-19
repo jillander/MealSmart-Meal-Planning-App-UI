@@ -41,13 +41,28 @@ export function ProjectionChart({ weightKg, goalWeight, pace, goal }: Projection
 
   return (
     <div className="rounded-2xl border border-[#E1E6E3] bg-white p-4 text-left shadow-sm">
+      <style>{`
+        @keyframes cp-chart-draw { from { stroke-dashoffset: 600 } to { stroke-dashoffset: 0 } }
+        @keyframes cp-chart-area { from { opacity: 0 } to { opacity: 1 } }
+        @media (prefers-reduced-motion: reduce) {
+          [style*="cp-chart"] { animation: none !important; stroke-dashoffset: 0 !important; opacity: 1 !important; }
+        }
+      `}</style>
       <div className="flex items-start justify-between gap-3"><div><p className="text-sm font-bold text-[#1A1A1A]">Here’s where you’re headed</p><p className="mt-0.5 text-xs text-[#68736D]">A {pace} pace, built for consistency.</p></div><span className="flex shrink-0 items-center gap-1 rounded-full bg-[#EDF8EF] px-2.5 py-1 text-xs font-bold text-[#2F7D34]"><Icon size={13} /> {projection.weeks} wk</span></div>
       <div className="relative mt-3">
         <svg className="h-[116px] w-full overflow-visible" viewBox="0 0 292 122" role="img" aria-label={`Weight projection from ${current} kilograms to ${target} kilograms by ${projection.projectedDate}`}>
           <defs><linearGradient id="projection-fill" x1="0" x2="0" y1="0" y2="1"><stop stopColor="#4CAF50" stopOpacity="0.25" /><stop offset="1" stopColor="#4CAF50" stopOpacity="0.02" /></linearGradient></defs>
           <path d="M 16 26 H 276" stroke="#C7CFCA" strokeDasharray="4 5" />
-          <path d={fillPath} fill="url(#projection-fill)" />
-          <path d={chartPath} fill="none" stroke="#4CAF50" strokeWidth="3.5" strokeLinecap="round" />
+          <path d={fillPath} fill="url(#projection-fill)" style={{ animation: 'cp-chart-area 700ms ease-out 600ms both' }} />
+          <path
+            d={chartPath}
+            fill="none"
+            stroke="#4CAF50"
+            strokeWidth="3.5"
+            strokeLinecap="round"
+            strokeDasharray="600"
+            style={{ animation: 'cp-chart-draw 1300ms cubic-bezier(0.22,1,0.36,1) 150ms both' }} />
+          
           <circle cx="16" cy={startY} r="4.5" fill="#1A1A1A" />
           <circle cx="276" cy={endY} r="11" fill="#4CAF50" opacity="0.14"><animate attributeName="r" values="8;13;8" dur="2.2s" repeatCount="indefinite" /></circle>
           <circle cx="276" cy={endY} r="5" fill="#4CAF50" />

@@ -16,7 +16,7 @@ import { CancelFlow } from './subscription/CancelFlow';
 import { ToastNotification } from './ToastNotification';
 import { getPlan, plusBenefits, subscriptionPlans } from '../data/subscriptionPlans';
 import type { PlanId } from '../data/subscriptionPlans';
-import { formatRenewalDate, useSubscription } from '../hooks/useSubscription';
+import { formatRenewalDate, TRIAL_DAYS, useSubscription } from '../hooks/useSubscription';
 import { haptic } from '../lib/haptics';
 
 const heroStats = [
@@ -35,7 +35,9 @@ export const SubscriptionScreen: React.FC<SubscriptionScreenProps> = ({
   navigateTo,
   startActive = false
 }) => {
-  const { subscription, subscribe, changePlan, cancel, resume } = useSubscription(startActive);
+  const { subscription, subscribe, changePlan, cancel, resume, pause, unpause } = useSubscription(
+    startActive ? 'active' : 'none'
+  );
   const [selected, setSelected] = useState<PlanId>(subscription.planId);
   const [showCancel, setShowCancel] = useState(false);
   const [toast, setToast] = useState('');
@@ -139,7 +141,9 @@ export const SubscriptionScreen: React.FC<SubscriptionScreenProps> = ({
               <div className="mt-4 flex items-center gap-2 rounded-xl bg-white/10 px-3.5 py-3">
                 <CalendarIcon size={16} className="shrink-0 text-white/70" />
                 <p className="text-xs leading-relaxed text-white/85">
-                  {subscription.cancelAtPeriodEnd ?
+                  {subscription.pausedUntil ?
+                `Paused — billing restarts on ${formatRenewalDate(subscription.pausedUntil)}.` :
+                subscription.cancelAtPeriodEnd ?
                 `Ends on ${formatRenewalDate(subscription.renewsOn)} — you keep Plus until then.` :
                 `Renews automatically on ${formatRenewalDate(subscription.renewsOn)}.`}
                 </p>
@@ -148,13 +152,14 @@ export const SubscriptionScreen: React.FC<SubscriptionScreenProps> = ({
 
           <div className="rounded-2xl border border-[#E1E6E3] bg-white p-5 shadow-sm">
               <span className="inline-flex rounded-full bg-[#F3F4F6] px-2.5 py-1 text-[10px] font-extrabold uppercase tracking-[0.08em] text-[#5B6660]">
-                Basic plan
+                No active plan
               </span>
               <h2 className="mt-3 text-[22px] font-bold leading-tight text-[#1A1A1A]">
                 Unlock everything Cal Pal can do
               </h2>
               <p className="mt-2 text-sm leading-relaxed text-[#68736D]">
-                You&rsquo;re on the free plan. Plus adds unlimited recipe matching and a plan that adapts as you go.
+                Start with {TRIAL_DAYS} free days. Cal Pal turns the ingredients you have into
+                recipes and keeps your targets moving with you.
               </p>
               <div className="mt-4 space-y-2">
                 {plusBenefits.map((benefit) =>
@@ -217,7 +222,8 @@ export const SubscriptionScreen: React.FC<SubscriptionScreenProps> = ({
             </button>
           }
           <p className="mt-3 flex flex-wrap items-center justify-center gap-x-1.5 text-center text-[10px] leading-relaxed text-[#8A948F]">
-            <LockIcon size={11} /> Secure payment <span>· Restore purchase</span> <span>· No free trial</span>
+            <LockIcon size={11} /> Secure payment <span>· Restore purchase</span>{' '}
+            <span>· {TRIAL_DAYS}-day free trial, cancel any time</span>
           </p>
         </section>
 
@@ -254,7 +260,18 @@ export const SubscriptionScreen: React.FC<SubscriptionScreenProps> = ({
               description="Managed through your app store account"
               onClick={() => showToast('Payment method is managed by your app store')} />
             
-              {subscription.cancelAtPeriodEnd ?
+              {subscription.pausedUntil ?
+            <ManageRow
+              label="Resume now"
+              description={`Paused until ${formatRenewalDate(subscription.pausedUntil)}`}
+              tone="positive"
+              isLast
+              onClick={() => {
+                unpause();
+                showToast('Your membership is active again');
+              }} /> :
+
+            subscription.cancelAtPeriodEnd ?
             <ManageRow
               label="Resume membership"
               description={`Keep Plus beyond ${formatRenewalDate(subscription.renewsOn)}`}
@@ -293,6 +310,11 @@ export const SubscriptionScreen: React.FC<SubscriptionScreenProps> = ({
         onAcceptOffer={() => {
           setShowCancel(false);
           showToast('50% off applied to your next term');
+        }}
+        onPause={(months) => {
+          pause(months);
+          setShowCancel(false);
+          showToast(`Membership paused for ${months} ${months === 1 ? 'month' : 'months'}`);
         }}
         onConfirmCancel={() => cancel()} />
 

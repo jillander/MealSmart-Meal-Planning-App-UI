@@ -8,8 +8,9 @@ import {
   LockIcon } from
 'lucide-react';
 import { CalPalMark } from './CalPalMark';
-import { subscriptionPlans } from '../../data/subscriptionPlans';
+import { getPlan, subscriptionPlans } from '../../data/subscriptionPlans';
 import type { PlanId } from '../../data/subscriptionPlans';
+import { TRIAL_DAYS } from '../../hooks/useSubscription';
 
 interface OnboardingPaywallProps {
   goalLabel: string;
@@ -17,22 +18,23 @@ interface OnboardingPaywallProps {
   proteinGoal: number;
   goalWeight: string | null;
   projectedDate: string | null;
-  onSubscribe: () => void;
+  /** Receives the term the user chose, so the follow-on offer can match it. */
+  onSubscribe: (planId: PlanId) => void;
   onSkip: () => void;
 }
 
 const plans = subscriptionPlans;
 
-/** Basic is a real, usable tier — not a locked shell. */
-const basicIncluded = [
-'The plan and daily targets you just built',
-'3 fridge scans and recipe matches a month',
-'Manual meal logging and a 7-day history',
-'A starter set of recipes'];
+/** How the free trial works, in the order the questions get asked. */
+const trialTerms = [
+'Full access to everything in Plus for 3 days',
+'Nothing is charged today',
+'Cancel any time before day 3 and you pay nothing',
+'We remind you the day before it ends'];
 
 
 const plusOnly = [
-'Unlimited scanning and recipe matching',
+'Fridge and receipt scans, up to 5 a day',
 'Photo calorie logging for meals you have eaten',
 'Targets that adapt as your weight changes',
 'Weekly meal planning and automatic shopping lists',
@@ -119,23 +121,23 @@ export function OnboardingPaywall({
       </div>
 
       <p className="mt-3 text-center text-xs font-semibold text-[#68736D]">
-        Cancel anytime · No commitment
+        Free for {TRIAL_DAYS} days · Cancel anytime
       </p>
 
       <div className="mt-4">
         <button
           type="button"
-          onClick={onSubscribe}
+          onClick={() => onSubscribe(selected)}
           className="flex h-14 w-full items-center justify-center rounded-2xl bg-[#1A1A1A] text-base font-bold text-white shadow-[0_4px_0_#080808] transition-all hover:bg-[#2A2A2A] active:translate-y-0.5 active:shadow-[0_2px_0_#080808]">
           
-          Start my Plus journey <ArrowRightIcon className="ml-2" size={19} />
+          Start my {TRIAL_DAYS}-day free trial <ArrowRightIcon className="ml-2" size={19} />
         </button>
         <button
           type="button"
           onClick={onSkip}
           className="mt-3 flex w-full items-center justify-center gap-1.5 py-1 text-sm font-semibold text-[#58655E] hover:text-[#1A1A1A]">
           
-          Continue with basic plan
+          Not right now
         </button>
         <button
           type="button"
@@ -143,7 +145,7 @@ export function OnboardingPaywall({
           aria-expanded={showBasicDetail}
           className="mt-1.5 flex w-full items-center justify-center gap-1 text-xs font-semibold text-[#8A948F] hover:text-[#1A1A1A]">
           
-          What&rsquo;s in the basic plan?
+          How does the free trial work?
           <ChevronDownIcon
             size={13}
             className={`transition-transform ${showBasicDetail ? 'rotate-180' : ''}`} />
@@ -152,10 +154,10 @@ export function OnboardingPaywall({
         {showBasicDetail &&
         <div className="mt-3 rounded-2xl border border-[#E1E6E3] bg-white p-4">
             <p className="text-xs font-extrabold uppercase tracking-wide text-[#2F7D34]">
-              Basic keeps
+              Your {TRIAL_DAYS} free days
             </p>
             <ul className="mt-2 space-y-1.5">
-              {basicIncluded.map((item) =>
+              {trialTerms.map((item) =>
             <li key={item} className="flex gap-2 text-[13px] leading-snug text-[#3C463F]">
                   <CheckIcon size={14} className="mt-0.5 shrink-0 text-[#4CAF50]" />
                   {item}
@@ -163,12 +165,12 @@ export function OnboardingPaywall({
             )}
             </ul>
             <p className="mt-4 text-xs font-extrabold uppercase tracking-wide text-[#94A3B8]">
-              Plus unlocks
+              What you get
             </p>
             <ul className="mt-2 space-y-1.5">
               {plusOnly.map((item) =>
             <li key={item} className="flex gap-2 text-[13px] leading-snug text-[#68736D]">
-                  <LockIcon size={13} className="mt-0.5 shrink-0 text-[#A7AFA9]" />
+                  <CheckIcon size={13} className="mt-0.5 shrink-0 text-[#A7AFA9]" />
                   {item}
                 </li>
             )}
@@ -176,7 +178,11 @@ export function OnboardingPaywall({
           </div>
         }
         <p className="mt-2 flex flex-wrap items-center justify-center gap-x-1.5 gap-y-0.5 text-center text-[10px] leading-relaxed text-[#8A948F]">
-          <LockIcon size={11} /> Secure payment <span>· Restore purchase</span> <span>· No free trial</span>
+          <LockIcon size={11} /> Secure payment <span>· Restore purchase</span>{' '}
+          <span>
+            · Free for {TRIAL_DAYS} days, then {getPlan(selected).price}{' '}
+            {getPlan(selected).billedAs.toLowerCase()}
+          </span>
         </p>
       </div>
     </section>);

@@ -72,7 +72,7 @@ export const storeDescription: DescriptionSection[] = [
 },
 {
   heading: 'CAL PAL PLUS',
-  body: 'Cal Pal is free to download with a limited number of scans and recipe matches each month. Cal Pal Plus unlocks unlimited scanning and matching, adaptive targets, the full recipe library, weekly planning, and progress tracking.\n\nPlus is available as 1-month, 3-month, and 12-month auto-renewing subscriptions. Payment is charged to your Apple Account at confirmation of purchase. Your subscription renews automatically unless auto-renew is turned off at least 24 hours before the end of the current period. You can manage or cancel your subscription in your Apple Account settings at any time.'
+  body: 'Cal Pal is free to download and starts with a 3-day free trial of Cal Pal Plus. Plus includes fridge and receipt scanning (up to 5 scans a day), recipe matching, photo calorie logging, adaptive targets, the full recipe library, weekly planning, and progress tracking.\n\nPlus is available as 1-month, 3-month, and 12-month auto-renewing subscriptions. Payment is charged to your Apple Account at confirmation of purchase. Your subscription renews automatically unless auto-renew is turned off at least 24 hours before the end of the current period. You can manage or cancel your subscription in your Apple Account settings at any time.'
 },
 {
   body: 'Open the fridge. Point the camera. Eat something good.'

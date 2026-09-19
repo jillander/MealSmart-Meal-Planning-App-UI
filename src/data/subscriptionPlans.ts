@@ -25,7 +25,7 @@ export const subscriptionPlans: SubscriptionPlan[] = [
   price: '$49.98',
   perMonth: '$4.16 / mo',
   billedAs: 'Billed yearly',
-  strikethrough: '$99.92',
+  strikethrough: '$239.76',
   badge: 'Best value',
   termMonths: 12
 },
@@ -40,8 +40,8 @@ export const subscriptionPlans: SubscriptionPlan[] = [
 {
   id: 'monthly',
   label: '1 month',
-  price: '$12.98',
-  perMonth: '$12.98 / mo',
+  price: '$19.98',
+  perMonth: '$19.98 / mo',
   billedAs: 'Billed monthly',
   termMonths: 1
 }];
@@ -52,7 +52,7 @@ export function getPlan(id: PlanId): SubscriptionPlan {
 }
 
 export const plusBenefits = [
-'Unlimited recipes from the ingredients you have',
+'Recipes from the ingredients you have, up to 5 scans a day',
 'Daily calorie and macro targets that adapt',
 'Weekly meal plans and shopping lists',
 'Progress tracking with your projected goal date'];

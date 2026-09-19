@@ -127,6 +127,72 @@ export const RecipeSuggestionScreen: React.FC<RecipeSuggestionScreenProps> = ({
       avatar:
       'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-1.2.1&auto=format&fit=crop&w=200&q=80'
     }
+  },
+  {
+    id: 'gen-4',
+    name: 'Miso Butter Spinach Udon',
+    image: "/3898cbaf-dbe4-4528-81a3-d3e51a7cbf57.jpg",
+
+    matchPercentage: 91,
+    prepTime: '20 min',
+    calories: 470,
+    protein: 24,
+    carbs: 58,
+    fat: 16,
+    missingIngredients: ['Miso Paste', 'Udon'],
+    cuisine: 'Asian',
+    dietaryTags: ['Vegetarian'],
+    difficulty: 'Easy',
+    inspiredBy: {
+      name: 'Noodle Lab',
+      handle: '@noodlelab',
+      avatar:
+      'https://images.unsplash.com/photo-1544005313-94ddf0286df2?ixlib=rb-1.2.1&auto=format&fit=crop&w=200&q=80'
+    }
+  },
+  {
+    id: 'gen-5',
+    name: 'Smoky Shakshuka with Charred Peppers',
+    image: "/efb37b4f-689a-48c2-ad09-1860e631d2e0.jpg",
+
+    matchPercentage: 88,
+    prepTime: '25 min',
+    calories: 340,
+    protein: 21,
+    carbs: 18,
+    fat: 20,
+    missingIngredients: ['Eggs', 'Smoked Paprika'],
+    cuisine: 'Mediterranean',
+    dietaryTags: ['Vegetarian', 'Low Carb', 'Gluten Free'],
+    difficulty: 'Medium',
+    inspiredBy: {
+      name: 'Skillet Diaries',
+      handle: '@skilletdiaries',
+      avatar:
+      'https://images.unsplash.com/photo-1524504388940-b1c1722653e1?ixlib=rb-1.2.1&auto=format&fit=crop&w=200&q=80'
+    }
+  },
+  {
+    id: 'gen-6',
+    name: 'Chipotle Chicken Tinga Tacos',
+    image: "/09117036-98dc-46ef-a221-27c50dd40fb4.jpg",
+
+    matchPercentage: 84,
+    prepTime: '35 min',
+    calories: 520,
+    protein: 41,
+    carbs: 44,
+    fat: 18,
+    missingIngredients: ['Tortillas', 'Chipotle'],
+    cuisine: 'Mexican',
+    dietaryTags: ['High Protein', 'Dairy Free'],
+    difficulty: 'Medium',
+    inspiredBy: {
+      name: 'Taqueria Home',
+      handle: '@taqueriahome',
+      avatar:
+      'https://images.unsplash.com/photo-1541216970279-affbfdd55aa8?ixlib=rb-1.2.1&auto=format&fit=crop&w=200&q=80'
+    }
   }]
   );
   useEffect(() => {
