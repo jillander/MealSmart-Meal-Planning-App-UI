@@ -64,6 +64,9 @@ interface MealPlanContextType {
     image: string;
     cookingTime: string;
     calories: number;
+    protein?: number;
+    carbs?: number;
+    fat?: number;
   },
   date: Date,
   mealType: 'breakfast' | 'lunch' | 'dinner' | 'snack')
@@ -341,6 +344,9 @@ export const MealPlanProvider: React.FC<MealPlanProviderProps> = ({
     image: string;
     cookingTime: string;
     calories: number;
+    protein?: number;
+    carbs?: number;
+    fat?: number;
   },
   date: Date,
   mealType: 'breakfast' | 'lunch' | 'dinner' | 'snack') =>
@@ -359,6 +365,9 @@ export const MealPlanProvider: React.FC<MealPlanProviderProps> = ({
       cookingTime: recipe.cookingTime,
       time: timeMap[mealType],
       image: recipe.image,
+      protein: recipe.protein,
+      carbs: recipe.carbs,
+      fat: recipe.fat,
       completed: false,
       date: date.toISOString().split('T')[0],
       progress: {

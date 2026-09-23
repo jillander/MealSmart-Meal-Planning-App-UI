@@ -40,6 +40,10 @@ export const manifest = {
     scr_3asd6x: { name: "Shopping list / Empty", route: "/", state: { "currentScreen": "shopping-list", "shoppingListEmpty": true }, position: { "x": 1560, "y": 23980 } },
     scr_x3hx5o: { name: "Notifications", route: "/", state: { "currentScreen": "notifications" }, position: { "x": 5760, "y": 14080 } },
     scr_j5k5sq: { name: "Discover", route: "/", state: { "currentScreen": "recipe-discovery" }, position: { "x": 160, "y": 12100 } },
+    scr_qdniv4: { name: "Discover / Search", route: "/", state: { "currentScreen": "recipe-discovery", "discoverView": "search" }, position: { "x": 160, "y": 29920 } },
+    scr_pd20ed: { name: "Discover / Results", route: "/", state: { "currentScreen": "recipe-discovery", "discoverView": "results" }, position: { "x": 2960, "y": 29920 } },
+    scr_id7y58: { name: "Discover / Filters", route: "/", state: { "currentScreen": "recipe-discovery", "discoverView": "filters" }, position: { "x": 1560, "y": 29920 } },
+    scr_lhl60p: { name: "Discover / No matches", route: "/", state: { "currentScreen": "recipe-discovery", "discoverView": "empty" }, position: { "x": 4360, "y": 29920 } },
     scr_sqvze9: { name: "Meal plan / Daily", route: "/", state: { "currentScreen": "meal-prep", "mealPlanView": "daily" }, position: { "x": 160, "y": 10120 } },
     scr_eyd9pk: { name: "Meal plan / Weekly", route: "/", state: { "currentScreen": "meal-prep", "mealPlanView": "weekly" }, position: { "x": 1560, "y": 10120 } },
     scr_mn6gio: { name: "Meal plan / Monthly", route: "/", state: { "currentScreen": "meal-prep", "mealPlanView": "monthly" }, position: { "x": 2960, "y": 10120 } },
@@ -100,7 +104,8 @@ export const manifest = {
     sec_ndiz2u: { name: "Osta Main App", x: 0, y: 21780, width: 2920, height: 1180 },
     sec_ya8aub: { name: "Shopping List", x: 0, y: 23760, width: 2920, height: 1180 },
     sec_f8s4ng: { name: "Brand & Store Assets", x: 0, y: 25740, width: 1520, height: 1180 },
-    sec_2rxcho: { name: "Day 1 Engagement", x: 0, y: 27720, width: 1520, height: 1180 }
+    sec_2rxcho: { name: "Day 1 Engagement", x: 0, y: 27720, width: 1520, height: 1180 },
+    sec_arkb5o: { name: "Discover Search & Filters", x: 0, y: 29700, width: 5720, height: 1180 }
   },
   layers: [
   { kind: "section", id: "sec_jxjl59", children: [
@@ -216,6 +221,12 @@ export const manifest = {
   },
   { kind: "section", id: "sec_2rxcho", children: [
     { kind: "screen", id: "scr_n2ag9o" }]
+  },
+  { kind: "section", id: "sec_arkb5o", children: [
+    { kind: "screen", id: "scr_qdniv4" },
+    { kind: "screen", id: "scr_id7y58" },
+    { kind: "screen", id: "scr_pd20ed" },
+    { kind: "screen", id: "scr_lhl60p" }]
   }]
 
 };

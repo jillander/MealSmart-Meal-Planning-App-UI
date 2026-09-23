@@ -4,6 +4,7 @@ import {
   ClockIcon,
   FlameIcon,
   FilterIcon,
+  SearchIcon,
   SparklesIcon,
   ShoppingBagIcon,
   ChefHatIcon,
@@ -19,32 +20,41 @@ import {
   PlusIcon } from
 'lucide-react';
 import { AddToMealPlanModal } from './AddToMealPlanModal';
+import { MacroChips } from './MacroChips';
 import { ToastNotification } from './ToastNotification';
 import { useMealPlan } from '../contexts/MealPlanContext';
 import { HubFilterSheet } from './discover/HubFilterSheet';
 import { HubActiveFilterBar } from './discover/HubActiveFilterBar';
+import { RecipeSearchScreen } from './discover/RecipeSearchScreen';
+import { SearchChips } from './discover/SearchChips';
 import {
   applyHubFilters,
   countActiveHubFilters,
+  dietaryOptions,
   emptyHubFilters } from
 '../utils/hubFilters';
 import type { HubFilters, HubRecipe } from '../utils/hubFilters';
+import {
+  applyHubSearch,
+  countIngredientMatches,
+  emptyHubSearch,
+  hasActiveSearch } from
+'../utils/hubSearch';
+import type { HubSearch } from '../utils/hubSearch';
+import {
+  allHubRecipes,
+  forYouRecipes,
+  pantryRecipes,
+  perfectMatchRecipes,
+  quickAndEasyRecipes,
+  trendingRecipes } from
+'../data/hubRecipes';
 interface RecipeRecommendationHubProps {
   navigateTo: (screen: string) => void;
+  /** Open straight onto search or results, for Screens previews. */
+  initialView?: 'idle' | 'search' | 'results' | 'filters' | 'empty';
 }
-interface Recipe {
-  id: string;
-  title: string;
-  image: string;
-  matchPercentage: number;
-  cookingTime: string;
-  calories: number;
-  difficulty: string;
-  trending?: boolean;
-  tags: string[];
-  saved: boolean;
-  liked: boolean;
-}
+type Recipe = HubRecipe;
 interface CollectionShortcut {
   id: string;
   label: string;
@@ -52,10 +62,27 @@ interface CollectionShortcut {
 }
 export const RecipeRecommendationHub: React.FC<
   RecipeRecommendationHubProps> =
-({ navigateTo }) => {
-  const [filters, setFilters] = useState<HubFilters>(emptyHubFilters);
-  const [draftFilters, setDraftFilters] = useState<HubFilters>(emptyHubFilters);
-  const [showFilters, setShowFilters] = useState(false);
+({ navigateTo, initialView = 'idle' }) => {
+  const demoFilters: HubFilters =
+  initialView === 'results' || initialView === 'filters' ?
+  { ...emptyHubFilters, meals: ['Dinner'] } :
+  initialView === 'empty' ?
+  { ...emptyHubFilters, maxTime: 15, dietary: ['Vegan'] } :
+  emptyHubFilters;
+  const demoSearch: HubSearch =
+  initialView === 'results' || initialView === 'filters' ?
+  { ingredients: ['Chicken', 'Pasta'], dishQueries: [] } :
+  initialView === 'empty' ?
+  { ingredients: ['Chicken', 'Tofu'], dishQueries: [] } :
+  initialView === 'search' ?
+  { ingredients: ['Chicken', 'Pasta'], dishQueries: [] } :
+  emptyHubSearch;
+
+  const [filters, setFilters] = useState<HubFilters>(demoFilters);
+  const [draftFilters, setDraftFilters] = useState<HubFilters>(demoFilters);
+  const [search, setSearch] = useState<HubSearch>(demoSearch);
+  const [showSearch, setShowSearch] = useState(initialView === 'search');
+  const [showFilters, setShowFilters] = useState(initialView === 'filters');
   const [selectedCollection, setSelectedCollection] = useState<string | null>(
     null
   );
@@ -111,245 +138,22 @@ export const RecipeRecommendationHub: React.FC<
     'https://images.unsplash.com/photo-1476718406336-bb5a9690ee2a?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80'
   }];
 
-  const dietaryFilters = [
-  'Vegetarian',
-  'Vegan',
-  'Gluten Free',
-  'Keto',
-  'Low Carb',
-  'High Protein'];
-
-  const forYouRecipes: Recipe[] = [
-  {
-    id: '1',
-    title: 'Mediterranean Bowl',
-    image:
-    'https://images.unsplash.com/photo-1512621776951-a57141f2eefd?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80',
-    matchPercentage: 95,
-    cookingTime: '25 min',
-    calories: 420,
-    difficulty: 'Medium',
-    tags: ['Vegetarian', 'Mediterranean'],
-    saved: false,
-    liked: false
-  },
-  {
-    id: '2',
-    title: 'Avocado Toast with Eggs',
-    image:
-    'https://images.unsplash.com/photo-1525351484163-7529414344d8?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80',
-    matchPercentage: 92,
-    cookingTime: '15 min',
-    calories: 350,
-    difficulty: 'Easy',
-    tags: ['Breakfast', 'High Protein'],
-    saved: false,
-    liked: false
-  },
-  {
-    id: '3',
-    title: 'Chicken Stir Fry',
-    image:
-    'https://images.unsplash.com/photo-1512058564366-18510be2db19?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80',
-    matchPercentage: 88,
-    cookingTime: '20 min',
-    calories: 480,
-    difficulty: 'Medium',
-    tags: ['High Protein', 'Asian'],
-    saved: false,
-    liked: false
-  },
-  {
-    id: '4',
-    title: 'Berry Smoothie Bowl',
-    image:
-    'https://images.unsplash.com/photo-1577805947697-89e18249d767?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80',
-    matchPercentage: 85,
-    cookingTime: '10 min',
-    calories: 320,
-    difficulty: 'Easy',
-    tags: ['Breakfast', 'Vegan'],
-    saved: false,
-    liked: false
-  }];
-
-  const perfectMatchRecipes: Recipe[] = [
-  {
-    id: '5',
-    title: 'Quinoa Salad Bowl',
-    image:
-    'https://images.unsplash.com/photo-1505253716362-afaea1d3d1af?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80',
-    matchPercentage: 98,
-    cookingTime: '30 min',
-    calories: 380,
-    difficulty: 'Easy',
-    tags: ['Vegetarian', 'Lunch'],
-    saved: false,
-    liked: false
-  },
-  {
-    id: '6',
-    title: 'Grilled Salmon',
-    image:
-    'https://images.unsplash.com/photo-1467003909585-2f8a72700288?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80',
-    matchPercentage: 94,
-    cookingTime: '25 min',
-    calories: 450,
-    difficulty: 'Medium',
-    tags: ['High Protein', 'Dinner'],
-    saved: false,
-    liked: false
-  },
-  {
-    id: '7',
-    title: 'Veggie Pasta',
-    image:
-    'https://images.unsplash.com/photo-1473093295043-cdd812d0e601?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80',
-    matchPercentage: 92,
-    cookingTime: '35 min',
-    calories: 520,
-    difficulty: 'Easy',
-    tags: ['Vegetarian', 'Italian'],
-    saved: false,
-    liked: false
-  }];
-
-  const quickAndEasyRecipes: Recipe[] = [
-  {
-    id: '8',
-    title: '5-Minute Breakfast Wrap',
-    image:
-    'https://images.unsplash.com/photo-1600335895229-6e75511892c8?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80',
-    matchPercentage: 82,
-    cookingTime: '5 min',
-    calories: 280,
-    difficulty: 'Easy',
-    tags: ['Breakfast', 'Quick'],
-    saved: false,
-    liked: false
-  },
-  {
-    id: '9',
-    title: 'Microwave Egg Bowl',
-    image:
-    'https://images.unsplash.com/photo-1510693206972-df098062cb71?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80',
-    matchPercentage: 78,
-    cookingTime: '8 min',
-    calories: 320,
-    difficulty: 'Easy',
-    tags: ['Breakfast', 'High Protein'],
-    saved: false,
-    liked: false
-  },
-  {
-    id: '10',
-    title: 'Quick Tuna Salad',
-    image:
-    'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80',
-    matchPercentage: 85,
-    cookingTime: '12 min',
-    calories: 350,
-    difficulty: 'Easy',
-    tags: ['Lunch', 'High Protein'],
-    saved: false,
-    liked: false
-  }];
-
-  const trendingRecipes: Recipe[] = [
-  {
-    id: '11',
-    title: 'Korean Bibimbap',
-    image:
-    'https://images.unsplash.com/photo-1590301157890-4810ed352733?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80',
-    matchPercentage: 76,
-    cookingTime: '40 min',
-    calories: 550,
-    difficulty: 'Medium',
-    trending: true,
-    tags: ['Asian', 'Dinner'],
-    saved: false,
-    liked: false
-  },
-  {
-    id: '12',
-    title: 'Acai Smoothie Bowl',
-    image:
-    'https://images.unsplash.com/photo-1590080874088-eec64895b423?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80',
-    matchPercentage: 80,
-    cookingTime: '15 min',
-    calories: 310,
-    difficulty: 'Easy',
-    trending: true,
-    tags: ['Breakfast', 'Vegan'],
-    saved: false,
-    liked: false
-  },
-  {
-    id: '13',
-    title: 'Cauliflower Tacos',
-    image:
-    'https://images.unsplash.com/photo-1565299585323-38d6b0865b47?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80',
-    matchPercentage: 72,
-    cookingTime: '30 min',
-    calories: 420,
-    difficulty: 'Medium',
-    trending: true,
-    tags: ['Vegetarian', 'Mexican'],
-    saved: false,
-    liked: false
-  }];
-
-  const pantryRecipes: Recipe[] = [
-  {
-    id: '14',
-    title: 'Pantry Pasta',
-    image:
-    'https://images.unsplash.com/photo-1563379926898-05f4575a45d8?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80',
-    matchPercentage: 100,
-    cookingTime: '20 min',
-    calories: 450,
-    difficulty: 'Easy',
-    tags: ['Italian', 'Dinner'],
-    saved: false,
-    liked: false
-  },
-  {
-    id: '15',
-    title: 'Bean & Rice Bowl',
-    image:
-    'https://images.unsplash.com/photo-1512621776951-a57141f2eefd?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80',
-    matchPercentage: 100,
-    cookingTime: '25 min',
-    calories: 380,
-    difficulty: 'Easy',
-    tags: ['Vegetarian', 'Lunch'],
-    saved: false,
-    liked: false
-  }];
-
-  // Every carousel draws from one pool, so filtering can search across all of them.
-  const allRecipes: HubRecipe[] = useMemo(
-    () =>
-    [
-    ...forYouRecipes,
-    ...perfectMatchRecipes,
-    ...quickAndEasyRecipes,
-    ...trendingRecipes,
-    ...pantryRecipes].
-    filter(
-      (recipe, index, list) => list.findIndex((entry) => entry.id === recipe.id) === index
-    ),
-    [forYouRecipes, perfectMatchRecipes, quickAndEasyRecipes, trendingRecipes, pantryRecipes]
-  );
+  // One shared vocabulary with the Filters sheet — the chips ARE the filter.
+  const dietaryFilters = dietaryOptions;
+  // Every carousel draws from one pool, so search and filters cover all of them.
+  const allRecipes = allHubRecipes;
   const activeFilterCount = countActiveHubFilters(filters);
+  const searchActive = hasActiveSearch(search);
+  /** Search AND filters — each constraint narrows the same list. */
   const filteredRecipes = useMemo(
-    () => applyHubFilters(allRecipes, filters),
-    [allRecipes, filters]
+    () => applyHubFilters(applyHubSearch(allRecipes, search), filters),
+    [allRecipes, search, filters]
   );
   const draftCount = useMemo(
-    () => applyHubFilters(allRecipes, draftFilters).length,
-    [allRecipes, draftFilters]
+    () => applyHubFilters(applyHubSearch(allRecipes, search), draftFilters).length,
+    [allRecipes, search, draftFilters]
   );
+  const showResults = activeFilterCount > 0 || searchActive;
   const toggleFilter = (filter: string) => {
     const next = {
       ...filters,
@@ -413,7 +217,10 @@ export const RecipeRecommendationHub: React.FC<
           title: selectedRecipeForPlan.title,
           image: selectedRecipeForPlan.image,
           cookingTime: selectedRecipeForPlan.cookingTime,
-          calories: selectedRecipeForPlan.calories
+          calories: selectedRecipeForPlan.calories,
+          protein: selectedRecipeForPlan.protein,
+          carbs: selectedRecipeForPlan.carbs,
+          fat: selectedRecipeForPlan.fat
         },
         date,
         mealType
@@ -466,11 +273,30 @@ export const RecipeRecommendationHub: React.FC<
             }
           </button>
         </div>
+
+        {/* Search — opens a dedicated screen so many ingredients can be added */}
+        <button
+          type="button"
+          onClick={() => setShowSearch(true)}
+          className="mt-4 flex h-11 w-full items-center gap-2.5 rounded-full bg-[#F3F4F6] px-4 text-left transition-colors hover:bg-[#EBEDEF]">
+          
+          <SearchIcon size={18} className="shrink-0 text-[#9CA3AF]" />
+          <span className="text-[15px] text-[#9CA3AF]">Search ingredients, recipes…</span>
+        </button>
+
+        <SearchChips
+          search={search}
+          meals={[]}
+          onSearchChange={setSearch}
+          onMealsChange={() => {}}
+          className="mt-3" />
+        
       </header>
 
       {/* Main Content - Scrollable */}
       <div className="flex-1 overflow-y-auto pb-20">
-        {/* Collection Shortcuts Grid */}
+        {/* Collection Shortcuts Grid — hidden once a search is running */}
+        {!showResults &&
         <section className="px-6 py-4 bg-white border-b border-gray-100">
           <div className="grid grid-cols-2 gap-3">
             {collections.map((collection) => {
@@ -501,8 +327,10 @@ export const RecipeRecommendationHub: React.FC<
             })}
           </div>
         </section>
+        }
 
-        {/* Quick Filters */}
+        {/* Quick dietary chips — same state as the Filters sheet */}
+        {!showResults &&
         <section className="px-6 py-3 bg-white sticky top-0 z-10 border-b border-gray-100">
           <div className="flex overflow-x-auto scrollbar-hide space-x-2 pb-1">
             {dietaryFilters.map((filter) =>
@@ -516,25 +344,40 @@ export const RecipeRecommendationHub: React.FC<
             )}
           </div>
         </section>
+        }
 
-        {/* Filtered Results — replaces the curated rails while filters are on */}
-        {activeFilterCount > 0 &&
+        {/* Results — search AND filters, replacing the curated shelves */}
+        {showResults &&
         <section className="px-6 py-5">
-            <div className="mb-3 flex items-center justify-between">
+            <div className="mb-3 flex items-center justify-between gap-3">
               <h2 className="text-lg font-bold text-[#1A1A1A]">
                 {filteredRecipes.length}{' '}
                 {filteredRecipes.length === 1 ? 'recipe' : 'recipes'}
+                {search.ingredients.length > 0 &&
+              <span className="ml-2 text-sm font-medium text-[#64748B]">
+                    {search.ingredients.join(' · ')}
+                  </span>
+              }
               </h2>
               <button
               onClick={() => {
                 setFilters(emptyHubFilters);
                 setDraftFilters(emptyHubFilters);
+                setSearch(emptyHubSearch);
               }}
-              className="text-sm font-semibold text-[#757575] transition-colors hover:text-[#1A1A1A]">
+              className="shrink-0 text-sm font-semibold text-[#757575] transition-colors hover:text-[#1A1A1A]">
               
                 Clear all
               </button>
             </div>
+
+            <SearchChips
+            search={search}
+            meals={[]}
+            onSearchChange={setSearch}
+            onMealsChange={() => {}}
+            className="mb-3" />
+          
 
             <HubActiveFilterBar
             filters={filters}
@@ -547,41 +390,66 @@ export const RecipeRecommendationHub: React.FC<
             {filteredRecipes.length === 0 ?
           <div className="flex flex-col items-center py-12 text-center">
                 <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-gray-100 text-3xl">
-                  🍳
+                  🍽️
                 </div>
                 <h3 className="mt-5 text-lg font-bold text-[#1A1A1A]">
-                  No recipes match
+                  {search.ingredients.length > 0 ?
+              'No recipes with these ingredients' :
+              'No recipes match'}
                 </h3>
                 <p className="mt-2 max-w-[280px] text-sm leading-relaxed text-[#64748B]">
-                  Dietary needs and time limits narrow things down fastest — try
-                  loosening one.
+                  Try removing a chip or loosening filters.
                 </p>
+                <div className="mt-6 flex w-full max-w-[280px] flex-col gap-2.5">
+                  {search.ingredients.length > 0 &&
+              <button
+                type="button"
+                onClick={() => setSearch({ ...search, ingredients: [] })}
+                className="flex h-12 items-center justify-center rounded-xl bg-[#1A1A1A] text-sm font-bold text-white transition-colors hover:bg-[#2A2A2A]">
+                
+                      Clear ingredients
+                    </button>
+              }
+                  <button
+                type="button"
+                onClick={() => {
+                  setSearch(emptyHubSearch);
+                  setFilters(emptyHubFilters);
+                  setDraftFilters(emptyHubFilters);
+                }}
+                className="flex h-12 items-center justify-center rounded-xl border border-[#DDE2DF] bg-white text-sm font-bold text-[#1A1A1A] transition-colors hover:bg-[#FAFBFA]">
+                
+                    Reset all
+                  </button>
+                </div>
               </div> :
 
           <div className="grid grid-cols-2 gap-3">
-                {filteredRecipes.map((recipe) =>
-            <div
-              key={recipe.id}
-              className="bg-white rounded-2xl shadow-sm overflow-hidden">
-              
+                {filteredRecipes.map((recipe) => {
+              const matches = countIngredientMatches(recipe, search.ingredients);
+              return (
+                <div
+                  key={recipe.id}
+                  className="bg-white rounded-2xl shadow-sm overflow-hidden">
+                  
                     <div
-                className="relative cursor-pointer"
-                onClick={() => navigateTo('recipe-detail')}>
-                
+                    className="relative cursor-pointer"
+                    onClick={() => navigateTo('recipe-detail')}>
+                    
                       <img
-                  src={recipe.image}
-                  alt={recipe.title}
-                  className="w-full h-[120px] object-cover" />
-                
+                      src={recipe.image}
+                      alt={recipe.title}
+                      className="w-full h-[120px] object-cover" />
+                    
                       <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent" />
                       <button
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    handleAddToMealPlan(recipe);
-                  }}
-                  className="absolute top-2 right-2 w-8 h-8 bg-white/90 backdrop-blur-sm rounded-full flex items-center justify-center shadow-md hover:bg-white hover:scale-110 transition-all duration-200"
-                  aria-label={`Add ${recipe.title} to meal plan`}>
-                  
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleAddToMealPlan(recipe);
+                      }}
+                      className="absolute top-2 right-2 w-8 h-8 bg-white/90 backdrop-blur-sm rounded-full flex items-center justify-center shadow-md hover:bg-white hover:scale-110 transition-all duration-200"
+                      aria-label={`Add ${recipe.title} to meal plan`}>
+                      
                         <PlusIcon size={16} className="text-[#1A1A1A]" />
                       </button>
                       <span className="absolute bottom-2 left-2.5 text-[10px] font-semibold text-white bg-[#4CAF50]/80 backdrop-blur-sm px-2 py-0.5 rounded-full">
@@ -589,9 +457,14 @@ export const RecipeRecommendationHub: React.FC<
                       </span>
                     </div>
                     <div className="p-3">
-                      <h3 className="font-semibold text-[#1A1A1A] text-sm mb-1.5 line-clamp-1">
+                      <h3 className="font-semibold text-[#1A1A1A] text-sm mb-1 line-clamp-1">
                         {recipe.title}
                       </h3>
+                      {matches > 0 &&
+                    <p className="mb-1 text-[11px] font-semibold text-[#4CAF50]">
+                          {matches} ingredient{matches === 1 ? '' : 's'} match
+                        </p>
+                    }
                       <div className="flex items-center justify-between text-xs text-[#64748B]">
                         <div className="flex items-center">
                           <ClockIcon size={11} className="mr-1" />
@@ -599,16 +472,22 @@ export const RecipeRecommendationHub: React.FC<
                         </div>
                         <span>{recipe.calories} cal</span>
                       </div>
+                      <MacroChips
+                      calories={recipe.calories}
+                      protein={recipe.protein}
+                      className="mt-2" />
+                    
                     </div>
-                  </div>
-            )}
+                  </div>);
+
+            })}
               </div>
           }
           </section>
         }
 
-        {/* Curated rails — hidden while a filter is narrowing results */}
-        {activeFilterCount === 0 &&
+        {/* Curated rails — hidden while search or filters are narrowing */}
+        {!showResults &&
         <>
         {/* Your Generated Recipes */}
         {generatedRecipes && generatedRecipes.length > 0 &&
@@ -680,6 +559,13 @@ export const RecipeRecommendationHub: React.FC<
                         </div>
                         <span>{recipe.calories} cal</span>
                       </div>
+                      <MacroChips
+                      calories={recipe.calories}
+                      protein={recipe.protein}
+                      carbs={recipe.carbs}
+                      fat={recipe.fat}
+                      className="mt-2" />
+                    
                     </div>
                   </div>
                 )}
@@ -743,6 +629,11 @@ export const RecipeRecommendationHub: React.FC<
                       </div>
                       <span>{recipe.calories} cal</span>
                     </div>
+                    <MacroChips
+                      calories={recipe.calories}
+                      protein={recipe.protein}
+                      className="mt-2" />
+                    
                   </div>
                 </div>
                 )}
@@ -809,6 +700,11 @@ export const RecipeRecommendationHub: React.FC<
                       </div>
                       <span>{recipe.calories} cal</span>
                     </div>
+                    <MacroChips
+                      calories={recipe.calories}
+                      protein={recipe.protein}
+                      className="mt-2" />
+                    
                   </div>
                 </div>
                 )}
@@ -874,6 +770,11 @@ export const RecipeRecommendationHub: React.FC<
                       </div>
                       <span>{recipe.calories} cal</span>
                     </div>
+                    <MacroChips
+                      calories={recipe.calories}
+                      protein={recipe.protein}
+                      className="mt-2" />
+                    
                   </div>
                 </div>
                 )}
@@ -938,6 +839,11 @@ export const RecipeRecommendationHub: React.FC<
                       </div>
                       <span>{recipe.calories} cal</span>
                     </div>
+                    <MacroChips
+                      calories={recipe.calories}
+                      protein={recipe.protein}
+                      className="mt-2" />
+                    
                   </div>
                 </div>
                 )}
@@ -1006,6 +912,11 @@ export const RecipeRecommendationHub: React.FC<
                       </div>
                       <span>{recipe.calories} cal</span>
                     </div>
+                    <MacroChips
+                      calories={recipe.calories}
+                      protein={recipe.protein}
+                      className="mt-2" />
+                    
                   </div>
                 </div>
                 )}
@@ -1017,16 +928,36 @@ export const RecipeRecommendationHub: React.FC<
         }
       </div>
 
+      {/* Search pushes over Discover; filters stay one tap away inside it */}
+      {showSearch &&
+      <RecipeSearchScreen
+        search={search}
+        meals={filters.meals}
+        resultCount={filteredRecipes.length}
+        onSearchChange={setSearch}
+        onMealsChange={(meals) => {
+          setFilters({ ...filters, meals });
+          setDraftFilters({ ...draftFilters, meals });
+        }}
+        onOpenFilters={() => {
+          setDraftFilters(filters);
+          setShowFilters(true);
+        }}
+        onSubmit={() => setShowSearch(false)}
+        onBack={() => setShowSearch(false)} />
+
+      }
+
       <HubFilterSheet
         open={showFilters}
         filters={filters}
-        recipes={allRecipes}
         previewCount={draftCount}
         onPreview={setDraftFilters}
         onApply={(next) => {
           setFilters(next);
           setDraftFilters(next);
           setShowFilters(false);
+          setShowSearch(false);
         }}
         onClose={() => setShowFilters(false)} />
       

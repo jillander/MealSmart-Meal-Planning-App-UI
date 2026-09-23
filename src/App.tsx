@@ -249,7 +249,10 @@ export function App() {
           <RecipeSuggestionScreen navigateTo={navigateTo} />
           }
           {currentScreen === 'recipe-discovery' &&
-          <RecipeRecommendationHub navigateTo={navigateTo} />
+          <RecipeRecommendationHub
+            navigateTo={navigateTo}
+            initialView={screenInit.discoverView ?? 'idle'} />
+
           }
           {currentScreen === 'category-browse' && categoryData &&
           <CategoryBrowseScreen

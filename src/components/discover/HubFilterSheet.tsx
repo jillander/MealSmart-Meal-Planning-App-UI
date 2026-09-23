@@ -1,17 +1,19 @@
 import React, { useEffect, useState } from 'react';
 import { XIcon } from 'lucide-react';
 import {
-  buildHubFacets,
   countActiveHubFilters,
-  emptyHubFilters } from
+  cuisineOptions,
+  dietaryOptions,
+  effortOptions,
+  emptyHubFilters,
+  mealOptions } from
 '../../utils/hubFilters';
-import type { HubFilters, HubRecipe, HubSort } from '../../utils/hubFilters';
+import type { HubFilters, HubSort } from '../../utils/hubFilters';
 
 interface HubFilterSheetProps {
   open: boolean;
   filters: HubFilters;
-  /** Full pool, used to build facet options and the live result count. */
-  recipes: HubRecipe[];
+  /** Live count, already including the active search chips. */
   previewCount: number;
   onPreview: (draft: HubFilters) => void;
   onApply: (draft: HubFilters) => void;
@@ -20,25 +22,28 @@ interface HubFilterSheetProps {
 
 const timeOptions = [15, 20, 30, 45];
 const calorieOptions = [350, 450, 550];
-const matchOptions = [80, 90];
+const proteinOptions = [20, 30, 40];
 const sortOptions: {value: HubSort;label: string;}[] = [
-{ value: 'match', label: 'Best match' },
+{ value: 'match', label: 'Recommended' },
 { value: 'quickest', label: 'Quickest' },
+{ value: 'protein', label: 'Most protein' },
 { value: 'calories', label: 'Fewest calories' },
-{ value: 'popular', label: 'Trending' }];
+{ value: 'popular', label: 'Most loved' }];
 
 
+/**
+ * Filters covers everything EXCEPT ingredients — those live only in Search,
+ * so there is never a question of where to type "chicken".
+ */
 export function HubFilterSheet({
   open,
   filters,
-  recipes,
   previewCount,
   onPreview,
   onApply,
   onClose
 }: HubFilterSheetProps) {
   const [draft, setDraft] = useState<HubFilters>(filters);
-  const facets = buildHubFacets(recipes);
 
   useEffect(() => {
     if (open) setDraft(filters);
@@ -63,8 +68,13 @@ export function HubFilterSheet({
       aria-modal="true"
       aria-label="Filter recipes">
       
-      <button type="button" aria-label="Close filters" onClick={onClose} className="absolute inset-0 cursor-default" />
-      <div className="relative max-h-[86vh] w-full max-w-[430px] mx-auto overflow-y-auto rounded-t-3xl bg-white pb-4">
+      <button
+        type="button"
+        aria-label="Close filters"
+        onClick={onClose}
+        className="absolute inset-0 cursor-default" />
+      
+      <div className="relative mx-auto max-h-[86vh] w-full max-w-[430px] overflow-y-auto rounded-t-3xl bg-white pb-4">
         <div className="sticky top-0 z-10 border-b border-gray-100 bg-white px-6 pb-4 pt-4">
           <div className="mx-auto mb-4 h-1 w-10 rounded-full bg-gray-200" />
           <div className="flex items-center justify-between">
@@ -72,11 +82,11 @@ export function HubFilterSheet({
             <div className="flex items-center gap-3">
               <button
                 type="button"
-                onClick={() => update(emptyHubFilters)}
+                onClick={() => update({ ...emptyHubFilters })}
                 disabled={activeCount === 0}
                 className="text-sm font-semibold text-[#1A1A1A] underline-offset-4 transition-colors hover:underline disabled:text-[#C7CFCA] disabled:no-underline">
                 
-                Reset
+                Reset filters
               </button>
               <button
                 type="button"
@@ -91,9 +101,8 @@ export function HubFilterSheet({
         </div>
 
         <div className="px-6 pt-5">
-          {facets.meals.length > 0 &&
-          <Group title="Meal">
-              {facets.meals.map((meal) =>
+          <Group title="Meal" hint="Any selected meal can match">
+            {mealOptions.map((meal) =>
             <Chip
               key={meal}
               label={meal}
@@ -101,8 +110,7 @@ export function HubFilterSheet({
               onClick={() => update({ ...draft, meals: toggle(draft.meals, meal) })} />
 
             )}
-            </Group>
-          }
+          </Group>
 
           <Group title="Ready in" hint="Total time">
             {timeOptions.map((minutes) =>
@@ -110,14 +118,15 @@ export function HubFilterSheet({
               key={minutes}
               label={`Under ${minutes} min`}
               active={draft.maxTime === minutes}
-              onClick={() => update({ ...draft, maxTime: draft.maxTime === minutes ? null : minutes })} />
+              onClick={() =>
+              update({ ...draft, maxTime: draft.maxTime === minutes ? null : minutes })
+              } />
 
             )}
           </Group>
 
-          {facets.dietary.length > 0 &&
           <Group title="Dietary needs" hint="All selected must match">
-              {facets.dietary.map((tag) =>
+            {dietaryOptions.map((tag) =>
             <Chip
               key={tag}
               label={tag}
@@ -125,8 +134,7 @@ export function HubFilterSheet({
               onClick={() => update({ ...draft, dietary: toggle(draft.dietary, tag) })} />
 
             )}
-            </Group>
-          }
+          </Group>
 
           <Group title="Calories" hint="Per serving">
             {calorieOptions.map((kcal) =>
@@ -134,25 +142,28 @@ export function HubFilterSheet({
               key={kcal}
               label={`Under ${kcal}`}
               active={draft.maxCalories === kcal}
-              onClick={() => update({ ...draft, maxCalories: draft.maxCalories === kcal ? null : kcal })} />
+              onClick={() =>
+              update({ ...draft, maxCalories: draft.maxCalories === kcal ? null : kcal })
+              } />
 
             )}
           </Group>
 
-          <Group title="Ingredient match" hint="Based on your kitchen">
-            {matchOptions.map((percent) =>
+          <Group title="Protein" hint="Per serving">
+            {proteinOptions.map((grams) =>
             <Chip
-              key={percent}
-              label={`${percent}%+ match`}
-              active={draft.minMatch === percent}
-              onClick={() => update({ ...draft, minMatch: draft.minMatch === percent ? null : percent })} />
+              key={grams}
+              label={`${grams}g+`}
+              active={draft.minProtein === grams}
+              onClick={() =>
+              update({ ...draft, minProtein: draft.minProtein === grams ? null : grams })
+              } />
 
             )}
           </Group>
 
-          {facets.cuisines.length > 0 &&
           <Group title="Cuisine">
-              {facets.cuisines.map((cuisine) =>
+            {cuisineOptions.map((cuisine) =>
             <Chip
               key={cuisine}
               label={cuisine}
@@ -160,11 +171,10 @@ export function HubFilterSheet({
               onClick={() => update({ ...draft, cuisines: toggle(draft.cuisines, cuisine) })} />
 
             )}
-            </Group>
-          }
+          </Group>
 
           <Group title="Effort">
-            {facets.efforts.map((effort) =>
+            {effortOptions.map((effort) =>
             <Chip
               key={effort}
               label={effort}
@@ -203,7 +213,15 @@ export function HubFilterSheet({
 
 }
 
-function Group({ title, hint, children }: {title: string;hint?: string;children: React.ReactNode;}) {
+function Group({
+  title,
+  hint,
+  children
+
+
+
+
+}: {title: string;hint?: string;children: React.ReactNode;}) {
   return (
     <section className="mb-6">
       <div className="mb-2.5 flex items-baseline gap-2">
@@ -215,7 +233,15 @@ function Group({ title, hint, children }: {title: string;hint?: string;children:
 
 }
 
-function Chip({ label, active, onClick }: {label: string;active: boolean;onClick: () => void;}) {
+function Chip({
+  label,
+  active,
+  onClick
+
+
+
+
+}: {label: string;active: boolean;onClick: () => void;}) {
   return (
     <button
       type="button"

@@ -6,6 +6,7 @@ import {
   ClockIcon,
   InfoIcon } from
 'lucide-react';
+import { MacroChips } from './MacroChips';
 interface MealRowProps {
   meal: {
     type: string;
@@ -14,6 +15,9 @@ interface MealRowProps {
     time: string;
     image: string;
     completed: boolean;
+    protein?: number;
+    carbs?: number;
+    fat?: number;
     progress?: {
       hasIngredients: boolean;
       hasRecipe: boolean;
@@ -100,6 +104,14 @@ export const MealRow: React.FC<MealRowProps> = ({
             <p className="text-sm text-[#757575] mt-1">
               {meal.calories} calories • {meal.time}
             </p>
+            {/* Macros, so the row answers "does this fit my targets?" */}
+            <MacroChips
+              calories={meal.calories}
+              protein={meal.protein}
+              carbs={meal.carbs}
+              fat={meal.fat}
+              className="mt-2" />
+            
             {/* Preparation time indicator */}
             {!meal.completed &&
             <div className="flex items-center mt-2">

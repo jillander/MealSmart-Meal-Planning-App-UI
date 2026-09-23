@@ -26,8 +26,13 @@ export function HubActiveFilterBar({ filters, onChange }: HubActiveFilterBarProp
   }] :
 
   []),
-  ...(filters.minMatch !== null ?
-  [{ label: `${filters.minMatch}%+ match`, onRemove: () => onChange({ ...filters, minMatch: null }) }] :
+  ...(filters.minProtein !== null ?
+  [
+  {
+    label: `${filters.minProtein}g+ protein`,
+    onRemove: () => onChange({ ...filters, minProtein: null })
+  }] :
+
   []),
   ...filters.cuisines.map((cuisine) => ({ label: cuisine, onRemove: () => remove('cuisines', cuisine) })),
   ...filters.effort.map((effort) => ({ label: effort, onRemove: () => remove('effort', effort) }))];

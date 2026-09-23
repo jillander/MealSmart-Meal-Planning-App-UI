@@ -285,7 +285,10 @@ export const RecipeDetailScreen: React.FC<RecipeDetailScreenProps> = ({
     image:
     'https://images.unsplash.com/photo-1565299585323-38d6b0865b47?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2000&q=80',
     cookingTime: '35 mins',
-    calories: 520
+    calories: 520,
+    protein: 42,
+    carbs: 48,
+    fat: 16
   };
   const handleConfirmAddToMealPlan = (
   date: Date,

@@ -1,15 +1,23 @@
-export type HubSort = 'match' | 'quickest' | 'calories' | 'popular';
+export type HubSort = 'match' | 'quickest' | 'protein' | 'calories' | 'popular';
 
 export interface HubRecipe {
   id: string;
   title: string;
+  /** Used by search to match dish queries like "salad" or "soup". */
+  description?: string;
   image: string;
   matchPercentage: number;
   cookingTime: string;
   calories: number;
+  protein: number;
+  /** Optional — estimated from calories and protein when absent. */
+  carbs?: number;
+  fat?: number;
   difficulty: string;
   trending?: boolean;
   tags: string[];
+  /** What the recipe is made of, for ingredient search. */
+  ingredients: string[];
   saved: boolean;
   liked: boolean;
 }
@@ -21,7 +29,7 @@ export interface HubFilters {
   effort: string[];
   maxTime: number | null;
   maxCalories: number | null;
-  minMatch: number | null;
+  minProtein: number | null;
   sort: HubSort;
 }
 
@@ -32,12 +40,33 @@ export const emptyHubFilters: HubFilters = {
   effort: [],
   maxTime: null,
   maxCalories: null,
-  minMatch: null,
+  minProtein: null,
   sort: 'match'
 };
 
-const mealTags = ['Breakfast', 'Lunch', 'Dinner', 'Snack'];
-const cuisineTags = ['Mediterranean', 'Asian', 'Mexican', 'Italian', 'Indian', 'American'];
+/**
+ * Fixed dimensions, so the sheet always offers the same vocabulary as the
+ * search chips. Ingredients are deliberately absent — they live only in
+ * Search, so there is one place to say "I have chicken".
+ */
+export const mealOptions = ['Breakfast', 'Lunch', 'Dinner', 'Snack'];
+export const cuisineOptions = [
+'Mediterranean',
+'Asian',
+'Mexican',
+'Italian',
+'American',
+'Indian'];
+
+export const dietaryOptions = [
+'High protein',
+'Vegetarian',
+'Vegan',
+'Gluten-free',
+'Dairy-free',
+'Low carb'];
+
+export const effortOptions = ['Easy', 'Medium', 'Advanced'];
 
 /** "25 min" -> 25. Falls back to a large number so unparsed times never pass a limit. */
 export function parseCookingMinutes(cookingTime: string): number {
@@ -53,29 +82,13 @@ export function countActiveHubFilters(filters: HubFilters): number {
     filters.effort.length + (
     filters.maxTime === null ? 0 : 1) + (
     filters.maxCalories === null ? 0 : 1) + (
-    filters.minMatch === null ? 0 : 1));
+    filters.minProtein === null ? 0 : 1));
 
-}
-
-/** Options built from the real pool, so no filter can return an empty set by definition. */
-export function buildHubFacets(recipes: HubRecipe[]) {
-  const tags = new Set<string>();
-  const efforts = new Set<string>();
-  recipes.forEach((recipe) => {
-    recipe.tags.forEach((tag) => tags.add(tag));
-    efforts.add(recipe.difficulty);
-  });
-  const all = Array.from(tags);
-  return {
-    meals: mealTags.filter((tag) => tags.has(tag)),
-    cuisines: cuisineTags.filter((tag) => tags.has(tag)),
-    dietary: all.filter((tag) => !mealTags.includes(tag) && !cuisineTags.includes(tag)).sort(),
-    efforts: ['Easy', 'Medium', 'Advanced'].filter((effort) => efforts.has(effort))
-  };
 }
 
 export function applyHubFilters(recipes: HubRecipe[], filters: HubFilters): HubRecipe[] {
   const filtered = recipes.filter((recipe) => {
+    // OR within meal, cuisine and effort; AND across every dimension.
     if (filters.meals.length && !filters.meals.some((meal) => recipe.tags.includes(meal))) return false;
     if (filters.cuisines.length && !filters.cuisines.some((cuisine) => recipe.tags.includes(cuisine))) {
       return false;
@@ -85,7 +98,7 @@ export function applyHubFilters(recipes: HubRecipe[], filters: HubFilters): HubR
     if (filters.effort.length && !filters.effort.includes(recipe.difficulty)) return false;
     if (filters.maxTime !== null && parseCookingMinutes(recipe.cookingTime) > filters.maxTime) return false;
     if (filters.maxCalories !== null && recipe.calories > filters.maxCalories) return false;
-    if (filters.minMatch !== null && recipe.matchPercentage < filters.minMatch) return false;
+    if (filters.minProtein !== null && recipe.protein < filters.minProtein) return false;
     return true;
   });
 
@@ -93,6 +106,9 @@ export function applyHubFilters(recipes: HubRecipe[], filters: HubFilters): HubR
   switch (filters.sort) {
     case 'quickest':
       sorted.sort((a, b) => parseCookingMinutes(a.cookingTime) - parseCookingMinutes(b.cookingTime));
+      break;
+    case 'protein':
+      sorted.sort((a, b) => b.protein - a.protein);
       break;
     case 'calories':
       sorted.sort((a, b) => a.calories - b.calories);
