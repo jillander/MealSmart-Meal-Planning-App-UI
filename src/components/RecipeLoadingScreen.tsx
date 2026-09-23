@@ -6,6 +6,8 @@ interface RecipeLoadingScreenProps {
   navigateTo: (screen: string) => void;
   /** When true, this run ends on the "no recipes found" error screen. */
   shouldFail?: boolean;
+  /** Fires only when the run actually returned recipes. */
+  onGenerated?: () => void;
 }
 
 const statusTexts = [
@@ -17,11 +19,14 @@ const statusTexts = [
 
 const DURATION = 5200;
 
-export const RecipeLoadingScreen: React.FC<RecipeLoadingScreenProps> = ({ navigateTo, shouldFail = false }) => {
+export const RecipeLoadingScreen: React.FC<RecipeLoadingScreenProps> = ({ navigateTo, shouldFail = false, onGenerated }) => {
   const { progress } = useRecipeGeneration({
     shouldFail,
     durationMs: DURATION,
-    onSuccess: () => navigateTo('recipe-suggestions'),
+    onSuccess: () => {
+      onGenerated?.();
+      navigateTo('recipe-suggestions');
+    },
     onError: () => navigateTo('recipe-error')
   });
 

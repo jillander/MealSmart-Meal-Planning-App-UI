@@ -24,7 +24,9 @@ import { ProfileScreen } from './components/ProfileScreen';
 import { SnapMealScreen } from './components/foodlog/SnapMealScreen';
 import { TrialEndedScreen } from './components/subscription/TrialEndedScreen';
 import { LaunchOfferScreen } from './components/subscription/LaunchOfferScreen';
+import { GenerationLimitScreen } from './components/GenerationLimitScreen';
 import { useSubscription } from './hooks/useSubscription';
+import { useDailyGenerationLimit } from './hooks/useDailyGenerationLimit';
 import { ToastNotification } from './components/ToastNotification';
 import type { MealSlot } from './types/foodLog';
 import { OnboardingFlow } from './components/onboarding/OnboardingFlow';
@@ -77,7 +79,17 @@ export function App() {
     setGenerationAttempt((attempt) => attempt + 1);
     setCurrentScreen('recipe-loading');
   };
+  // 3 successful ingredient → recipe generations per day. Empty matches don't count.
+  const generationLimit = useDailyGenerationLimit();
   const navigateTo = (screen: string) => {
+    // Starting a new scan once today's allowance is spent shows the limit screen instead.
+    if (
+    (screen === 'ingredient-capture' || screen === 'recipe-loading') &&
+    generationLimit.isLimitReached())
+    {
+      setCurrentScreen('generation-limit');
+      return;
+    }
     // "snap-meal:<mealType>" preselects the slot the user tapped.
     if (screen.startsWith('snap-meal')) {
       const [, slot] = screen.split(':');
@@ -226,8 +238,12 @@ export function App() {
           <RecipeLoadingScreen
             key={generationAttempt}
             navigateTo={navigateTo}
-            shouldFail={generationShouldFail} />
+            shouldFail={generationShouldFail}
+            onGenerated={generationLimit.recordSuccess} />
 
+          }
+          {currentScreen === 'generation-limit' &&
+          <GenerationLimitScreen navigateTo={navigateTo} />
           }
           {currentScreen === 'recipe-error' &&
           <RecipeErrorScreen
